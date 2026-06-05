@@ -38,6 +38,12 @@ export const IMG = {
 
   // ── 取り組み（SOLUTION）──────────────────────────────────────────
   solutionHeroBg: "/4_h.png",
+  impactHeroBg: "/5_h.png",
+  horsesHeroBg: "/6_h.png",
+  partnersHeroBg: "/7_h.png",
+  mediaHeroBg: "/8_h.png",
+  supportHeroBg: "/9_h.png",
+  contactHeroBg: "/10_h.png",
   rescue: "肥育場から救出される馬",
   retrain: "パドックでのリトレーニング風景",
   owner: "一口オーナーと馬（日本人）",

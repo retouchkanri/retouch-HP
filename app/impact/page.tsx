@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { IMG } from "@/lib/images";
 import { SITE, STATS } from "@/lib/site";
 import { MEDIA } from "@/lib/data";
 import PageHero from "@/components/PageHero";
@@ -39,6 +40,7 @@ export default function ImpactPage() {
         title="活動実績"
         subtitle="数字が証明する、支援の力。"
         image="保護された馬たちの集合写真"
+        backgroundImage={IMG.impactHeroBg}
         crumbs={[{ label: "活動実績" }]}
       />
 

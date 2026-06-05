@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { HORSES } from "@/lib/data";
+import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
@@ -35,6 +36,7 @@ export default function HorsesPage() {
         title="馬たちの紹介"
         subtitle="一頭一頭に、物語がある。"
         image="Retouchの馬たちが牧場で過ごす風景"
+        backgroundImage={IMG.horsesHeroBg}
         crumbs={[{ label: "馬たちの紹介" }]}
       />
 

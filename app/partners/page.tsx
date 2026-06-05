@@ -37,6 +37,7 @@ export default function PartnersPage() {
         title="共に未来を創る"
         subtitle="一団体だけでは、救える数に限りがあります。だから、あなたと。"
         image={IMG.community}
+        backgroundImage={IMG.partnersHeroBg}
         crumbs={[{ label: "共に未来を創る" }]}
       />
 

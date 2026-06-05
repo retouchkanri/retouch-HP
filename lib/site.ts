@@ -107,7 +107,7 @@ export const NAV: NavItem[] = [
   {
     label: "応援する",
     labelEn: "SUPPORT",
-    href: "https://retouch.salon/",
+    href: "/support",
     sections: ["会員になる", "一口支援", "ポニーチーム", "法人協賛", "寄付・支援"],
   },
   { label: "お問い合わせ", labelEn: "CONTACT", href: "/contact" },

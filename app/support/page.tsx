@@ -44,6 +44,7 @@ export default function SupportPage() {
         title="応援する"
         subtitle="あなたの応援が、一頭の命をつなぎます。"
         image={IMG.bannerSupport}
+        backgroundImage={IMG.supportHeroBg}
         crumbs={[{ label: "応援する" }]}
       />
 

@@ -19,6 +19,7 @@ export default function ContactPage() {
         title="お問い合わせ"
         subtitle="ご支援・ご連携・取材のご相談など、お気軽にご連絡ください。"
         image={IMG.nature}
+        backgroundImage={IMG.contactHeroBg}
         crumbs={[{ label: "お問い合わせ" }]}
       />
 

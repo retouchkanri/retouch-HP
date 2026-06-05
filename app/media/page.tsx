@@ -31,6 +31,7 @@ export default function MediaPage() {
         title="メディア・取材"
         subtitle="報道関係者の皆さまへ。取材・写真素材のご案内。"
         image={IMG.heroRacehorse}
+        backgroundImage={IMG.mediaHeroBg}
         crumbs={[{ label: "メディア・取材" }]}
       />
 

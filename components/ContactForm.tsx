@@ -15,6 +15,8 @@ const TOPICS = [
 
 export default function ContactForm() {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -26,10 +28,26 @@ export default function ContactForm() {
   const update = (k: string, v: string | boolean) =>
     setForm((f) => ({ ...f, [k]: v }));
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 実運用ではここで送信API（メール送信／フォームサービス）に接続します。
-    setSent(true);
+    setError(null);
+    setSending(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || "送信に失敗しました。時間をおいて再度お試しください。");
+      }
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "送信に失敗しました。");
+    } finally {
+      setSending(false);
+    }
   };
 
   if (sent) {
@@ -122,8 +140,21 @@ export default function ContactForm() {
         <span>プライバシーポリシーに同意のうえ送信します。</span>
       </label>
 
-      <button type="submit" className="btn-primary mt-7 w-full sm:w-auto">
-        この内容で送信する
+      {error && (
+        <p
+          role="alert"
+          className="mt-5 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 ring-1 ring-red-200"
+        >
+          {error}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={sending}
+        className="btn-primary mt-7 w-full sm:w-auto disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {sending ? "送信中…" : "この内容で送信する"}
       </button>
     </form>
   );
