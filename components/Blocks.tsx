@@ -1,0 +1,161 @@
+import Link from "next/link";
+import { ReactNode } from "react";
+import { Horse } from "@/lib/data";
+import Placeholder from "@/components/Placeholder";
+
+// 統計カードグリッド
+export function StatGrid({
+  stats,
+  dark = false,
+}: {
+  stats: { value: string; unit: string; label: string; sub?: string }[];
+  dark?: boolean;
+}) {
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      {stats.map((s) => (
+        <div
+          key={s.label}
+          className={`rounded-2xl p-6 text-center ring-1 ${
+            dark
+              ? "bg-white/5 ring-white/10 text-white"
+              : "bg-white ring-brand-900/5 shadow-sm"
+          }`}
+        >
+          <div className="flex items-end justify-center gap-1">
+            <span
+              className={`text-4xl sm:text-5xl font-bold ${
+                dark ? "text-gold" : "text-brand-700"
+              }`}
+            >
+              {s.value}
+            </span>
+            <span className={`mb-1 text-sm ${dark ? "text-brand-200" : "text-brand-600"}`}>
+              {s.unit}
+            </span>
+          </div>
+          <p className={`mt-2 text-sm font-semibold ${dark ? "text-white" : "text-black"}`}>
+            {s.label}
+          </p>
+          {s.sub && (
+            <p className={`mt-1 text-xs ${dark ? "text-brand-300" : "text-ink/50"}`}>{s.sub}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// 取り組みカード（番号 + 画像 + 説明）
+export function FeatureCard({
+  no,
+  title,
+  body,
+  image,
+  href,
+}: {
+  no: string;
+  title: string;
+  body: string;
+  image: string;
+  href?: string;
+}) {
+  const inner = (
+    <div className="card group h-full flex flex-col">
+      <div className="relative h-48 overflow-hidden">
+        <Placeholder label={image} className="h-full w-full" />
+        <span className="absolute top-3 left-3 flex h-9 w-9 items-center justify-center rounded-full bg-gold text-sm font-bold text-white">
+          {no}
+        </span>
+      </div>
+      <div className="flex flex-1 flex-col p-6">
+        <h3 className="text-lg font-semibold text-black">{title}</h3>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-black/80">{body}</p>
+        {href && <span className="mt-4 text-sm font-semibold text-gold">詳しく →</span>}
+      </div>
+    </div>
+  );
+  return href ? <Link href={href}>{inner}</Link> : inner;
+}
+
+// 馬カード
+export function HorseCard({ horse }: { horse: Horse }) {
+  const badgeColor =
+    horse.status === "protected"
+      ? "bg-brand-600"
+      : horse.status === "graduated"
+      ? "bg-gold"
+      : "bg-ink";
+  return (
+    <article className="card group flex flex-col">
+      <div className="relative aspect-square overflow-hidden">
+        <Placeholder label={`${horse.name}（${horse.statusLabel}）の写真`} className="h-full w-full" />
+        <span
+          className={`absolute top-3 left-3 rounded-full ${badgeColor} px-3 py-1 text-[10px] font-semibold tracking-wider text-white`}
+        >
+          {horse.statusLabel}
+        </span>
+      </div>
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex items-baseline justify-between">
+          <h3 className="text-lg font-semibold text-black">{horse.name}</h3>
+          <span className="text-xs text-ink/50">
+            {horse.sex}・{horse.age}
+          </span>
+        </div>
+        <p className="mt-2 text-xs font-semibold text-brand-600">性格：{horse.personality}</p>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-black/80">{horse.story}</p>
+      </div>
+    </article>
+  );
+}
+
+// 想い・テキスト2カラム（画像 + 本文）
+export function SplitBlock({
+  image,
+  reverse = false,
+  children,
+}: {
+  image: string;
+  reverse?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={`grid items-center gap-8 lg:gap-14 lg:grid-cols-2 ${
+        reverse ? "lg:[&>div:first-child]:order-2" : ""
+      }`}
+    >
+      <div className="overflow-hidden rounded-3xl shadow-lg">
+        <Placeholder label={image} className="aspect-[4/3] w-full" />
+      </div>
+      <div>{children}</div>
+    </div>
+  );
+}
+
+// セクション内CTA
+export function CTA({
+  title,
+  body,
+  primary,
+  secondary,
+}: {
+  title: string;
+  body?: string;
+  primary: { label: string; href: string };
+  secondary?: { label: string; href: string };
+}) {
+  return (
+    <div className="rounded-3xl bg-brand-700 px-8 py-12 text-center text-white">
+      <h3 className="text-2xl sm:text-3xl font-semibold">{title}</h3>
+      {body && <p className="mt-4 mx-auto max-w-2xl text-sm leading-loose text-brand-100">{body}</p>}
+      <div className="mt-7 flex flex-wrap justify-center gap-4">
+        <Link href={primary.href} className="btn-gold">{primary.label}</Link>
+        {secondary && (
+          <Link href={secondary.href} className="btn-white">{secondary.label}</Link>
+        )}
+      </div>
+    </div>
+  );
+}
