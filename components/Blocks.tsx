@@ -1,7 +1,13 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
+import SiteLink from "@/components/SiteLink";
 import { Horse } from "@/lib/data";
 import Placeholder from "@/components/Placeholder";
+
+function isImagePath(src: string) {
+  return src.startsWith("/");
+}
 
 // 統計カードグリッド
 export function StatGrid({
@@ -113,10 +119,12 @@ export function HorseCard({ horse }: { horse: Horse }) {
 // 想い・テキスト2カラム（画像 + 本文）
 export function SplitBlock({
   image,
+  imageAlt = "",
   reverse = false,
   children,
 }: {
   image: string;
+  imageAlt?: string;
   reverse?: boolean;
   children: ReactNode;
 }) {
@@ -126,8 +134,18 @@ export function SplitBlock({
         reverse ? "lg:[&>div:first-child]:order-2" : ""
       }`}
     >
-      <div className="overflow-hidden rounded-3xl shadow-lg">
-        <Placeholder label={image} className="aspect-[4/3] w-full" />
+      <div>
+        {isImagePath(image) ? (
+          <Image
+            src={image}
+            alt={imageAlt}
+            width={1200}
+            height={800}
+            className="w-full h-auto"
+          />
+        ) : (
+          <Placeholder label={image} className="aspect-[4/3] w-full" />
+        )}
       </div>
       <div>{children}</div>
     </div>
@@ -151,9 +169,9 @@ export function CTA({
       <h3 className="text-2xl sm:text-3xl font-semibold">{title}</h3>
       {body && <p className="mt-4 mx-auto max-w-2xl text-sm leading-loose text-brand-100">{body}</p>}
       <div className="mt-7 flex flex-wrap justify-center gap-4">
-        <Link href={primary.href} className="btn-gold">{primary.label}</Link>
+        <SiteLink href={primary.href} className="btn-gold">{primary.label}</SiteLink>
         {secondary && (
-          <Link href={secondary.href} className="btn-white">{secondary.label}</Link>
+          <SiteLink href={secondary.href} className="btn-white">{secondary.label}</SiteLink>
         )}
       </div>
     </div>

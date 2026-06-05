@@ -12,15 +12,32 @@ export const SITE = {
     "引退競走馬保護団体 Retouch（リタッチ）。肥育場で過ごす引退競走馬を救出し、再調教を通じて人と共に生きる新しい道へ。代表・野口佳槻（株式会社馬事学院）。",
   ceo: "野口 佳槻",
   ceoRole: "Retouch 代表 / 株式会社馬事学院 代表取締役",
-  founded: "2023年11月",
+  orgName: "引退馬支援団体　Retouch（リタッチ）",
+  founded: "令和5年11月（代表交代に伴い再始動）",
   email: "info@retouch-members.com",
-  tel: "0475-00-0000",
+  tel: "050-6875-3336",
+  telNote: "リタッチ担当者をお呼び出しください",
+  hq: "〒586-0031 大阪府河内長野市高向2001 ホースレスト内",
+  activityBases: "千葉県八街市・山武市／大阪府河内長野市",
+  activityBasesNote: "※山武市雨坪10番地　東関東馬事高等学院内",
+  mapQuery: "大阪府河内長野市高向2001 ホースレスト",
+  membersUrl: "https://retouch.salon/",
   youtube: "https://www.youtube.com/@Retouch2023",
   addresses: [
-    "大阪本部：大阪府河内長野市",
-    "千葉拠点：千葉県山武市 / 八千代市",
+    "〒586-0031 大阪府河内長野市高向2001 ホースレスト内",
+    "活動拠点：千葉県八街市・山武市／大阪府河内長野市",
+    "※山武市雨坪10番地　東関東馬事高等学院内",
   ],
 };
+
+export const externalLinkProps = {
+  target: "_blank",
+  rel: "noopener noreferrer",
+} as const;
+
+export function isExternalUrl(href: string) {
+  return href.startsWith("http://") || href.startsWith("https://");
+}
 
 export type NavItem = {
   label: string;
@@ -90,7 +107,7 @@ export const NAV: NavItem[] = [
   {
     label: "応援する",
     labelEn: "SUPPORT",
-    href: "/support",
+    href: "https://retouch.salon/",
     sections: ["会員になる", "一口支援", "ポニーチーム", "法人協賛", "寄付・支援"],
   },
   { label: "お問い合わせ", labelEn: "CONTACT", href: "/contact" },

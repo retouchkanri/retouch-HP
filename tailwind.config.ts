@@ -23,6 +23,7 @@ const config: Config = {
           950: "#0d1d12",
         },
         cream: "#f7f5ef",
+        blush: "#FDF9F6",
         ink: "#000000",
         gold: "#b98a3e",
       },
@@ -30,7 +31,7 @@ const config: Config = {
         serif: ["var(--font-noto-serif-jp)", "Noto Serif JP", "serif"],
       },
       maxWidth: {
-        container: "1200px",
+        container: "1280px",
       },
       keyframes: {
         fadeUp: {

@@ -1,25 +1,42 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ImageNote } from "@/components/Placeholder";
 
 type Crumb = { label: string; href?: string };
+
+const HERO_GRADIENT = "bg-gradient-to-r from-brand-950 via-brand-900 to-brand-800";
 
 export default function PageHero({
   eyebrow,
   title,
   subtitle,
   image,
+  backgroundImage,
   crumbs = [],
 }: {
   eyebrow: string;
   title: string;
   subtitle?: string;
   image: string;
+  backgroundImage?: string;
   crumbs?: Crumb[];
 }) {
   return (
-    <section className="relative h-[42vh] min-h-[320px] w-full overflow-hidden bg-gradient-to-r from-brand-950 via-brand-900 to-brand-800">
-      <div className="relative container-x flex h-full flex-col justify-center">
-        <ImageNote label={image} className="mb-5 w-fit" />
+    <section className="relative h-[42vh] min-h-[320px] w-full overflow-hidden">
+      {backgroundImage ? (
+        <Image
+          src={backgroundImage}
+          alt=""
+          fill
+          className="object-cover"
+          priority
+        />
+      ) : (
+        <div className={`absolute inset-0 ${HERO_GRADIENT}`} aria-hidden />
+      )}
+      <div className={`absolute inset-0 ${HERO_GRADIENT} opacity-30`} aria-hidden />
+      <div className="relative z-10 container-x flex h-full flex-col justify-center">
+        {!backgroundImage && <ImageNote label={image} className="mb-5 w-fit" />}
         <p className="eyebrow !text-gold animate-fadeUp">{eyebrow}</p>
         <h1 className="mt-3 text-3xl sm:text-5xl font-semibold text-white animate-fadeUp">
           {title}

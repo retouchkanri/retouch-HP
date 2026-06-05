@@ -1,18 +1,28 @@
+import Image from "next/image";
 import Link from "next/link";
+import SiteLink from "@/components/SiteLink";
+import { IMG } from "@/lib/images";
 import { NAV, SITE } from "@/lib/site";
 
 export default function Footer() {
   return (
     <footer className="mt-24 bg-brand-900 text-brand-100">
       {/* 上部CTA帯 */}
-      <div className="relative overflow-hidden bg-brand-950">
-        <div className="relative container-x py-14 text-center">
+      <div className="relative h-[50vh] w-full overflow-hidden">
+        <Image
+          src={IMG.contactCta}
+          alt=""
+          fill
+          className="object-cover"
+          aria-hidden
+        />
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
           <p className="eyebrow !text-gold">JOIN US</p>
           <h2 className="mt-3 text-2xl sm:text-3xl font-semibold text-white">
             あなたの応援が、一頭の命をつなぎます。
           </h2>
           <div className="mt-7 flex flex-wrap justify-center gap-4">
-            <Link href="/support" className="btn-gold">会員になって支援する</Link>
+            <SiteLink href={SITE.membersUrl} className="btn-gold">会員になって支援する</SiteLink>
             <Link href="/contact" className="btn-white">お問い合わせ</Link>
           </div>
         </div>
@@ -20,10 +30,15 @@ export default function Footer() {
 
       <div className="container-x py-14 grid gap-10 md:grid-cols-[1.3fr_2fr]">
         <div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold tracking-[0.15em] text-white">Retouch</span>
-            <span className="text-xs text-brand-300">リタッチ</span>
-          </div>
+          <Link href="/">
+            <Image
+              src="/logo.png"
+              alt="Retouch（リタッチ）"
+              width={195}
+              height={40}
+              className="h-8 w-auto"
+            />
+          </Link>
           <p className="mt-4 text-sm leading-loose text-brand-200">
             {SITE.tagline}
             <br />
@@ -50,7 +65,7 @@ export default function Footer() {
 
         <nav className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3 text-sm">
           {NAV.map((item) => (
-            <Link
+            <SiteLink
               key={item.href}
               href={item.href}
               className="text-brand-200 hover:text-white transition-colors"
@@ -59,7 +74,7 @@ export default function Footer() {
               <span className="block text-[10px] tracking-widest text-brand-400">
                 {item.labelEn}
               </span>
-            </Link>
+            </SiteLink>
           ))}
         </nav>
       </div>

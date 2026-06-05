@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { STATS } from "@/lib/site";
+import { SITE, STATS } from "@/lib/site";
 import { MEDIA } from "@/lib/data";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
@@ -45,8 +45,8 @@ export default function ImpactPage() {
       {/* 大型カウンター */}
       <div className="bg-brand-900">
         <div className="container-x py-14">
-          <p className="text-center eyebrow !text-gold">BY THE NUMBERS</p>
-          <h2 className="mt-3 mb-10 text-center text-2xl sm:text-3xl font-semibold text-white">
+          <p className="eyebrow !text-gold">BY THE NUMBERS</p>
+          <h2 className="section-title mt-3 mb-10 !text-white">
             これまでの歩み
           </h2>
           <StatGrid stats={STATS} dark />
@@ -61,7 +61,7 @@ export default function ImpactPage() {
               i % 2 ? "lg:[&>div:first-child]:order-2" : ""
             }`}
           >
-            <Placeholder label={h.image} className="aspect-[4/3] w-full rounded-3xl shadow-lg" />
+            <Placeholder label={h.image} className="aspect-[4/3] w-full" />
             <div>
               <div className="flex items-end gap-2">
                 <span className="text-6xl sm:text-7xl font-bold text-brand-700">{h.value}</span>
@@ -77,7 +77,6 @@ export default function ImpactPage() {
       {/* メディア掲載（ロゴ一覧） */}
       <Section id="メディア掲載" alt>
         <SectionHeading
-          center
           eyebrow="MEDIA"
           title="メディア掲載"
           lead="テレビ・新聞・Webなど、多くのメディアにRetouchの取り組みを取り上げていただいています。"
@@ -87,7 +86,7 @@ export default function ImpactPage() {
             <Placeholder
               key={m.title}
               label={`${m.outlet}（ロゴ）`}
-              className="aspect-[3/2] w-full rounded-xl"
+              className="aspect-[3/2] w-full"
             />
           ))}
         </div>
@@ -104,7 +103,7 @@ export default function ImpactPage() {
 
       {/* 年表 */}
       <Section id="年表">
-        <SectionHeading center eyebrow="HISTORY" title="活動の歩み（年表）" />
+        <SectionHeading eyebrow="HISTORY" title="活動の歩み（年表）" />
         <ol className="mx-auto mt-12 max-w-3xl border-l-2 border-brand-200 pl-8">
           {TIMELINE.map((t) => (
             <li key={t.year} className="relative pb-10 last:pb-0">
@@ -125,7 +124,7 @@ export default function ImpactPage() {
           <CTA
             title="次の1頭を救うために。"
             body="あなたの支援が、次の保護とリトレーニングを可能にします。"
-            primary={{ label: "応援する", href: "/support" }}
+            primary={{ label: "応援する", href: SITE.membersUrl }}
             secondary={{ label: "馬たちを見る", href: "/horses" }}
           />
         </div>

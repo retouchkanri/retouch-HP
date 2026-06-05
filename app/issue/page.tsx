@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IMG } from "@/lib/images";
+import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { SplitBlock, CTA } from "@/components/Blocks";
@@ -37,7 +38,7 @@ export default function IssuePage() {
           lead="ターフを駆けた馬たちの多くが、引退後わずかな期間で肥育場へと送られます。"
         />
         <div className="mt-12">
-          <SplitBlock image={IMG.issueStable}>
+          <SplitBlock image={IMG.issueStable} imageAlt="馬房で過ごす馬">
             <p className="accent-line eyebrow">FACT</p>
             <h3 className="section-title mt-2 !text-2xl">「肉用馬」として、出荷を待つ馬たち。</h3>
             <p className="section-lead mt-5">
@@ -57,7 +58,6 @@ export default function IssuePage() {
       {/* 引退馬問題とは */}
       <Section id="引退馬問題とは">
         <SectionHeading
-          center
           eyebrow="THE PROBLEM"
           title="引退馬問題とは"
           lead="「かわいそう」だけでは解決できない、産業全体の構造的な課題です。"
@@ -83,7 +83,7 @@ export default function IssuePage() {
         title="1頭まるごと保護、という選択。"
         body="大阪府河内長野市のふるさと納税で、引退馬の保護を直接応援できます。返礼として馬に会える・乗れる体験も。"
         cta="支援の方法を見る"
-        href="/support"
+        href={SITE.membersUrl}
         tone="green"
       />
 
@@ -117,16 +117,13 @@ export default function IssuePage() {
               <p className="mt-2 text-xs text-ink/50">目標 60,000人に向けて、ご署名をお願いします。</p>
             </div>
           </div>
-          <div className="overflow-hidden rounded-3xl shadow-lg">
-            <Placeholder label={IMG.issueSign} className="aspect-[4/3] w-full" />
-          </div>
+          <Placeholder label={IMG.issueSign} className="aspect-[4/3] w-full" />
         </div>
       </Section>
 
       {/* 私たちが向き合う課題 */}
       <Section id="私たちが向き合う課題">
         <SectionHeading
-          center
           eyebrow="CHALLENGES"
           title="私たちが向き合う課題"
           lead="ひとつずつ、しかし確実に。Retouchが取り組む4つの課題。"
@@ -147,7 +144,7 @@ export default function IssuePage() {
             title="知ったあなたに、できることがあります。"
             body="現実を知ることは、変化の第一歩。次は、ぜひ「私たちの取り組み」をご覧ください。"
             primary={{ label: "取り組みを見る", href: "/solution" }}
-            secondary={{ label: "署名・支援する", href: "/support" }}
+            secondary={{ label: "署名・支援する", href: SITE.membersUrl }}
           />
         </div>
       </Section>

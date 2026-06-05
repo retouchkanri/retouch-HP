@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import SiteLink from "@/components/SiteLink";
 import { SITE } from "@/lib/site";
 import { IMG } from "@/lib/images";
 import PageHero from "@/components/PageHero";
@@ -50,7 +50,6 @@ export default function SupportPage() {
       {/* 会員になる */}
       <Section id="会員になる" alt>
         <SectionHeading
-          center
           eyebrow="MEMBERSHIP"
           title="会員になる"
           lead="月々のご支援が、馬たちの毎日を支えます。会費の多くは、馬の保護・飼養活動に充てられます。"
@@ -82,9 +81,12 @@ export default function SupportPage() {
                   </li>
                 ))}
               </ul>
-              <Link href="/contact" className={`mt-7 ${p.featured ? "btn-gold" : "btn-primary"}`}>
+              <SiteLink
+                href={SITE.membersUrl}
+                className={`mt-7 ${p.featured ? "btn-gold" : "btn-primary"}`}
+              >
                 このプランで申し込む
-              </Link>
+              </SiteLink>
             </div>
           ))}
         </div>
@@ -98,7 +100,7 @@ export default function SupportPage() {
         title="ふるさと納税で、1頭まるごと保護。"
         body="大阪府河内長野市のふるさと納税を通じて、引退馬の保護を直接応援。返礼として馬に会える・乗れる体験もご用意しています。"
         cta="寄付・支援を見る"
-        href="#寄付・支援"
+        href={SITE.membersUrl}
         tone="gold"
       />
 
@@ -106,14 +108,14 @@ export default function SupportPage() {
       {WAYS.map((w, i) => (
         <Section key={w.id} id={w.id} alt={i % 2 === 1}>
           <div className={`grid items-center gap-10 lg:grid-cols-2 ${i % 2 ? "lg:[&>div:first-child]:order-2" : ""}`}>
-            <div className="overflow-hidden rounded-3xl shadow-lg">
-              <Placeholder label={w.img} className="aspect-[4/3] w-full" />
-            </div>
+            <Placeholder label={w.img} className="aspect-[4/3] w-full" />
             <div>
               <p className="eyebrow">{`SUPPORT 0${i + 1}`}</p>
               <h3 className="mt-3 section-title !text-2xl sm:!text-3xl">{w.title}</h3>
               <p className="section-lead mt-5">{w.body}</p>
-              <Link href="/contact" className="btn-outline mt-7">この方法で支援する</Link>
+              <SiteLink href={SITE.membersUrl} className="btn-outline mt-7">
+                この方法で支援する
+              </SiteLink>
             </div>
           </div>
         </Section>
@@ -123,8 +125,8 @@ export default function SupportPage() {
         <CTA
           title="あなたにできる方法で、命をつなぐ。"
           body="ご不明な点は、お気軽にお問い合わせください。あなたに合った応援の形をご提案します。"
-          primary={{ label: "お問い合わせ", href: "/contact" }}
-          secondary={{ label: "馬たちを見る", href: "/horses" }}
+          primary={{ label: "会員登録・支援する", href: SITE.membersUrl }}
+          secondary={{ label: "お問い合わせ", href: "/contact" }}
         />
         <p className="mt-6 text-center text-sm text-ink/60">
           公式YouTube（登録者2万人超）でも活動を発信中 ▶{" "}

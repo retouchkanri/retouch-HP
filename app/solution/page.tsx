@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IMG } from "@/lib/images";
+import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { SplitBlock, CTA } from "@/components/Blocks";
@@ -34,7 +35,6 @@ export default function SolutionPage() {
 
       <Section alt>
         <SectionHeading
-          center
           eyebrow="OUR APPROACH"
           title="保護して終わり、ではない。"
           lead="救出・再調教から、オーナー制度、教育・福祉・観光、そして地域活性化まで。Retouchは馬の一生に寄り添い、馬が社会の中で役割を持ち続けられる仕組みをつくります。"
@@ -73,8 +73,8 @@ export default function SolutionPage() {
         <CTA
           title="馬たちに、新しい未来を。"
           body="あなたの支援や連携が、救える馬の数を増やします。できることから、一緒に始めてください。"
-          primary={{ label: "私たちの活動を応援する", href: "/support" }}
-          secondary={{ label: "会員になる", href: "/support#会員になる" }}
+          primary={{ label: "私たちの活動を応援する", href: SITE.membersUrl }}
+          secondary={{ label: "会員になる", href: SITE.membersUrl }}
         />
       </Section>
     </>

@@ -72,7 +72,7 @@ export default function ContactPage() {
 
       {/* FAQ */}
       <Section>
-        <SectionHeading center eyebrow="FAQ" title="よくあるご質問" />
+        <SectionHeading eyebrow="FAQ" title="よくあるご質問" />
         <div className="mx-auto mt-10 max-w-3xl space-y-4">
           {[
             { q: "支援したお金は何に使われますか？", a: "会費・寄付の多くは、馬たちの飼養費・治療費・再調教・施設運営に充てられます。会員向けに会計報告も公開しています。" },

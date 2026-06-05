@@ -1,10 +1,12 @@
 import Link from "next/link";
+import SiteLink from "@/components/SiteLink";
 import { SITE, STATS } from "@/lib/site";
 import { IMG } from "@/lib/images";
 import { HORSES, NEWS, MEDIA } from "@/lib/data";
 import { Section, SectionHeading } from "@/components/Section";
 import { StatGrid, FeatureCard, HorseCard, CTA } from "@/components/Blocks";
 import { AdBanner, AdGrid } from "@/components/Ads";
+import Image from "next/image";
 import Placeholder, { ImageNote } from "@/components/Placeholder";
 
 const SOLUTIONS = [
@@ -20,9 +22,17 @@ export default function Home() {
   return (
     <>
       {/* ===== ヒーロー ===== */}
-      <section className="relative h-[88vh] min-h-[560px] w-full overflow-hidden bg-gradient-to-t from-brand-950 via-brand-900 to-brand-800">
-        <div className="relative container-x flex h-full flex-col justify-end pb-20 sm:pb-28">
-          <ImageNote label={IMG.heroHorse} className="mb-6 w-fit animate-fadeUp" />
+      <section className="relative h-[88vh] min-h-[560px] w-full overflow-hidden">
+        <Image
+          src={IMG.aboutHeroBg}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-900/55 to-brand-900/30" aria-hidden />
+        <div className="relative z-10 container-x flex h-full flex-col justify-end pb-20 sm:pb-28">
           <p className="eyebrow !text-gold animate-fadeUp">RETOUCH ｜ 引退競走馬保護団体</p>
           <h1 className="mt-4 max-w-4xl text-4xl sm:text-6xl font-semibold leading-[1.4] text-white animate-fadeUp">
             命をつなぐ。
@@ -37,7 +47,7 @@ export default function Home() {
             人と共に生きる新しい道を切り拓きます。
           </p>
           <div className="mt-9 flex flex-wrap gap-4 animate-fadeUp">
-            <Link href="/support" className="btn-gold">いますぐ応援する</Link>
+            <SiteLink href={SITE.membersUrl} className="btn-gold">いますぐ応援する</SiteLink>
             <Link href="/issue" className="btn-white">引退馬の現実を知る</Link>
           </div>
         </div>
@@ -53,9 +63,13 @@ export default function Home() {
       {/* ===== 私たちの想い ===== */}
       <Section alt>
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="overflow-hidden rounded-3xl shadow-xl">
-            <Placeholder label={IMG.heroField} className="aspect-[4/3] w-full" />
-          </div>
+          <Image
+            src={IMG.ceoPhoto}
+            alt="代表 野口佳槻と馬"
+            width={800}
+            height={1000}
+            className="aspect-[4/3] w-full object-cover object-top"
+          />
           <div>
             <p className="eyebrow">OUR MISSION ｜ 私たちの想い</p>
             <h2 className="section-title mt-3">
@@ -84,13 +98,13 @@ export default function Home() {
 
       {/* ===== 引退馬の現実（ISSUE） ===== */}
       <section className="relative overflow-hidden bg-brand-950 py-20 sm:py-28">
-        <div className="relative container-x text-center text-white">
+        <div className="relative container-x text-white">
           <ImageNote label={IMG.issueFarm} className="mb-6" />
           <p className="eyebrow !text-gold">THE REALITY ｜ 引退競走馬の現実</p>
-          <h2 className="mt-4 text-2xl sm:text-4xl font-semibold leading-snug">
+          <h2 className="section-title mt-4 !text-white">
             走れなくなった馬を、待つのは。
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-sm sm:text-base leading-loose text-brand-100">
+          <p className="mt-6 max-w-2xl text-sm sm:text-base leading-loose text-brand-100">
             引退した競走馬の多くは肥育場へ送られ、肉用馬として処分されます。
             これは「かわいそう」では終われない、産業全体の構造的な課題です。
             まずは、知ることから始めてください。
@@ -114,7 +128,6 @@ export default function Home() {
       {/* ===== 私たちの取り組み（SOLUTION） ===== */}
       <Section alt>
         <SectionHeading
-          center
           eyebrow="OUR SOLUTION ｜ 私たちの取り組み"
           title="保護して終わり、ではない。"
           lead="救出から、再調教、譲渡、教育、福祉、観光、そして地域活性化まで。Retouchは馬の一生に寄り添い、馬と人と地域がともに幸せになる仕組みをつくります。"
@@ -195,7 +208,7 @@ export default function Home() {
         <CTA
           title="共に、馬たちの未来を創る。"
           body="月々1,000円台からの会員支援、一口オーナー、法人協賛、ふるさと納税。あなたに合った方法で、引退競走馬の命をつなぐことができます。"
-          primary={{ label: "応援する（会員・寄付）", href: "/support" }}
+          primary={{ label: "応援する（会員・寄付）", href: SITE.membersUrl }}
           secondary={{ label: "パートナーを相談する", href: "/partners" }}
         />
       </Section>

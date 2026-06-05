@@ -42,7 +42,6 @@ export default function PartnersPage() {
 
       <Section alt>
         <SectionHeading
-          center
           eyebrow="PARTNERSHIP"
           title="馬と地域の未来を、ともに。"
           lead="企業・行政・乗馬クラブ・観光牧場・教育機関。さまざまな立場のパートナーと手を取り合い、引退馬が活きる社会の仕組みを広げていきます。"
@@ -53,9 +52,7 @@ export default function PartnersPage() {
         <div key={p.id}>
           <Section id={p.id} alt={i % 2 === 1}>
             <div className={`grid items-center gap-10 lg:grid-cols-2 ${i % 2 ? "lg:[&>div:first-child]:order-2" : ""}`}>
-              <div className="overflow-hidden rounded-3xl shadow-lg">
-                <Placeholder label={p.image} className="aspect-[4/3] w-full" />
-              </div>
+              <Placeholder label={p.image} className="aspect-[4/3] w-full" />
               <div>
                 <p className="eyebrow">{`PARTNER 0${i + 1}`}</p>
                 <h3 className="mt-3 section-title !text-2xl sm:!text-3xl">{p.title}</h3>

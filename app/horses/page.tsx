@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { HORSES } from "@/lib/data";
+import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { HorseCard, CTA } from "@/components/Blocks";
@@ -133,7 +134,6 @@ export default function HorsesPage() {
       {featured && (
         <Section id="馬たちの物語">
           <SectionHeading
-            center
             eyebrow="THEIR STORIES"
             title="馬たちの物語"
             lead={`特集：${featured.name}が歩んだ、保護前から現在までの物語。`}
@@ -169,7 +169,6 @@ export default function HorsesPage() {
       {/* 支援中の馬を探す（検索機能） */}
       <Section id="支援中の馬を探す" alt>
         <SectionHeading
-          center
           eyebrow="SEARCH"
           title="支援中の馬を探す"
           lead="年齢・性別・カテゴリーから、応援したい馬を探せます。"
@@ -184,8 +183,8 @@ export default function HorsesPage() {
         <CTA
           title="この子の、力になりませんか。"
           body="一口オーナー制度や会員支援で、馬の飼養・再調教を支えることができます。"
-          primary={{ label: "この子を支援する", href: "/support#一口支援" }}
-          secondary={{ label: "会員になる", href: "/support#会員になる" }}
+          primary={{ label: "この子を支援する", href: SITE.membersUrl }}
+          secondary={{ label: "会員になる", href: SITE.membersUrl }}
         />
       </Section>
     </>

@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { NAV } from "@/lib/site";
+import SiteLink from "@/components/SiteLink";
+import { isExternalUrl, NAV, SITE } from "@/lib/site";
 
 export default function Header() {
   const pathname = usePathname();
@@ -43,10 +44,13 @@ export default function Header() {
         {/* PCナビ（全10メニュー） */}
         <nav className="hidden xl:flex items-center gap-0.5">
           {NAV.map((item) => {
-            const active =
-              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const active = isExternalUrl(item.href)
+              ? false
+              : item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
             return (
-              <Link
+              <SiteLink
                 key={item.href}
                 href={item.href}
                 className={`group relative px-2.5 py-2 text-center transition-colors ${
@@ -64,7 +68,7 @@ export default function Header() {
                     active ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                   }`}
                 />
-              </Link>
+              </SiteLink>
             );
           })}
         </nav>
@@ -89,16 +93,16 @@ export default function Header() {
       >
         <nav className="px-[5vw] py-4 flex flex-col">
           {NAV.map((item) => (
-            <Link
+            <SiteLink
               key={item.href}
               href={item.href}
               className="flex items-baseline justify-between py-3 border-b border-brand-900/5"
             >
               <span className="text-base text-black">{item.label}</span>
               <span className="text-[10px] tracking-widest text-black/50">{item.labelEn}</span>
-            </Link>
+            </SiteLink>
           ))}
-          <Link href="/support" className="btn-gold mt-5">応援する</Link>
+          <SiteLink href={SITE.membersUrl} className="btn-gold mt-5">応援する</SiteLink>
         </nav>
       </div>
     </header>

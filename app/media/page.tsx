@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { SITE } from "@/lib/site";
 import { IMG } from "@/lib/images";
@@ -101,7 +102,7 @@ export default function MediaPage() {
             </p>
             <div className="mt-5 grid grid-cols-3 gap-3">
               {[IMG.rescue, IMG.retrain, IMG.riding, IMG.pasture, IMG.training, IMG.heroField].map((src, i) => (
-                <Placeholder key={i} label={src} className="aspect-square w-full rounded-lg" />
+                <Placeholder key={i} label={src} className="aspect-square w-full" />
               ))}
             </div>
             <Link href="/contact" className="btn-outline mt-7">素材を請求する</Link>
@@ -113,8 +114,14 @@ export default function MediaPage() {
       <Section id="代表プロフィール">
         <SectionHeading eyebrow="PROFILE" title="代表プロフィール" />
         <div className="mt-10 grid items-start gap-10 lg:grid-cols-[0.7fr_1.3fr]">
-          <div className="overflow-hidden rounded-3xl shadow-xl">
-            <Placeholder label={IMG.ceo} className="aspect-[4/5] w-full" />
+          <div>
+            <Image
+              src={IMG.ceoPhoto}
+              alt={`代表 ${SITE.ceo}`}
+              width={800}
+              height={1000}
+              className="aspect-[4/5] w-full object-cover object-top"
+            />
             <div className="bg-brand-800 p-5 text-center text-white">
               <p className="text-lg font-semibold">{SITE.ceo}</p>
               <p className="mt-1 text-xs text-brand-200">{SITE.ceoRole}</p>

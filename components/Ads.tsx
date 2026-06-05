@@ -1,5 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
+import SiteLink from "@/components/SiteLink";
 import { IMG } from "@/lib/images";
+import { SITE } from "@/lib/site";
 import Placeholder from "@/components/Placeholder";
 
 // ============================================================================
@@ -33,7 +36,7 @@ export function AdBanner({
 }) {
   return (
     <aside className="container-x my-12" aria-label="広告">
-      <Link
+      <SiteLink
         href={href}
         className={`group relative block overflow-hidden rounded-2xl bg-gradient-to-r ${toneMap[tone]} shadow-lg`}
       >
@@ -47,60 +50,69 @@ export function AdBanner({
           </div>
           <span className="btn-white shrink-0">{cta} →</span>
         </div>
-      </Link>
+      </SiteLink>
     </aside>
   );
 }
 
 // 小型広告カード（3枠グリッド）
 export function AdGrid() {
-  const ads = [
+  const imageAds = [
     {
-      badge: "PR｜企業協賛",
-      title: "貴社のロゴをここに",
-      body: "Retouchの活動に協賛いただける企業様を募集しています。社会貢献（CSR）として馬と地域の未来を支援。",
-      cta: "協賛について",
+      src: IMG.adSponsor,
       href: "/partners#企業スポンサー募集",
-      img: IMG.rescue,
+      alt: "貴社のロゴをここに — 企業協賛のご案内",
+      width: 1312,
+      height: 1199,
     },
     {
-      badge: "PR｜ふるさと納税",
-      title: "1頭まるごと保護",
-      body: "大阪府河内長野市のふるさと納税で、引退馬の保護を直接応援。返礼として馬に会える・乗れる体験も。",
-      cta: "詳しく見る",
-      href: "/support#寄付・支援",
-      img: IMG.pasture,
-    },
-    {
-      badge: "PR｜一口オーナー",
-      title: "あなたが、馬のオーナーに",
-      body: "月々の支援で引退馬の一口オーナーに。成長の様子をYouTubeや会員限定情報でお届けします。",
-      cta: "オーナー制度",
-      href: "/solution#オーナー制度",
-      img: IMG.owner,
+      src: IMG.adFurusato,
+      href: SITE.membersUrl,
+      alt: "1頭まるごと保護 — ふるさと納税のご案内",
+      width: 1298,
+      height: 1212,
     },
   ];
+
+  const cardAd = {
+    badge: "PR｜一口オーナー",
+    title: "あなたが、馬のオーナーに",
+    body: "月々の支援で引退馬の一口オーナーに。成長の様子をYouTubeや会員限定情報でお届けします。",
+    cta: "オーナー制度",
+      href: SITE.membersUrl,
+    img: IMG.owner,
+  };
+
   return (
     <aside className="container-x my-12" aria-label="広告">
       <p className="mb-4 text-center text-[10px] tracking-[0.3em] text-ink/40">
         — ADVERTISEMENT / 協賛・支援のご案内 —
       </p>
       <div className="grid gap-5 md:grid-cols-3">
-        {ads.map((ad) => (
-          <Link key={ad.title} href={ad.href} className="card group flex flex-col">
-            <div className="relative h-40 overflow-hidden">
-              <Placeholder label={ad.img} className="h-full w-full" />
-              <span className="absolute top-3 left-3 rounded-full bg-brand-900/80 px-3 py-1 text-[10px] font-semibold tracking-wider text-white">
-                {ad.badge}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col p-5">
-              <h3 className="text-lg font-semibold text-brand-900">{ad.title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/75">{ad.body}</p>
-              <span className="mt-4 text-sm font-semibold text-gold">{ad.cta} →</span>
-            </div>
-          </Link>
+        {imageAds.map((ad) => (
+          <SiteLink key={ad.src} href={ad.href} className="block">
+            <Image
+              src={ad.src}
+              alt={ad.alt}
+              width={ad.width}
+              height={ad.height}
+              className="w-full h-auto"
+            />
+          </SiteLink>
         ))}
+        <SiteLink href={cardAd.href} className="card group flex flex-col">
+          <div className="relative h-40 overflow-hidden">
+            <Placeholder label={cardAd.img} className="h-full w-full" />
+            <span className="absolute top-3 left-3 rounded-full bg-brand-900/80 px-3 py-1 text-[10px] font-semibold tracking-wider text-white">
+              {cardAd.badge}
+            </span>
+          </div>
+          <div className="flex flex-1 flex-col p-5">
+            <h3 className="text-lg font-semibold text-brand-900">{cardAd.title}</h3>
+            <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/75">{cardAd.body}</p>
+            <span className="mt-4 text-sm font-semibold text-gold">{cardAd.cta} →</span>
+          </div>
+        </SiteLink>
       </div>
     </aside>
   );

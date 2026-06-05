@@ -13,6 +13,13 @@
 
 export const IMG = {
   // ── ヒーロー / 大判（馬・風景：人物なしでOK）──────────────────────
+  aboutHeroBg: "/2_1.png",
+  aboutMessage: "/2_2.png",
+  ceoPhoto: "/2_3.jpg",
+  adSponsor: "/2_4_1.png",
+  adFurusato: "/2_4_2.png",
+  contactCta: "/contact.png",
+  aboutFuture: "/2_5.png",
   heroHorse: "メインビジュアル：夕陽の中を駆ける馬",
   heroField: "牧場で穏やかに過ごす馬",
   heroRacehorse: "ターフを駆ける現役時代の競走馬",
@@ -25,7 +32,7 @@ export const IMG = {
 
   // ── 課題（ISSUE）（馬・風景：人物なしでOK）──────────────────────
   issueFarm: "肥育場で出荷を待つ引退競走馬",
-  issueStable: "馬房で過ごす馬",
+  issueStable: "/3_1.jpg",
   issueSign: "署名活動の様子（日本人の参加者）",
 
   // ── 取り組み（SOLUTION）──────────────────────────────────────────
