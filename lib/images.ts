@@ -31,11 +31,13 @@ export const IMG = {
   riding: "乗馬を楽しむ様子（日本人ライダーと馬）",
 
   // ── 課題（ISSUE）（馬・風景：人物なしでOK）──────────────────────
+  issueHeroBg: "/3_h.png",
   issueFarm: "肥育場で出荷を待つ引退競走馬",
   issueStable: "/3_1.jpg",
   issueSign: "署名活動の様子（日本人の参加者）",
 
   // ── 取り組み（SOLUTION）──────────────────────────────────────────
+  solutionHeroBg: "/4_h.png",
   rescue: "肥育場から救出される馬",
   retrain: "パドックでのリトレーニング風景",
   owner: "一口オーナーと馬（日本人）",

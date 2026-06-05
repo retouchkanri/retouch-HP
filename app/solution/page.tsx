@@ -26,11 +26,9 @@ export default function SolutionPage() {
   return (
     <>
       <PageHero
-        eyebrow="SOLUTION"
-        title="私たちの取り組み"
-        subtitle="馬たちに、新しい未来を。"
         image="大自然の中で馬と触れ合うスタッフと支援者"
-        crumbs={[{ label: "私たちの取り組み" }]}
+        backgroundImage={IMG.solutionHeroBg}
+        imageOnly
       />
 
       <Section alt>

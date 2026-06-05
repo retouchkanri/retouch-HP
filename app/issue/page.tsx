@@ -23,11 +23,9 @@ export default function IssuePage() {
   return (
     <>
       <PageHero
-        eyebrow="ISSUE"
-        title="引退競走馬の現実"
-        subtitle="目をそらさないことから、すべては始まります。"
         image={IMG.issueFarm}
-        crumbs={[{ label: "引退競走馬の現実" }]}
+        backgroundImage={IMG.issueHeroBg}
+        imageOnly
       />
 
       {/* 肥育場の現実 */}
