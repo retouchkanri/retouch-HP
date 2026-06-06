@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { IMG } from "@/lib/images";
 import { SITE, STATS } from "@/lib/site";
 import { MEDIA } from "@/lib/data";
@@ -15,13 +16,13 @@ export const metadata: Metadata = {
 };
 
 const HIGHLIGHTS = [
-  { id: "保護馬53頭", value: "53", unit: "頭", title: "累計保護馬", image: "保護馬の写真コラージュ",
+  { id: "保護馬53頭", value: "53", unit: "頭", title: "累計保護馬", image: IMG.impactProtected, imageAlt: "保護馬の写真コラージュ",
     body: "肥育場・競馬場・牧場から救い出した馬の累計頭数。一頭ずつ、確かに命をつないできました。" },
-  { id: "支援者600名超", value: "600", unit: "名超", title: "支援者・会員", image: "全国の支援者・コミュニティの写真",
+  { id: "支援者600名超", value: "600", unit: "名超", title: "支援者・会員", image: IMG.impactSupporters, imageAlt: "全国の支援者・コミュニティの写真",
     body: "全国から集まった会員・サポーター。月々のご支援が、馬たちの飼養・治療・再調教を支えています。" },
-  { id: "YouTube登録者2万人超", value: "2", unit: "万人超", title: "YouTube登録者", image: "動画視聴風景／人気動画サムネイル",
+  { id: "YouTube登録者2万人超", value: "2", unit: "万人超", title: "YouTube登録者", image: IMG.impactYoutube, imageAlt: "動画視聴風景／人気動画サムネイル",
     body: "公式チャンネル @Retouch2023。保護馬の日常を発信し、登録者の増加が新たな1頭を救う力になっています。" },
-  { id: "署名5万人超", value: "5", unit: "万人超", title: "署名", image: "署名活動の様子（社会的インパクト）",
+  { id: "署名5万人超", value: "5", unit: "万人超", title: "署名", image: IMG.impactPetition, imageAlt: "署名活動の様子（社会的インパクト）",
     body: "引退馬を守る制度づくりに向けた署名。農水省・JRA・地方競馬への提言を後押しする確かな声です。" },
 ];
 
@@ -58,13 +59,21 @@ export default function ImpactPage() {
       {/* 各指標の詳細 */}
       {HIGHLIGHTS.map((h, i) => (
         <Section key={h.id} id={h.id} alt={i % 2 === 0}>
-          <div
-            className={`grid items-center gap-10 lg:grid-cols-2 ${
-              i % 2 ? "lg:[&>div:first-child]:order-2" : ""
-            }`}
-          >
-            <Placeholder label={h.image} className="aspect-[4/3] w-full" />
-            <div>
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            <div className={i % 2 === 1 ? "lg:order-2" : undefined}>
+              {h.image.startsWith("/") ? (
+                <Image
+                  src={h.image}
+                  alt={h.imageAlt ?? ""}
+                  width={1200}
+                  height={800}
+                  className="w-full h-auto"
+                />
+              ) : (
+                <Placeholder label={h.image} className="aspect-[4/3] w-full" />
+              )}
+            </div>
+            <div className={i % 2 === 1 ? "lg:order-1" : undefined}>
               <div className="flex items-end gap-2">
                 <span className="text-6xl sm:text-7xl font-bold text-brand-700">{h.value}</span>
                 <span className="mb-2 text-xl text-brand-600">{h.unit}</span>

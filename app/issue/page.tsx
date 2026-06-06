@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { SplitBlock, CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
-import Placeholder from "@/components/Placeholder";
 
 export const metadata: Metadata = {
   title: "引退競走馬の現実",
@@ -118,7 +118,13 @@ export default function IssuePage() {
               <p className="mt-2 text-xs text-ink/50">目標 60,000人に向けて、ご署名をお願いします。</p>
             </div>
           </div>
-          <Placeholder label={IMG.issueSign} className="aspect-[4/3] w-full" />
+          <Image
+            src={IMG.issueSign}
+            alt="署名活動の様子（日本人の参加者）"
+            width={1200}
+            height={900}
+            className="w-full h-auto"
+          />
         </div>
       </Section>
 
