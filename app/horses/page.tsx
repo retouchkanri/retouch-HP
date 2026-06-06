@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { HORSES } from "@/lib/data";
 import { IMG } from "@/lib/images";
@@ -82,7 +83,17 @@ export default function HorsesPage() {
               key={h.name}
               className="grid items-stretch gap-0 overflow-hidden rounded-3xl shadow-sm ring-1 ring-brand-900/5 lg:grid-cols-[300px_1fr]"
             >
-              <Placeholder label={`${h.name} の写真`} className="min-h-[200px] w-full" />
+              {h.photo ? (
+                <Image
+                  src={h.photo}
+                  alt={`${h.name}の Before / After`}
+                  width={600}
+                  height={800}
+                  className="min-h-[200px] w-full object-cover lg:min-h-full"
+                />
+              ) : (
+                <Placeholder label={`${h.name} の写真`} className="min-h-[200px] w-full" />
+              )}
               <div className="bg-white p-7">
                 <div className="flex items-baseline justify-between">
                   <h3 className="text-xl font-semibold text-brand-900">{h.name}</h3>

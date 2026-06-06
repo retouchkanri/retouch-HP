@@ -1,7 +1,7 @@
 // ============================================================================
 // サイトコンテンツデータ / Site content data
 // ============================================================================
-import { mediaImg } from "./images";
+import { IMG, mediaImg } from "./images";
 
 export type Horse = {
   name: string;
@@ -13,6 +13,7 @@ export type Horse = {
   personality: string; // 性格
   story: string; // 現在の様子・物語
   before?: string; // 卒業馬：保護前の状況（Before→After用）
+  photo?: string; // 卒業馬など：写真URL
   ownerStory?: string; // オーナー決定馬：オーナーストーリー
 };
 
@@ -58,6 +59,7 @@ export const HORSES: Horse[] = [
     status: "graduated",
     statusLabel: "卒業馬",
     personality: "素直・働き者",
+    photo: IMG.graduateKaito,
     before: "競走馬を引退し、行き先が決まらず肥育場へ送られる寸前でした。",
     story:
       "リトレーニングを修了し、提携乗馬クラブの乗用馬としてデビュー。多くの人を背に乗せ、第二の馬生を歩んでいます。",
@@ -70,6 +72,7 @@ export const HORSES: Horse[] = [
     status: "graduated",
     statusLabel: "卒業馬",
     personality: "温厚・癒やし系",
+    photo: IMG.graduateYuki,
     before: "繁殖を引退後、活躍の場を失っていました。",
     story:
       "観光牧場のふれあい馬として卒業。温厚な性格を活かし、来場者に癒やしを届けています。",
@@ -108,6 +111,7 @@ export const HORSES: Horse[] = [
     status: "graduated",
     statusLabel: "卒業馬",
     personality: "頼れる兄貴分",
+    photo: IMG.graduateMinato,
     before: "高齢で引き取り手が見つからず、処分の対象となっていました。",
     story:
       "馬事学院（バジガク）の教育プログラムを経て、学生たちと共に乗馬へ転用。後進の指導馬として活躍しています。",
