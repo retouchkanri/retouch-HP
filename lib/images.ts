@@ -19,6 +19,7 @@ export const IMG = {
   adSponsor: "/2_4_1.png",
   adFurusato: "/2_4_2.png",
   contactCta: "/contact.png",
+  ctaBg: "/contact2.png",
   aboutFuture: "/2_5.png",
   heroHorse: "メインビジュアル：夕陽の中を駆ける馬",
   heroField: "牧場で穏やかに過ごす馬",

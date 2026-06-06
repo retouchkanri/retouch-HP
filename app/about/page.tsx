@@ -205,12 +205,13 @@ export default function AboutPage() {
 
         <div className="mt-14">
           <CTA
+            backgroundImage={IMG.ctaBg}
             title="引退競走馬の未来を、私たちと一緒に支えてください。"
-            primary={{ label: "会員になる", href: SITE.membersUrl }}
-            secondary={{ label: "一口支援する", href: SITE.membersUrl }}
+            primary={{ label: "会員になる", href: SITE.loginUrl }}
+            secondary={{ label: "一口支援する", href: SITE.donateUrl }}
           />
           <div className="mt-4 text-center">
-            <SiteLink href={SITE.membersUrl} className="btn-outline">活動を応援する</SiteLink>
+            <SiteLink href={SITE.donateUrl} className="btn-outline">活動を応援する</SiteLink>
           </div>
         </div>
       </Section>

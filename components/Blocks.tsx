@@ -158,22 +158,54 @@ export function CTA({
   body,
   primary,
   secondary,
+  backgroundImage,
 }: {
   title: string;
   body?: string;
   primary: { label: string; href: string };
   secondary?: { label: string; href: string };
+  backgroundImage?: string;
 }) {
-  return (
-    <div className="rounded-3xl bg-brand-700 px-8 py-12 text-center text-white">
-      <h3 className="text-2xl sm:text-3xl font-semibold">{title}</h3>
-      {body && <p className="mt-4 mx-auto max-w-2xl text-sm leading-loose text-brand-100">{body}</p>}
+  const content = (
+    <>
+      <h3 className="section-title !text-white">{title}</h3>
+      {body && (
+        <p
+          className={`section-lead mt-4 mx-auto max-w-2xl ${
+            backgroundImage ? "!text-white/90" : "!text-brand-100"
+          }`}
+        >
+          {body}
+        </p>
+      )}
       <div className="mt-7 flex flex-wrap justify-center gap-4">
         <SiteLink href={primary.href} className="btn-gold">{primary.label}</SiteLink>
         {secondary && (
           <SiteLink href={secondary.href} className="btn-white">{secondary.label}</SiteLink>
         )}
       </div>
+    </>
+  );
+
+  if (backgroundImage) {
+    return (
+      <div className="relative overflow-hidden rounded-3xl px-8 py-12 text-center font-serif text-white">
+        <Image
+          src={backgroundImage}
+          alt=""
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 1200px"
+        />
+        <div className="absolute inset-0 bg-black/45" aria-hidden />
+        <div className="relative z-10">{content}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-3xl bg-brand-700 px-8 py-12 text-center font-serif text-white">
+      {content}
     </div>
   );
 }

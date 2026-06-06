@@ -146,6 +146,7 @@ export default function MediaPage() {
         </div>
         <div className="mt-14">
           <CTA
+            backgroundImage={IMG.ctaBg}
             title="取材・お問い合わせはこちら"
             primary={{ label: "お問い合わせ", href: "/contact" }}
             secondary={{ label: "活動実績を見る", href: "/impact" }}

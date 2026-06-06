@@ -194,10 +194,11 @@ export default function HorsesPage() {
       {/* CTA */}
       <Section>
         <CTA
+          backgroundImage={IMG.ctaBg}
           title="この子の、力になりませんか。"
           body="一口オーナー制度や会員支援で、馬の飼養・再調教を支えることができます。"
-          primary={{ label: "この子を支援する", href: SITE.membersUrl }}
-          secondary={{ label: "会員になる", href: SITE.membersUrl }}
+          primary={{ label: "この子を支援する", href: SITE.donateUrl }}
+          secondary={{ label: "会員になる", href: SITE.loginUrl }}
         />
       </Section>
     </>

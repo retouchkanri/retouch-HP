@@ -70,10 +70,11 @@ export default function SolutionPage() {
 
       <Section>
         <CTA
+          backgroundImage={IMG.ctaBg}
           title="馬たちに、新しい未来を。"
           body="あなたの支援や連携が、救える馬の数を増やします。できることから、一緒に始めてください。"
-          primary={{ label: "私たちの活動を応援する", href: SITE.membersUrl }}
-          secondary={{ label: "会員になる", href: SITE.membersUrl }}
+          primary={{ label: "私たちの活動を応援する", href: SITE.donateUrl }}
+          secondary={{ label: "会員になる", href: SITE.loginUrl }}
         />
       </Section>
     </>

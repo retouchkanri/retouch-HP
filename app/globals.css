@@ -41,7 +41,8 @@
 
   /* ボタン */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold tracking-wider transition-all duration-300;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-serif font-semibold tracking-wider transition-all duration-300;
+    font-feature-settings: "palt";
   }
   .btn-primary {
     @apply btn bg-brand-600 text-white hover:bg-brand-700 shadow-lg shadow-brand-900/10 hover:-translate-y-0.5;

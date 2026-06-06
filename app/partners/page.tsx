@@ -92,6 +92,7 @@ export default function PartnersPage() {
 
       <Section>
         <CTA
+          backgroundImage={IMG.ctaBg}
           title="その一歩が、馬たちの未来を変える。"
           body="協賛・連携に関するご相談、資料のご請求は、お問い合わせフォームよりお気軽にご連絡ください。"
           primary={{ label: "パートナーを相談する", href: "/contact" }}

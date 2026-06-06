@@ -148,10 +148,11 @@ export default function IssuePage() {
         </div>
         <div className="mt-14">
           <CTA
+            backgroundImage={IMG.ctaBg}
             title="知ったあなたに、できることがあります。"
             body="現実を知ることは、変化の第一歩。次は、ぜひ「私たちの取り組み」をご覧ください。"
             primary={{ label: "取り組みを見る", href: "/solution" }}
-            secondary={{ label: "署名・支援する", href: SITE.membersUrl }}
+            secondary={{ label: "署名・支援する", href: SITE.donateUrl }}
           />
         </div>
       </Section>

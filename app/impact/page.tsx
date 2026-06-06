@@ -133,9 +133,10 @@ export default function ImpactPage() {
         </ol>
         <div className="mt-14">
           <CTA
+            backgroundImage={IMG.ctaBg}
             title="次の1頭を救うために。"
             body="あなたの支援が、次の保護とリトレーニングを可能にします。"
-            primary={{ label: "応援する", href: SITE.membersUrl }}
+            primary={{ label: "応援する", href: SITE.donateUrl }}
             secondary={{ label: "馬たちを見る", href: "/horses" }}
           />
         </div>

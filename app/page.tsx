@@ -206,9 +206,10 @@ export default function Home() {
       {/* ===== 最終CTA ===== */}
       <Section>
         <CTA
+          backgroundImage={IMG.ctaBg}
           title="共に、馬たちの未来を創る。"
           body="月々1,000円台からの会員支援、一口オーナー、法人協賛、ふるさと納税。あなたに合った方法で、引退競走馬の命をつなぐことができます。"
-          primary={{ label: "応援する（会員・寄付）", href: SITE.membersUrl }}
+          primary={{ label: "応援する（会員・寄付）", href: SITE.donateUrl }}
           secondary={{ label: "パートナーを相談する", href: "/partners" }}
         />
       </Section>

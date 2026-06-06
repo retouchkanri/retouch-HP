@@ -132,9 +132,10 @@ export default function SupportPage() {
 
       <Section alt>
         <CTA
+          backgroundImage={IMG.ctaBg}
           title="あなたにできる方法で、命をつなぐ。"
           body="ご不明な点は、お気軽にお問い合わせください。あなたに合った応援の形をご提案します。"
-          primary={{ label: "会員登録・支援する", href: SITE.membersUrl }}
+          primary={{ label: "会員登録・支援する", href: SITE.loginUrl }}
           secondary={{ label: "お問い合わせ", href: "/contact" }}
         />
         <p className="mt-6 text-center text-sm text-ink/60">
