@@ -124,7 +124,13 @@ export function AdSidebar() {
     <aside className="space-y-5" aria-label="広告">
       <div className="card p-5 text-center">
         <span className="text-[10px] tracking-[0.3em] text-ink/40">ADVERTISEMENT</span>
-        <Placeholder label={IMG.riding} className="mt-3 h-44 w-full rounded-xl" />
+        <Image
+          src={IMG.adRiding}
+          alt="乗馬を楽しむ様子（日本人ライダーと馬）"
+          width={800}
+          height={600}
+          className="mt-3 w-full h-auto"
+        />
         <h4 className="mt-4 text-lg font-semibold text-brand-900">乗馬体験を、ここから</h4>
         <p className="mt-2 text-sm text-ink/70">
           保護馬が第二の馬生を歩む乗馬クラブ。見学会・体験乗馬を受付中です。

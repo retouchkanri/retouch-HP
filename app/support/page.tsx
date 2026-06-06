@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import SiteLink from "@/components/SiteLink";
 import { SITE } from "@/lib/site";
 import { IMG } from "@/lib/images";
@@ -6,7 +7,6 @@ import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
-import Placeholder from "@/components/Placeholder";
 
 export const metadata: Metadata = {
   title: "応援する",
@@ -26,13 +26,13 @@ const PLANS = [
 ];
 
 const WAYS = [
-  { id: "一口支援", title: "一口支援", img: IMG.owner,
+  { id: "一口支援", title: "一口支援", image: IMG.supportOneShare, imageAlt: "一口オーナーと馬（日本人）",
     body: "1頭の馬を、みんなで支える仕組み。月々の一口支援で、飼養・治療・再調教を支えます。支援した馬に会える・乗れる体験も。" },
-  { id: "ポニーチーム", title: "ポニーチーム", img: IMG.welfare,
+  { id: "ポニーチーム", title: "ポニーチーム", image: IMG.supportPony, imageAlt: "ふれあい・教育・福祉で活躍するポニー",
     body: "ふれあい・教育・福祉で活躍するポニーたちを応援するチーム。子どもや家族で参加できる、やさしい支援のかたちです。" },
-  { id: "法人協賛", title: "法人協賛", img: IMG.rescue,
+  { id: "法人協賛", title: "法人協賛", image: IMG.supportCorporate, imageAlt: "企業協賛・CSR活動",
     body: "企業として活動を支える年間協賛。CSR・SDGsの取り組みとして、広報掲出や社員参加プログラムもご用意します。" },
-  { id: "寄付・支援", title: "寄付・支援（ふるさと納税）", img: IMG.pasture,
+  { id: "寄付・支援", title: "寄付・支援（ふるさと納税）", image: IMG.supportDonation, imageAlt: "寄付・ふるさと納税による支援",
     body: "都度の寄付、ふるさと納税（大阪府河内長野市）による「1頭まるごと保護」など。返礼として馬に会える支援メニューもあります。" },
 ];
 
@@ -108,9 +108,17 @@ export default function SupportPage() {
       {/* 支援の方法（一口支援・ポニーチーム・法人協賛・寄付） */}
       {WAYS.map((w, i) => (
         <Section key={w.id} id={w.id} alt={i % 2 === 1}>
-          <div className={`grid items-center gap-10 lg:grid-cols-2 ${i % 2 ? "lg:[&>div:first-child]:order-2" : ""}`}>
-            <Placeholder label={w.img} className="aspect-[4/3] w-full" />
-            <div>
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            <div className={i % 2 === 1 ? "lg:order-2" : undefined}>
+              <Image
+                src={w.image}
+                alt={w.imageAlt}
+                width={1200}
+                height={800}
+                className="w-full h-auto"
+              />
+            </div>
+            <div className={i % 2 === 1 ? "lg:order-1" : undefined}>
               <p className="eyebrow">{`SUPPORT 0${i + 1}`}</p>
               <h3 className="mt-3 section-title !text-2xl sm:!text-3xl">{w.title}</h3>
               <p className="section-lead mt-5">{w.body}</p>
