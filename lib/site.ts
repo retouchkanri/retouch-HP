@@ -25,6 +25,10 @@ export const SITE = {
   donateUrl: "https://retouch.salon/donate",
   loginUrl: "https://retouch.salon/login",
   youtube: "https://www.youtube.com/@Retouch2023",
+  instagram: "https://www.instagram.com/bajigakuin/",
+  line: "https://line.me/ti/p/%40410yxdcp",
+  x: "https://x.com/retouch_menbers",
+  tiktok: "https://www.tiktok.com/@retouch_00",
   addresses: [
     "〒586-0031 大阪府河内長野市高向2001 ホースレスト内",
     "活動拠点：千葉県八街市・山武市／大阪府河内長野市",

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import SiteLink from "@/components/SiteLink";
+import SocialLinks from "@/components/SocialLinks";
 import { IMG } from "@/lib/images";
 import { NAV, SITE } from "@/lib/site";
 
@@ -53,25 +54,21 @@ export default function Footer() {
               <div key={a}>{a}</div>
             ))}
           </dl>
-          <a
-            href={SITE.youtube}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 inline-block text-sm text-gold hover:underline"
-          >
-            ▶ 公式YouTubeチャンネル
-          </a>
+          <div className="mt-6">
+            <p className="text-[11px] font-semibold tracking-[0.2em] text-brand-400">FOLLOW US</p>
+            <SocialLinks className="mt-3" />
+          </div>
         </div>
 
-        <nav className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3 text-sm">
+        <nav className="grid grid-cols-2 gap-x-8 gap-y-0.5 self-start text-sm sm:grid-cols-2">
           {NAV.map((item) => (
             <SiteLink
               key={item.href}
               href={item.href}
-              className="text-brand-200 hover:text-white transition-colors"
+              className="group flex items-baseline gap-2 border-b border-white/5 py-2 text-brand-200 transition-colors hover:text-white"
             >
-              {item.label}
-              <span className="block text-[10px] tracking-widest text-brand-400">
+              <span>{item.label}</span>
+              <span className="text-[10px] tracking-widest text-brand-400 group-hover:text-gold">
                 {item.labelEn}
               </span>
             </SiteLink>
