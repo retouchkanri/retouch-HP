@@ -5,6 +5,7 @@ import { IMG } from "@/lib/images";
 import { HORSES, NEWS, MEDIA } from "@/lib/data";
 import { Section, SectionHeading } from "@/components/Section";
 import { StatGrid, FeatureCard, HorseCard, CTA } from "@/components/Blocks";
+import SupportRanking from "@/components/SupportRanking";
 import { AdBanner, AdGrid } from "@/components/Ads";
 import Image from "next/image";
 import Placeholder, { ImageNote } from "@/components/Placeholder";
@@ -33,12 +34,12 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-900/55 to-brand-900/30" aria-hidden />
         <div className="relative z-10 container-x flex h-full flex-col justify-end pb-20 sm:pb-28">
-          <p className="eyebrow !text-gold animate-fadeUp">RETOUCH ｜ 引退競走馬保護団体</p>
+          <p className="eyebrow !text-gold animate-fadeUp">RETOUCH ｜ 引退競走馬の保護団体</p>
           <h1 className="mt-4 max-w-4xl text-4xl sm:text-6xl font-semibold leading-[1.4] text-white animate-fadeUp">
             命をつなぐ。
             <br />
             引退競走馬と、人と、
-            <br className="sm:hidden" />
+            <br />
             地域の未来へ。
           </h1>
           <p className="mt-6 max-w-2xl text-sm sm:text-lg leading-loose text-brand-100 animate-fadeUp">
@@ -102,7 +103,7 @@ export default function Home() {
           <ImageNote label={IMG.issueFarm} className="mb-6" />
           <p className="eyebrow !text-gold">THE REALITY ｜ 引退競走馬の現実</p>
           <h2 className="section-title mt-4 !text-white">
-            走れなくなった馬を、待つのは。
+            引退した競走馬を、待つのは。
           </h2>
           <p className="mt-6 max-w-2xl text-sm sm:text-base leading-loose text-brand-100">
             引退した競走馬の多くは肥育場へ送られ、肉用馬として処分されます。
@@ -111,9 +112,9 @@ export default function Home() {
           </p>
           <div className="mt-10 grid gap-4 sm:grid-cols-3 text-left">
             {[
-              { t: "肥育場の現実", d: "命の期限が迫る馬たちが、限られた環境で出荷を待っています。" },
-              { t: "引退馬問題とは", d: "受け皿の不足、費用負担、情報の少なさ。複合的な課題が絡み合います。" },
-              { t: "署名活動", d: "政策提言に向けた署名は5万人を突破。声を、制度を変える力に。" },
+              { t: "肥育場の現実", d: "競走馬を引退した多くの馬たちが、食肉として出荷されるまでを過ごす場所です。" },
+              { t: "引退馬問題とは", d: "年間多くの馬が行き場を失う一方で、受け入れ先や支援の仕組みが足りていない。" },
+              { t: "署名活動", d: "国や地域への政策提言に向けた署名は5万人をも突破。声を、制度を変える力に。" },
             ].map((x) => (
               <div key={x.t} className="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
                 <h3 className="text-lg font-semibold text-gold">{x.t}</h3>
@@ -143,7 +144,7 @@ export default function Home() {
       <AdBanner
         badge="SPONSORED ｜ 企業協賛募集"
         title="貴社のCSRに、馬と地域の未来を。"
-        body="Retouchはともに未来を創る企業スポンサーを募集しています。社員参加型の体験プログラムや広報での掲出もご用意。"
+        body="Retouchはともに「馬と人と地域の未来を創る企業スポンサー」を募集しています。"
         cta="協賛を相談する"
         href="/partners"
         tone="gold"
@@ -162,6 +163,21 @@ export default function Home() {
           {HORSES.slice(0, 4).map((h) => (
             <HorseCard key={h.name} horse={h} />
           ))}
+        </div>
+      </Section>
+
+      {/* ===== 馬ごとの支援状況ランキング（SUPPORT） ===== */}
+      <Section alt>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <SectionHeading
+            eyebrow="SUPPORT STATUS ｜ 馬ごとの支援状況"
+            title="いま、応援を待っている子がいます。"
+            lead="一頭ごとの月間支援の達成状況を、retouch.salon と連動して公開しています。支援が手薄な子も、応援が集まっている子も、あなたの一歩で次の命へつながります。"
+          />
+          <SiteLink href={SITE.membersUrl} className="btn-outline">支援状況をすべて見る</SiteLink>
+        </div>
+        <div className="mt-12">
+          <SupportRanking />
         </div>
       </Section>
 

@@ -38,6 +38,26 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(24px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        fadeInLeft: {
+          "0%": { opacity: "0", transform: "translateX(-32px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        fadeInRight: {
+          "0%": { opacity: "0", transform: "translateX(32px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        scaleIn: {
+          "0%": { opacity: "0", transform: "scale(0.92)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        drawLine: {
+          "0%": { transform: "scaleY(0)" },
+          "100%": { transform: "scaleY(1)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-12px)" },
+        },
         kenburns: {
           "0%": { transform: "scale(1)" },
           "100%": { transform: "scale(1.12)" },
@@ -45,6 +65,11 @@ const config: Config = {
       },
       animation: {
         fadeUp: "fadeUp 0.9s ease-out both",
+        fadeInLeft: "fadeInLeft 0.8s ease-out both",
+        fadeInRight: "fadeInRight 0.8s ease-out both",
+        scaleIn: "scaleIn 0.7s ease-out both",
+        drawLine: "drawLine 1.4s ease-out both",
+        float: "float 6s ease-in-out infinite",
         kenburns: "kenburns 18s ease-out both",
       },
     },

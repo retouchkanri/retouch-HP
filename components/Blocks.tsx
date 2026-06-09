@@ -161,7 +161,7 @@ export function CTA({
   backgroundImage,
 }: {
   title: string;
-  body?: string;
+  body?: ReactNode;
   primary: { label: string; href: string };
   secondary?: { label: string; href: string };
   backgroundImage?: string;
@@ -171,7 +171,7 @@ export function CTA({
       <h3 className="section-title !text-white">{title}</h3>
       {body && (
         <p
-          className={`section-lead mt-4 mx-auto max-w-2xl ${
+          className={`section-lead mt-4 mx-auto max-w-2xl text-pretty ${
             backgroundImage ? "!text-white/90" : "!text-brand-100"
           }`}
         >

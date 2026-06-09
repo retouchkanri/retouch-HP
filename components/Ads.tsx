@@ -3,7 +3,6 @@ import Link from "next/link";
 import SiteLink from "@/components/SiteLink";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
-import Placeholder from "@/components/Placeholder";
 
 // ============================================================================
 // 広告コンポーネント群 / Advertisement components
@@ -56,32 +55,40 @@ export function AdBanner({
 }
 
 // 小型広告カード（3枠グリッド）
+// 河内長野市ふるさと納税「Retouch 引退馬支援」ページの実画像・テキストを掲載。
+const RAKUTEN_FURUSATO_URL =
+  "https://item.rakuten.co.jp/f272167-kawachinagano/15152-40001191/";
+
 export function AdGrid() {
-  const imageAds = [
+  const cards = [
     {
-      src: IMG.adSponsor,
+      badge: "PR｜企業協賛",
+      title: "協賛企業募集",
+      body: "引退競走馬の未来を、企業の力で。CSR活動を通じて、馬と地域の未来づくりを応援できます。",
+      cta: "協賛について",
       href: "/partners#企業スポンサー募集",
-      alt: "貴社のロゴをここに — 企業協賛のご案内",
-      width: 1312,
-      height: 1199,
+      img: "https://image.rakuten.co.jp/f272167-kawachinagano/cabinet/12758671/6954bb51ae4d09551771.jpg",
+      alt: "ご寄附のお礼として救われた馬たちと触れ合う来場者",
     },
     {
-      src: IMG.adFurusato,
+      badge: "PR｜ふるさと納税",
+      title: "個人納税支援",
+      body: "大阪府河内長野市の「ふるさと納税」で引退競走馬の保護を直接支援。返礼として馬に会える。",
+      cta: "詳しく見る",
+      href: RAKUTEN_FURUSATO_URL,
+      img: "https://image.rakuten.co.jp/f272167-kawachinagano/cabinet/12758671/6954bb23155cf6473940.jpg",
+      alt: "ふるさと納税で引退馬を救う — 救われた馬とふれあう返礼",
+    },
+    {
+      badge: "PR｜一口支援馬",
+      title: "馬の未来支援",
+      body: "月額支援を通じ引退競走馬の命と新たな活躍の場を応援。月額支援で本来もう無い命を支える。",
+      cta: "一口支援制度",
       href: SITE.membersUrl,
-      alt: "1頭まるごと保護 — ふるさと納税のご案内",
-      width: 1298,
-      height: 1212,
+      img: "https://image.rakuten.co.jp/f272167-kawachinagano/cabinet/12758671/6954bb41d90065029866.jpg",
+      alt: "皆さまのご寄附が、馬たちを引き取る資金となります",
     },
   ];
-
-  const cardAd = {
-    badge: "PR｜一口オーナー",
-    title: "あなたが、馬のオーナーに",
-    body: "月々の支援で引退馬の一口オーナーに。成長の様子をYouTubeや会員限定情報でお届けします。",
-    cta: "オーナー制度",
-      href: SITE.membersUrl,
-    img: IMG.owner,
-  };
 
   return (
     <aside className="container-x my-12" aria-label="広告">
@@ -89,30 +96,26 @@ export function AdGrid() {
         — ADVERTISEMENT / 協賛・支援のご案内 —
       </p>
       <div className="grid gap-5 md:grid-cols-3">
-        {imageAds.map((ad) => (
-          <SiteLink key={ad.src} href={ad.href} className="block">
-            <Image
-              src={ad.src}
-              alt={ad.alt}
-              width={ad.width}
-              height={ad.height}
-              className="w-full h-auto"
-            />
+        {cards.map((card) => (
+          <SiteLink key={card.title} href={card.href} className="card group flex flex-col">
+            <div className="relative h-40 overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={card.img}
+                alt={card.alt}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <span className="absolute top-3 left-3 rounded-full bg-brand-900/80 px-3 py-1 text-[10px] font-semibold tracking-wider text-white">
+                {card.badge}
+              </span>
+            </div>
+            <div className="flex flex-1 flex-col p-5">
+              <h3 className="text-lg font-semibold text-brand-900">{card.title}</h3>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/75">{card.body}</p>
+              <span className="mt-4 text-sm font-semibold text-gold">{card.cta} →</span>
+            </div>
           </SiteLink>
         ))}
-        <SiteLink href={cardAd.href} className="card group flex flex-col">
-          <div className="relative h-40 overflow-hidden">
-            <Placeholder label={cardAd.img} className="h-full w-full" />
-            <span className="absolute top-3 left-3 rounded-full bg-brand-900/80 px-3 py-1 text-[10px] font-semibold tracking-wider text-white">
-              {cardAd.badge}
-            </span>
-          </div>
-          <div className="flex flex-1 flex-col p-5">
-            <h3 className="text-lg font-semibold text-brand-900">{cardAd.title}</h3>
-            <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/75">{cardAd.body}</p>
-            <span className="mt-4 text-sm font-semibold text-gold">{cardAd.cta} →</span>
-          </div>
-        </SiteLink>
       </div>
     </aside>
   );

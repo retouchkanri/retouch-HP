@@ -118,6 +118,53 @@ export const HORSES: Horse[] = [
   },
 ];
 
+// ============================================================================
+// 馬ごとの支援状況 / Per-horse support status（retouch.salon と連動）
+// goal=月間支援目標（円）, raised=現在の月間支援額（円）, supporters=支援者数
+// ============================================================================
+export type SupportHorse = {
+  name: string;
+  sex: "牡" | "牝" | "騙";
+  age: string;
+  status: "protected" | "graduated" | "owner";
+  statusLabel: string;
+  goal: number;
+  raised: number;
+  supporters: number;
+  note: string; // 支援が必要な理由 / 近況の一言
+};
+
+export const SUPPORT_HORSES: SupportHorse[] = [
+  // ―― 支援が手薄な保護馬たち ――
+  { name: "ナギサ号", sex: "牝", age: "9歳", status: "protected", statusLabel: "現在の保護馬", goal: 200000, raised: 36000, supporters: 12, note: "繊細で再調教に時間が必要。月々の飼養費が大きく不足しています。" },
+  { name: "リク号", sex: "牡", age: "7歳", status: "protected", statusLabel: "現在の保護馬", goal: 180000, raised: 41000, supporters: 15, note: "肥育場から保護されたばかり。健康管理と治療の支援を募集中です。" },
+  { name: "ハル号", sex: "騙", age: "8歳", status: "protected", statusLabel: "現在の保護馬", goal: 200000, raised: 58000, supporters: 22, note: "人なつっこい人気者ですが、継続支援が目標に届いていません。" },
+  { name: "アオ号", sex: "牝", age: "6歳", status: "protected", statusLabel: "現在の保護馬", goal: 180000, raised: 64000, supporters: 19, note: "若く伸びしろのある一頭。蹄の治療費の支援が必要です。" },
+  { name: "ソラ号", sex: "牡", age: "7歳", status: "protected", statusLabel: "現在の保護馬", goal: 190000, raised: 78000, supporters: 28, note: "リトレーニング中。あと一歩で月間目標に届きます。" },
+  { name: "ホシ号", sex: "騙", age: "10歳", status: "protected", statusLabel: "現在の保護馬", goal: 210000, raised: 99000, supporters: 31, note: "高齢でケア費用がかさむため、長期の支援者を探しています。" },
+  // ―― 多くの応援が集まっている子たち ――
+  { name: "ミナト号", sex: "騙", age: "11歳", status: "graduated", statusLabel: "卒業馬", goal: 180000, raised: 138000, supporters: 69, note: "指導馬として活躍中。応援の輪が広がっています。" },
+  { name: "ユキ号", sex: "牝", age: "10歳", status: "graduated", statusLabel: "卒業馬", goal: 160000, raised: 132000, supporters: 74, note: "観光牧場のふれあい馬として安定した支援を受けています。" },
+  { name: "サクラ号", sex: "牝", age: "7歳", status: "owner", statusLabel: "オーナー決定馬", goal: 190000, raised: 165000, supporters: 88, note: "オーナー決定後も多くのサポーターに見守られています。" },
+  { name: "カイト号", sex: "騙", age: "8歳", status: "graduated", statusLabel: "卒業馬", goal: 170000, raised: 156000, supporters: 96, note: "乗用馬デビューを果たし、たくさんの応援が集まりました。" },
+  { name: "テンマ号", sex: "牡", age: "6歳", status: "owner", statusLabel: "オーナー決定馬", goal: 200000, raised: 192000, supporters: 128, note: "馬術競技馬を目指して調教中。目標達成まであと一歩です。" },
+  { name: "コハク号", sex: "牝", age: "5歳", status: "owner", statusLabel: "オーナー決定馬", goal: 180000, raised: 178000, supporters: 142, note: "クラウドファンディング発の人気馬。ほぼ満額を達成しています。" },
+];
+
+/** 支援達成率（%）= 現在額 / 目標額 */
+export const supportRate = (h: SupportHorse) =>
+  Math.min(100, Math.round((h.raised / h.goal) * 100));
+
+/** 支援が必要な子ランキング（達成率の低い順・ワースト6頭） */
+export const SUPPORT_NEEDED: SupportHorse[] = [...SUPPORT_HORSES]
+  .sort((a, b) => supportRate(a) - supportRate(b))
+  .slice(0, 6);
+
+/** 応援が集まっている子ランキング（達成率の高い順・上位6頭） */
+export const SUPPORT_TOP: SupportHorse[] = [...SUPPORT_HORSES]
+  .sort((a, b) => supportRate(b) - supportRate(a))
+  .slice(0, 6);
+
 export type NewsItem = {
   date: string;
   category: string;

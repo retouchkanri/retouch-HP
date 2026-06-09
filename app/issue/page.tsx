@@ -12,11 +12,17 @@ export const metadata: Metadata = {
   description: "肥育場の現実、引退馬問題とは、署名活動、私たちが向き合う課題。引退競走馬が直面する厳しい現実を伝えます。",
 };
 
+const PETITION_DEMANDS = [
+  "引退競走馬の「行方不明という実態」を解決すること",
+  "引退馬の屠殺目的譲渡を禁止し、馬が安心して生きられる仕組みを",
+  "引退馬の国の予算、約12億8千万円の使途と成果を明らかに。",
+];
+
 const CHALLENGES = [
-  { t: "受け皿の不足", d: "毎年数千頭が引退する一方、引き取り先となる牧場や乗馬クラブは限られています。" },
-  { t: "費用の負担", d: "馬1頭の飼養には月数万円。治療や輸送も加わり、継続的な資金が欠かせません。" },
-  { t: "再調教の専門性", d: "競走馬を乗用馬へ転用するには高い技術と時間が必要。担い手の育成が課題です。" },
-  { t: "情報の少なさ", d: "引退後の行方は表に出にくく、「知られていない」こと自体が大きな問題です。" },
+  { t: "情報の少なさ", d: "引退後の馬たちがどこで、どのような生涯を送っているのか。その実態は十分に知られていません。まずは現状を知り、社会全体で考えることが課題解決の第一歩です。" },
+  { t: "費用の負担", d: "馬1頭を維持するためには、飼料代や医療費など年間100万円以上の費用が必要です。引退馬を支える仕組みや、公的支援制度の充実が求められています。" },
+  { t: "活躍の場の不足", d: "競走馬としての役目を終えても、馬たちには様々な可能性があります。教育、福祉、観光、スポーツなど、新たな役割を生み出す環境づくりが必要です。" },
+  { t: "人材の育成", d: "引退馬の未来を支えるためには、馬を管理し、活用し、命に向き合える人材が欠かせません。次世代を担う人材の育成が持続可能な仕組みにつながります。" },
 ];
 
 export default function IssuePage() {
@@ -56,34 +62,34 @@ export default function IssuePage() {
         </div>
       </Section>
 
-      {/* 引退馬問題とは */}
-      <Section id="引退馬問題とは">
+      {/* 引退馬問題の数字 */}
+      <Section id="引退馬問題の数字">
         <SectionHeading
           eyebrow="THE PROBLEM"
-          title="引退馬問題とは"
+          title="引退馬問題の数字"
           lead="「かわいそう」だけでは解決できない、産業全体の構造的な課題です。"
         />
         <div className="mt-12 grid gap-8 lg:grid-cols-3">
           <div className="rounded-3xl bg-brand-700 p-8 text-white">
-            <p className="text-5xl font-bold text-gold">数千頭</p>
-            <p className="mt-2 text-sm text-brand-100">毎年引退するとされる競走馬。その多くの行方は知られていません。</p>
+            <p className="text-5xl font-bold text-gold">屠殺5000頭</p>
+            <p className="mt-2 text-sm text-brand-100">毎年、競走馬を引退し屠殺への向かう数といわれています。</p>
           </div>
           <div className="rounded-3xl bg-brand-800 p-8 text-white">
-            <p className="text-5xl font-bold text-gold">月数万円</p>
-            <p className="mt-2 text-sm text-brand-100">1頭の飼養にかかる費用。継続的な支援なしには救えません。</p>
+            <p className="text-5xl font-bold text-gold">年間100万円</p>
+            <p className="mt-2 text-sm text-brand-100">概ね1頭の飼養にかかる費用。継続的な支援なしには救えません。</p>
           </div>
           <div className="rounded-3xl bg-brand-900 p-8 text-white">
-            <p className="text-5xl font-bold text-gold">数年</p>
-            <p className="mt-2 text-sm text-brand-100">競走馬としての現役期間。30年近い寿命に対し、あまりに短いものです。</p>
+            <p className="text-5xl font-bold text-gold">一生涯30年</p>
+            <p className="mt-2 text-sm text-brand-100">競走馬としての現役。30年近い馬の寿命に対し、あまりに短いものです。</p>
           </div>
         </div>
       </Section>
 
       <AdBanner
-        badge="SUPPORT ｜ ふるさと納税"
-        title="1頭まるごと保護、という選択。"
-        body="大阪府河内長野市のふるさと納税で、引退馬の保護を直接応援できます。返礼として馬に会える・乗れる体験も。"
-        cta="支援の方法を見る"
+        badge="ＰＲ｜一口支援馬"
+        title="馬の未来支援"
+        body="月額支援を通じ引退競走馬の命と新たな活躍の場を応援。月額支援で本来もうない命を支える。"
+        cta="一口支援制度"
         href={SITE.membersUrl}
         tone="green"
       />
@@ -91,40 +97,56 @@ export default function IssuePage() {
       {/* 署名活動 */}
       <Section id="署名活動" alt>
         <SectionHeading eyebrow="PETITION" title="署名活動" />
-        <div className="mt-10 grid items-center gap-10 lg:grid-cols-2">
+        <div className="mt-10 grid items-start gap-10 lg:grid-cols-2">
           <div>
-            <p className="section-lead">
-              一団体が救える数には限りがあります。だからこそ私たちは、
-              引退馬を守る社会の「仕組み」を変えるための署名活動に取り組んでいます。
-              農林水産省・JRA・地方競馬への政策提言に向け、
-              集まった声は<strong className="text-brand-700">5万人を突破</strong>しました。
-            </p>
-            <ul className="mt-6 space-y-3 text-sm text-ink/80">
-              {["引退馬の追跡・登録の仕組みづくり", "受け皿となる施設・人材への支援", "再調教・福祉活用への助成"].map((x) => (
+            <h3 className="text-2xl font-semibold text-brand-900">引退馬競走馬の問題について</h3>
+            <p className="mt-3 text-lg font-semibold text-brand-800">なぜ、今私たちは声を上げるのか？</p>
+            <div className="mt-6 space-y-4 section-lead">
+              <p>
+                競走馬たちは、自ら望んで生まれてきたわけではありません。それでも私たちに夢や感動を与え、その役目を終えた後、多くの馬たちの行き先は十分に把握されていません。
+              </p>
+              <p>
+                2022年、国会では引退競走馬対策やホースセラピー関連事業として約12億8,000万円の予算が示されました。しかし、その使途や成果は十分に見えているとは言えません。私たちは競馬を否定したいのではありません。競馬産業が社会から信頼され続けるために、引退後の馬たちにも責任を持つべきだと考えています。
+              </p>
+            </div>
+            <h4 className="mt-8 text-lg font-semibold text-brand-900">私たちが求めること</h4>
+            <ul className="mt-4 space-y-3 text-sm leading-relaxed text-ink/80">
+              {PETITION_DEMANDS.map((x) => (
                 <li key={x} className="flex gap-3">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
+                  <span className="shrink-0 text-gold" aria-hidden>✅</span>
                   {x}
                 </li>
               ))}
             </ul>
+            <p className="mt-8 text-lg font-semibold text-brand-900">
+              夢を与えてくれた馬たちに、引退後の未来を。
+            </p>
+            <p className="mt-2 section-lead">あなたの署名が、その第一歩になります。</p>
             <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-brand-900/5">
               <div className="flex items-end justify-between">
                 <span className="text-sm font-semibold text-brand-800">署名数</span>
-                <span className="text-2xl font-bold text-brand-700">50,000<span className="text-sm">人超</span></span>
+                <span className="text-2xl font-bold text-brand-700">57,614<span className="text-sm">人</span></span>
               </div>
               <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-brand-100">
-                <div className="h-full w-[83%] rounded-full bg-gold" />
+                <div className="h-full w-[96%] rounded-full bg-gold" />
               </div>
               <p className="mt-2 text-xs text-ink/50">目標 60,000人に向けて、ご署名をお願いします。</p>
             </div>
           </div>
-          <Image
-            src={IMG.issueSign}
-            alt="署名活動の様子（日本人の参加者）"
-            width={1200}
-            height={900}
-            className="w-full h-auto"
-          />
+          <a
+            href={SITE.petitionVideoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block transition-opacity hover:opacity-90"
+          >
+            <Image
+              src={IMG.issueSign}
+              alt="署名活動の様子（日本人の参加者）"
+              width={1200}
+              height={900}
+              className="w-full h-auto"
+            />
+          </a>
         </div>
       </Section>
 
@@ -132,8 +154,7 @@ export default function IssuePage() {
       <Section id="私たちが向き合う課題">
         <SectionHeading
           eyebrow="CHALLENGES"
-          title="私たちが向き合う課題"
-          lead="ひとつずつ、しかし確実に。Retouchが取り組む4つの課題。"
+          title="引退馬の未来を阻む4つの壁"
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
           {CHALLENGES.map((c, i) => (
