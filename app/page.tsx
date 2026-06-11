@@ -24,13 +24,23 @@ export default function Home() {
     <>
       {/* ===== ヒーロー ===== */}
       <section className="relative h-[88vh] min-h-[560px] w-full overflow-hidden">
+        {/* デスクトップ用背景 */}
         <Image
-          src={IMG.aboutHeroBg}
+          src="/bg.png"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="hidden object-cover sm:block"
+        />
+        {/* モバイル用背景（縦長） */}
+        <Image
+          src="/bg-m.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover sm:hidden"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-900/55 to-brand-900/30" aria-hidden />
         <div className="relative z-10 container-x flex h-full flex-col justify-end pb-20 sm:pb-28">
