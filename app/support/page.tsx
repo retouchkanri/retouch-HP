@@ -13,17 +13,15 @@ export const metadata: Metadata = {
   description: "会員になる、一口支援、ポニーチーム、法人協賛、寄付・支援。あなたに合った方法で引退競走馬の命をつなぐ。",
 };
 
+// 会員種別による特典内容の違いはなし。月額のみが異なる3プラン。
 const PLANS = [
-  { name: "フリー会員", price: "0", unit: "円", featured: false,
-    desc: "まずは応援から。最新情報やイベントのお知らせを受け取れます。",
-    items: ["活動の最新情報をお届け", "イベント・見学会のご案内"] },
-  { name: "サポーター会員", price: "1,000", unit: "円/月", featured: true,
-    desc: "もっとも人気のプラン。会員限定情報で馬たちの今を見守れます。",
-    items: ["会員限定の活動報告・会計報告", "保護馬の近況・限定動画", "見学会の優先案内"] },
-  { name: "レリーフ会員", price: "5,000", unit: "円/月", featured: false,
-    desc: "より深く支える上位プラン。馬たちの飼養を力強く支援します。",
-    items: ["サポーター会員の特典すべて", "見学会・体験乗馬の優待", "特別レポートのお届け"] },
+  { name: "メンバーズ会員", price: "1,800", unit: "円/月" },
+  { name: "サポーター会員", price: "3,600", unit: "円/月" },
+  { name: "リェリーフ会員", price: "7,200", unit: "円/月" },
 ];
+
+// 全プラン共通の特典
+const MEMBER_BENEFITS = ["見学会へのご参加", "会員専用情報の閲覧"];
 
 const WAYS = [
   { id: "一口支援", title: "一口支援", image: IMG.supportOneShare, imageAlt: "一口オーナーと馬（日本人）",
@@ -52,47 +50,39 @@ export default function SupportPage() {
       <Section id="会員になる" alt>
         <SectionHeading
           eyebrow="MEMBERSHIP"
-          title="会員になる"
-          lead="月々のご支援が、馬たちの毎日を支えます。会費の多くは、馬の保護・飼養活動に充てられます。"
+          title="ご入会のご案内"
+          lead="本ページでは、Retouch（リタッチ）の活動理念にご賛同いただき、引退競走馬たちの未来を共に支えてくださる皆さまへ、会員制度についてご案内いたします。見学会へのご参加、会員専用の情報閲覧が可能です。"
         />
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+        <p className="mt-8 max-w-3xl text-base leading-relaxed text-ink/80">
+          現在、Retouchでは以下の3種類の月額会員制度をご用意しております。
+        </p>
+        <div className="mt-10 grid gap-6 lg:grid-cols-3">
           {PLANS.map((p) => (
             <div
               key={p.name}
-              className={`relative flex flex-col rounded-3xl p-8 shadow-sm ring-1 ${
-                p.featured ? "bg-brand-700 text-white ring-brand-700 lg:-translate-y-3" : "bg-white ring-brand-900/10"
-              }`}
+              className="flex flex-col rounded-3xl bg-white p-8 shadow-sm ring-1 ring-brand-900/10"
             >
-              {p.featured && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold px-4 py-1 text-xs font-semibold text-white">
-                  人気No.1
-                </span>
-              )}
-              <h3 className={`text-lg font-semibold ${p.featured ? "text-white" : "text-brand-900"}`}>{p.name}</h3>
+              <h3 className="text-lg font-semibold text-brand-900">{p.name}</h3>
               <div className="mt-3 flex items-end gap-1">
-                <span className={`text-4xl font-bold ${p.featured ? "text-gold" : "text-brand-700"}`}>{p.price}</span>
-                <span className={`mb-1 text-sm ${p.featured ? "text-brand-100" : "text-ink/60"}`}>{p.unit}</span>
+                <span className="text-4xl font-bold text-brand-700">{p.price}</span>
+                <span className="mb-1 text-sm text-ink/60">{p.unit}</span>
               </div>
-              <p className={`mt-3 text-sm ${p.featured ? "text-brand-100" : "text-ink/70"}`}>{p.desc}</p>
-              <ul className={`mt-5 flex-1 space-y-2 text-sm ${p.featured ? "text-brand-50" : "text-ink/80"}`}>
-                {p.items.map((it) => (
+              <ul className="mt-5 flex-1 space-y-2 text-sm text-ink/80">
+                {MEMBER_BENEFITS.map((it) => (
                   <li key={it} className="flex gap-2">
-                    <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${p.featured ? "bg-gold" : "bg-brand-500"}`} />
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />
                     {it}
                   </li>
                 ))}
               </ul>
-              <SiteLink
-                href={SITE.membersUrl}
-                className={`mt-7 ${p.featured ? "btn-gold" : "btn-primary"}`}
-              >
+              <SiteLink href={SITE.membersUrl} className="mt-7 btn-primary">
                 このプランで申し込む
               </SiteLink>
             </div>
           ))}
         </div>
-        <p className="mt-6 text-center text-xs text-ink/50">
-          ※ 会費・特典は一例です。最新の詳細はお問い合わせください。
+        <p className="mt-6 text-center text-xs text-ink/60">
+          ※ 会員種別による特典内容の違いはございません。ご自身のご負担のない範囲で、応援いただけるプランをお選びください。
         </p>
       </Section>
 

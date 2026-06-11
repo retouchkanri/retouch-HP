@@ -166,7 +166,7 @@ export default function Home() {
         title="貴社のCSRに、馬と地域の未来を。"
         body="Retouchはともに「馬と人と地域の未来を創る企業スポンサー」を募集しています。"
         cta="協賛を相談する"
-        href="/partners"
+        href="https://item.rakuten.co.jp/f272167-kawachinagano/15152-40001192/"
         tone="gold"
       />
 

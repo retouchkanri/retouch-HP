@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { IMG } from "@/lib/images";
 import { SITE, STATS } from "@/lib/site";
-import { MEDIA } from "@/lib/data";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { StatGrid, CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
 import Placeholder from "@/components/Placeholder";
+import YouTubeGrid from "@/components/YouTubeGrid";
 
 export const metadata: Metadata = {
   title: "活動実績",
@@ -20,17 +20,32 @@ const HIGHLIGHTS = [
     body: "肥育場・競馬場・牧場から救い出した馬の累計頭数。一頭ずつ、確かに命をつないできました。" },
   { id: "支援者600名超", value: "600", unit: "名超", title: "支援者・会員", image: IMG.impactSupporters, imageAlt: "全国の支援者・コミュニティの写真",
     body: "全国から集まった会員・サポーター。月々のご支援が、馬たちの飼養・治療・再調教を支えています。" },
-  { id: "YouTube登録者2万人超", value: "2", unit: "万人超", title: "YouTube登録者", image: IMG.impactYoutube, imageAlt: "動画視聴風景／人気動画サムネイル",
-    body: "公式チャンネル @Retouch2023。保護馬の日常を発信し、登録者の増加が新たな1頭を救う力になっています。" },
+  { id: "YouTube登録者2万人超", value: "2", unit: "万人超", title: "Youtube啓発活動", image: IMG.impactYoutube, imageAlt: "動画視聴風景／人気動画サムネイル",
+    body: "Retouch専用のYoutubeチャンネルを活用し引退馬問題を取り上げています。" },
   { id: "署名5万人超", value: "5", unit: "万人超", title: "署名", image: IMG.impactPetition, imageAlt: "署名活動の様子（社会的インパクト）",
     body: "引退馬を守る制度づくりに向けた署名。農水省・JRA・地方競馬への提言を後押しする確かな声です。" },
 ];
 
 const TIMELINE = [
-  { year: "2023", title: "活動開始", body: "引退競走馬保護団体 Retouch（リタッチ）始動。肥育場からの保護を開始。" },
-  { year: "2024", title: "保護馬増加", body: "千葉・大阪の拠点で受け入れを拡大。見学会＆懇談会を定期開催。" },
-  { year: "2025", title: "メディア掲載", body: "新聞・テレビ・Webで活動が紹介され、支援者・署名が大きく拡大。" },
-  { year: "現在", title: "全国へ", body: "保護馬53頭・支援者600名超。教育・福祉・観光へ活動を広げています。" },
+  { year: "2021年5月", title: "引退馬保護プロジェクト始動", body: "前代表・林氏による肥育場の馬保護クラウドファンディングが完了。" },
+  { year: "2021年6月", title: "Retouch発足", body: "引退馬支援団体「Retouch」を設立。" },
+  { year: "2023年10月", title: "代表交代", body: "野口佳槻がRetouch代表に就任。" },
+  { year: "2023年11月", title: "初めての馬を保護", body: "第1号パヴォーネ号、第2号ハル号を肥育場から保護。" },
+  { year: "2023年12月", title: "情報発信スタート", body: "YouTubeおよびSNSでの活動を開始。" },
+  { year: "2024年12月", title: "支援の輪が拡大", body: "Retouchメンバー150名突破。1口支援馬制度を開始。" },
+  { year: "2025年2月", title: "啓発活動スタート", body: "YouTubeにて引退馬問題を伝えるシリーズ配信開始。" },
+  { year: "2025年12月", title: "法人化", body: "大阪府河内長野市に株式会社リタッチを設立。" },
+  { year: "2026年6月", title: "新たな挑戦へ", body: "メンバーズサイト・公式Webサイトをリニューアル。" },
+];
+
+// YouTube動画（メディア掲載枠に2行×3列で掲載。サムネイルクリックでその場で再生）
+const YOUTUBE_VIDEOS = [
+  { id: "ZfKCxojVmcU", title: "Retouchで保護された馬", thumb: "/v1.webp" },
+  { id: "aOg5jTScgIQ", title: "馬予算2億→12.8億 なぜ？", thumb: "/v2.jpg" },
+  { id: "Bxt9r3Qdq7", title: "日々消えゆく引退競走馬の命", thumb: "/v3.jpg" },
+  { id: "TSBOdDUPegg", title: "JRAでは公表されない引退競走馬の最期", thumb: "/v4.webp" },
+  { id: "CicKVV8uT0Y", title: "引退馬の再就職先 ホースセラピー", thumb: "/v5.jpg" },
+  { id: "vVg-H1p3Nv", title: "引退競走馬を救いたい", thumb: "/v6.jpg" },
 ];
 
 export default function ImpactPage() {
@@ -92,15 +107,7 @@ export default function ImpactPage() {
           title="メディア掲載"
           lead="テレビ・新聞・Webなど、多くのメディアにRetouchの取り組みを取り上げていただいています。"
         />
-        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {MEDIA.map((m) => (
-            <Placeholder
-              key={m.title}
-              label={`${m.outlet}（ロゴ）`}
-              className="aspect-[3/2] w-full"
-            />
-          ))}
-        </div>
+        <YouTubeGrid videos={YOUTUBE_VIDEOS} />
       </Section>
 
       <AdBanner
@@ -122,7 +129,7 @@ export default function ImpactPage() {
                 ●
               </span>
               <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-brand-900/5">
-                <div className="flex items-baseline gap-3">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <span className="text-xl font-bold text-brand-700">{t.year}</span>
                   <h3 className="text-lg font-semibold text-brand-900">{t.title}</h3>
                 </div>
