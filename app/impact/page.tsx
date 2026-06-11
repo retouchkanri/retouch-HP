@@ -40,12 +40,12 @@ const TIMELINE = [
 
 // YouTube動画（メディア掲載枠に2行×3列で掲載。サムネイルクリックでその場で再生）
 const YOUTUBE_VIDEOS = [
-  { id: "ZfKCxojVmcU", title: "Retouchで保護された馬", thumb: "/v1.webp" },
-  { id: "aOg5jTScgIQ", title: "馬予算2億→12.8億 なぜ？", thumb: "/v2.jpg" },
-  { id: "Bxt9r3Qdq7", title: "日々消えゆく引退競走馬の命", thumb: "/v3.jpg" },
-  { id: "TSBOdDUPegg", title: "JRAでは公表されない引退競走馬の最期", thumb: "/v4.webp" },
-  { id: "CicKVV8uT0Y", title: "引退馬の再就職先 ホースセラピー", thumb: "/v5.jpg" },
-  { id: "vVg-H1p3Nv", title: "引退競走馬を救いたい", thumb: "/v6.jpg" },
+  { title: "Retouchで保護された馬", thumb: "/v1.webp", url: "https://www.youtube.com/watch?v=ZfKCxojVmcU" },
+  { title: "馬予算2億→12.8億 なぜ？", thumb: "/v2.jpg", url: "https://www.youtube.com/watch?v=aOg5jTScgIQ" },
+  { title: "日々消えゆく引退競走馬の命", thumb: "/v3.jpg", url: "https://www.youtube.com/watch?v=Bxt9r3Qdq7c" },
+  { title: "JRAでは公表されない引退競走馬の最期", thumb: "/v4.webp", url: "https://www.youtube.com/watch?v=TSBOdDUPegg" },
+  { title: "引退馬の再就職先 ホースセラピー", thumb: "/v5.jpg", url: "https://www.youtube.com/watch?v=CicKVV8uT0Y" },
+  { title: "引退競走馬を救いたい", thumb: "/v6.jpg", url: "https://www.youtube.com/watch?v=vVg-H1p3Nvw" },
 ];
 
 export default function ImpactPage() {
