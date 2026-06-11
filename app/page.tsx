@@ -11,12 +11,12 @@ import Image from "next/image";
 import Placeholder, { ImageNote } from "@/components/Placeholder";
 
 const SOLUTIONS = [
-  { no: "01", image: "/1_1.jpg", caption: "馬とふれあう子どもたち", href: "/solution#馬の保護" },
-  { no: "02", image: "/1_2.jpg", caption: "再調教を経て競技に挑む馬", href: "/solution#リトレーニング" },
-  { no: "03", image: "/1_3.jpg", caption: "見学会で馬とふれあう来場者", href: "/solution#オーナー制度" },
-  { no: "04", image: "/1_4.jpg", caption: "スタッフと心を通わせる保護馬", href: "/solution#教育事業" },
-  { no: "05", image: "/1_5.jpg", caption: "親子で楽しむホースセラピー", href: "/solution#福祉事業", crop: true },
-  { no: "06", image: "/1_6.jpg", caption: "地域に笑顔を届ける騎乗イベント", href: "/solution#地域活性化" },
+  { no: "01", image: "/1_1.jpg", title: "馬の保護", body: "肥育場・競馬場・牧場から、命の期限が迫る引退競走馬を直接引き取ります。", href: "/solution#馬の保護" },
+  { no: "02", image: "/1_2.jpg", title: "リトレーニング", body: "一頭ごとの個性に合わせ、競走馬から乗用馬へ。時間をかけて信頼を育てます。", href: "/solution#リトレーニング" },
+  { no: "03", image: "/1_3.jpg", title: "オーナー制度", body: "一口支援・オーナー制度で、馬と支援者をつなぎます。会える・乗れる支援。", href: "/solution#オーナー制度" },
+  { no: "04", image: "/1_4.jpg", title: "教育事業", body: "馬事学院（バジガク）と連携し、馬産業を担う人材を育成・輩出します。", href: "/solution#教育事業" },
+  { no: "05", image: "/1_5.jpg", title: "福祉・観光", body: "ホースセラピーやふれあい見学会で、馬が人と地域に癒やしを届けます。", href: "/solution#福祉事業", crop: true },
+  { no: "06", image: "/1_6.jpg", title: "地域活性化", body: "馬を核に、観光・雇用・交流を生み、地域とともに歩む未来をつくります。", href: "/solution#地域活性化" },
 ];
 
 export default function Home() {
@@ -140,17 +140,19 @@ export default function Home() {
                 <div className="relative overflow-hidden rounded-2xl">
                   <img
                     src={s.image}
-                    alt={s.caption}
+                    alt={s.title}
                     className={`h-56 w-full object-cover transition-transform duration-300 group-hover:scale-105 ${
-                      s.crop ? "object-center" : ""
+                      s.crop ? "object-[50%_20%]" : ""
                     }`}
                   />
                   <span className="absolute top-3 left-3 flex h-9 w-9 items-center justify-center rounded-full bg-gold text-sm font-bold text-white">
                     {s.no}
                   </span>
                 </div>
-                <figcaption className="mt-3 text-center text-sm leading-relaxed text-black/80">
-                  {s.caption}
+                <figcaption className="mt-4">
+                  <h3 className="text-lg font-semibold text-black">{s.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-black/80">{s.body}</p>
+                  <span className="mt-4 inline-block text-sm font-semibold text-gold">詳しく →</span>
                 </figcaption>
               </figure>
             </Link>
