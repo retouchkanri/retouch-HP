@@ -106,7 +106,11 @@ export function HorseCard({ horse }: { horse: Horse }) {
         <div className="flex items-baseline justify-between">
           <h3 className="text-lg font-semibold text-black">{horse.name}</h3>
           <span className="text-xs text-ink/50">
-            {horse.sex}・{horse.age}
+            {horse.sex && horse.age
+              ? `${horse.sex}・${horse.age}`
+              : horse.order
+              ? `肥育場から${horse.order}番目`
+              : ""}
           </span>
         </div>
         <p className="mt-2 text-xs font-semibold text-brand-600">性格：{horse.personality}</p>

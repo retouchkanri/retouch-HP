@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { HORSES } from "@/lib/data";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
@@ -17,14 +16,13 @@ export const metadata: Metadata = {
 };
 
 const protectedHorses = HORSES.filter((h) => h.status === "protected");
+// 卒業馬＝オーナー決定馬（卒業＝オーナーが決まった馬）として統合
 const graduatedHorses = HORSES.filter((h) => h.status === "graduated");
-const ownerHorses = HORSES.filter((h) => h.status === "owner");
 const featured = graduatedHorses[0]; // 馬たちの物語の特集馬
 
 const NAV = [
   { id: "現在の保護馬", label: "現在の保護馬" },
-  { id: "卒業馬", label: "卒業馬" },
-  { id: "オーナー決定馬", label: "オーナー決定馬" },
+  { id: "卒業馬", label: "卒業馬（オーナー決定馬）" },
   { id: "馬たちの物語", label: "馬たちの物語" },
   { id: "支援中の馬を探す", label: "支援中の馬を探す" },
 ];
@@ -70,12 +68,12 @@ export default function HorsesPage() {
         </div>
       </Section>
 
-      {/* 卒業馬（Before → After） */}
+      {/* 卒業馬（＝オーナー決定馬）。Before → After */}
       <Section id="卒業馬">
         <SectionHeading
           eyebrow="GRADUATES"
-          title="卒業馬"
-          lead="新しい生活を送る馬たち。保護前（Before）から現在（After）へ、歩んできた道のりをご紹介します。"
+          title="卒業馬（オーナー決定馬）"
+          lead="卒業＝オーナーが決まった馬たち。肥育場での保護前（Before）から、新しい家族のもとへ巣立つ現在（After）まで、歩んできた道のりをご紹介します。"
         />
         <div className="mt-10 space-y-6">
           {graduatedHorses.map((h) => (
@@ -92,14 +90,20 @@ export default function HorsesPage() {
                   className="min-h-[200px] w-full object-cover lg:min-h-full"
                 />
               ) : (
-                <Placeholder label={`${h.name} の写真`} className="min-h-[200px] w-full" />
+                <Placeholder label={`${h.name} の Before / After 写真`} className="min-h-[200px] w-full" />
               )}
               <div className="bg-white p-7">
-                <div className="flex items-baseline justify-between">
+                <div className="flex items-baseline justify-between gap-3">
                   <h3 className="text-xl font-semibold text-brand-900">{h.name}</h3>
-                  <span className="text-xs text-ink/50">{h.sex}・{h.age}</span>
+                  <span className="shrink-0 text-xs text-ink/50">
+                    {h.sex && h.age
+                      ? `${h.sex}・${h.age}`
+                      : h.order
+                      ? `肥育場から${h.order}番目`
+                      : ""}
+                  </span>
                 </div>
-                <p className="mt-1 text-xs font-semibold text-brand-600">性格：{h.personality}</p>
+                <p className="mt-1 text-xs font-semibold text-brand-600">特徴：{h.personality}</p>
                 <div className="mt-5 grid gap-4 sm:grid-cols-2">
                   <div className="rounded-2xl bg-ink/5 p-5">
                     <span className="text-[11px] font-bold tracking-widest text-ink/50">BEFORE</span>
@@ -109,33 +113,6 @@ export default function HorsesPage() {
                     <span className="text-[11px] font-bold tracking-widest text-brand-600">AFTER</span>
                     <p className="mt-2 text-sm leading-relaxed text-brand-900">{h.story}</p>
                   </div>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </Section>
-
-      {/* オーナー決定馬 */}
-      <Section id="オーナー決定馬" alt>
-        <SectionHeading
-          eyebrow="WITH OWNERS"
-          title="オーナー決定馬"
-          lead="一口オーナー制度を通じて、支援者に見守られながら成長する馬たち。それぞれのオーナーストーリーをご紹介します。"
-        />
-        <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          {ownerHorses.map((h) => (
-            <article key={h.name} className="grid gap-0 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-brand-900/5 sm:grid-cols-[200px_1fr]">
-              <Placeholder label={`支援者と${h.name}の写真`} className="min-h-[180px] w-full" />
-              <div className="p-6">
-                <div className="flex items-baseline justify-between">
-                  <h3 className="text-lg font-semibold text-brand-900">{h.name}</h3>
-                  <span className="text-xs text-ink/50">{h.sex}・{h.age}</span>
-                </div>
-                <p className="mt-1 text-xs font-semibold text-brand-600">性格：{h.personality}</p>
-                <div className="mt-4 rounded-2xl bg-brand-50 p-4">
-                  <span className="text-[11px] font-bold tracking-widest text-gold">OWNER STORY</span>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/80">{h.ownerStory}</p>
                 </div>
               </div>
             </article>

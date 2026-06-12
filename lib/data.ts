@@ -1,20 +1,21 @@
 // ============================================================================
 // サイトコンテンツデータ / Site content data
 // ============================================================================
-import { IMG, mediaImg } from "./images";
+import { mediaImg } from "./images";
 
 export type Horse = {
   name: string;
-  sex: "牡" | "牝" | "騙";
-  age: string; // 表示用ラベル
-  ageYears: number; // 絞り込み用
+  sex?: "牡" | "牝" | "騙";
+  age?: string; // 表示用ラベル
+  ageYears?: number; // 絞り込み用
   status: "protected" | "graduated" | "owner";
   statusLabel: string;
-  personality: string; // 性格
-  story: string; // 現在の様子・物語
+  personality: string; // 性格・特徴
+  story: string; // 現在の様子・物語（After）
   before?: string; // 卒業馬：保護前の状況（Before→After用）
   photo?: string; // 卒業馬など：写真URL
   ownerStory?: string; // オーナー決定馬：オーナーストーリー
+  order?: number; // 肥育場から◯番目（保護順）
 };
 
 export const HORSES: Horse[] = [
@@ -51,70 +52,95 @@ export const HORSES: Horse[] = [
     story:
       "地方競馬出身。じっくりと信頼関係を築きながら、再調教を進めています。",
   },
+  // ―― 卒業馬（＝オーナー決定馬）。保護前（Before）から現在（After）へ ――
+  // 写真は後日アップロード予定（photo を設定すると Before/After 画像に差し替わります）
   {
-    name: "カイト号",
-    sex: "騙",
-    age: "8歳",
-    ageYears: 8,
+    name: "テラ号",
     status: "graduated",
     statusLabel: "卒業馬",
-    personality: "素直・働き者",
-    photo: IMG.graduateKaito,
-    before: "競走馬を引退し、行き先が決まらず肥育場へ送られる寸前でした。",
+    order: 16,
+    personality: "とても穏やかで癒し系の人気者",
+    before:
+      "緊張下にある肥育場の厩舎でも、優しく人懐っこい性格でお利口さんな感じがした。",
     story:
-      "リトレーニングを修了し、提携乗馬クラブの乗用馬としてデビュー。多くの人を背に乗せ、第二の馬生を歩んでいます。",
+      "常に冷静で安心感。約1年のオーナー預託を経て北海道のプライベート乗馬施設へ。",
   },
   {
-    name: "ユキ号",
-    sex: "牝",
-    age: "10歳",
-    ageYears: 10,
+    name: "アキラ号",
     status: "graduated",
     statusLabel: "卒業馬",
-    personality: "温厚・癒やし系",
-    photo: IMG.graduateYuki,
-    before: "繁殖を引退後、活躍の場を失っていました。",
+    order: 20,
+    personality: "まだ若い元気な男の子",
+    before:
+      "肥育場の中でもまだ若さと幼さが垣間見える。せっかく生まれた命を大切にしたい。",
     story:
-      "観光牧場のふれあい馬として卒業。温厚な性格を活かし、来場者に癒やしを届けています。",
+      "肥育場から引き取り後、運命的な出会いを感じて頂いた個人オーナー様に譲渡決定。",
   },
   {
-    name: "テンマ号",
-    sex: "牡",
-    age: "6歳",
-    ageYears: 6,
-    status: "owner",
-    statusLabel: "オーナー決定馬",
-    personality: "負けず嫌い・運動神経抜群",
-    ownerStory:
-      "「もう一度この子の走る姿を見たい」というオーナー様の想いから支援が決定。馬術競技馬を目指して調教中です。",
-    story:
-      "一口オーナー制度を通じて支援者が決定。サポーターに見守られながら成長しています。",
-  },
-  {
-    name: "コハク号",
-    sex: "牝",
-    age: "5歳",
-    ageYears: 5,
-    status: "owner",
-    statusLabel: "オーナー決定馬",
-    personality: "おっとり・マイペース",
-    ownerStory:
-      "クラウドファンディングで全国の支援者が集い、オーナーが決定。成長の様子をYouTubeで配信中です。",
-    story:
-      "多くの支援を受けて救出。オーナー決定後も穏やかに過ごしています。",
-  },
-  {
-    name: "ミナト号",
-    sex: "騙",
-    age: "11歳",
-    ageYears: 11,
+    name: "ジュライ号",
     status: "graduated",
     statusLabel: "卒業馬",
-    personality: "頼れる兄貴分",
-    photo: IMG.graduateMinato,
-    before: "高齢で引き取り手が見つからず、処分の対象となっていました。",
+    order: 25,
+    personality: "品のあるカッコいいまっくろな子",
+    before:
+      "肥育場で大怪我をしながらも、そのケガを自力で治しながらも生きる強さに奇跡が。",
     story:
-      "馬事学院（バジガク）の教育プログラムを経て、学生たちと共に乗馬へ転用。後進の指導馬として活躍しています。",
+      "肥育場にいるこの子の様子を伝えたところ、個人オーナー様により直接の引き取り。",
+  },
+  {
+    name: "サニー号",
+    status: "graduated",
+    statusLabel: "卒業馬",
+    order: 21,
+    personality: "顔は鋭いけどすごく優しいギャップ",
+    before:
+      "お顔はキリッと強そうなイメージ。しかし、本当に人にも馬にも優しい子の予感が。",
+    story:
+      "とても大人しく扱いも騎乗もとても安心できる子で個人のオーナー様への譲渡決定。",
+  },
+  {
+    name: "ブライト号",
+    status: "graduated",
+    statusLabel: "卒業馬",
+    order: 7,
+    personality: "すごく優しいお父さんのような存在",
+    before:
+      "肥育場の厩舎ではドロドロになりながらも一生懸命生きている感じが伝わってきた。",
+    story:
+      "おとなしい性格で、だれからも可愛がられている存在。オーナーが決まり長野県へ。",
+  },
+  {
+    name: "カリン号",
+    status: "graduated",
+    statusLabel: "卒業馬",
+    order: 10,
+    personality: "顔のつくりがとても美しい美人さん",
+    before:
+      "顔がとてもきれいな整ったつくりで特徴的でした。すぐに目に留まり引取りを決定。",
+    story:
+      "この子の素晴らしさを理解して頂いたオーナー様すぐに面会して頂き決定。九州へ。",
+  },
+  {
+    name: "ニコ号",
+    status: "graduated",
+    statusLabel: "卒業馬",
+    order: 11,
+    personality: "まさにお兄ちゃん的存在。優しい～",
+    before:
+      "肥育場でのお部屋にニコとアイが一緒に支え合ってる感じ。二人とも同時に受入れ。",
+    story:
+      "アイとニコ同時に譲渡決定。熊本の個人オーナーさんのもと元気に過ごしています。",
+  },
+  {
+    name: "アイ号",
+    status: "graduated",
+    statusLabel: "卒業馬",
+    order: 12,
+    personality: "元気な妹！ニコがお兄ちゃん的存在",
+    before:
+      "ニコ号がお兄ちゃん、アイ号がギャル・・・ってニコとアイはとても仲良しでした。",
+    story:
+      "アイとニコ同時に譲渡決定。熊本の個人オーナーさんのもと元気に過ごしています。",
   },
 ];
 

@@ -7,8 +7,7 @@ import { HorseCard } from "@/components/Blocks";
 const CATEGORIES = [
   { value: "all", label: "すべて" },
   { value: "protected", label: "現在の保護馬" },
-  { value: "graduated", label: "卒業馬" },
-  { value: "owner", label: "オーナー決定馬" },
+  { value: "graduated", label: "卒業馬（オーナー決定馬）" },
 ];
 const SEXES = [
   { value: "all", label: "すべて" },
@@ -36,9 +35,11 @@ export default function HorseExplorer({ horses }: { horses: Horse[] }) {
       horses.filter((h) => {
         if (category !== "all" && h.status !== category) return false;
         if (sex !== "all" && h.sex !== sex) return false;
-        if (age === "young" && h.ageYears > 6) return false;
-        if (age === "mid" && (h.ageYears < 7 || h.ageYears > 9)) return false;
-        if (age === "senior" && h.ageYears < 10) return false;
+        if (age !== "all" && h.ageYears !== undefined) {
+          if (age === "young" && h.ageYears > 6) return false;
+          if (age === "mid" && (h.ageYears < 7 || h.ageYears > 9)) return false;
+          if (age === "senior" && h.ageYears < 10) return false;
+        }
         return true;
       }),
     [horses, category, sex, age]
