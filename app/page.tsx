@@ -9,6 +9,7 @@ import SupportRanking from "@/components/SupportRanking";
 import { AdBanner, AdGrid } from "@/components/Ads";
 import Image from "next/image";
 import Placeholder, { ImageNote } from "@/components/Placeholder";
+import ScrollDownArrow from "@/components/ScrollDownArrow";
 
 const SOLUTIONS = [
   { no: "01", image: "/1_1.jpg", title: "馬の保護", body: "肥育場・競馬場・牧場から、命の期限が迫る引退競走馬を直接引き取ります。", href: "/solution#馬の保護" },
@@ -23,7 +24,7 @@ export default function Home() {
   return (
     <>
       {/* ===== ヒーロー ===== */}
-      <section className="relative h-[88vh] min-h-[560px] w-full overflow-hidden">
+      <section data-hero className="relative h-[calc(100dvh-4rem)] sm:h-[calc(100dvh-5rem)] w-full overflow-hidden">
         {/* デスクトップ用背景 */}
         <Image
           src="/bg.png"
@@ -57,15 +58,16 @@ export default function Home() {
             Retouch（リタッチ）は、その馬たちを救い出し、再調教を通じて
             人と共に生きる新しい道を切り拓きます。
           </p>
-          <div className="mt-9 flex flex-wrap gap-4 animate-fadeUp">
-            <SiteLink href={SITE.membersUrl} className="btn-gold">いますぐ応援する</SiteLink>
-            <Link href="/issue" className="btn-white">引退馬の現実を知る</Link>
+          <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap animate-fadeUp">
+            <SiteLink href={SITE.membersUrl} className="btn-gold w-full text-base sm:w-auto sm:text-sm">いますぐ応援する</SiteLink>
+            <Link href="/issue" className="btn-white w-full text-base sm:w-auto sm:text-sm">引退馬の現実を知る</Link>
           </div>
         </div>
+        <ScrollDownArrow />
       </section>
 
       {/* ===== 統計バー ===== */}
-      <div className="bg-brand-900">
+      <div data-stats className="bg-brand-900">
         <div className="container-x py-10">
           <StatGrid stats={STATS} dark />
         </div>
@@ -108,9 +110,10 @@ export default function Home() {
       <AdGrid />
 
       {/* ===== 引退馬の現実（ISSUE） ===== */}
-      <section className="relative overflow-hidden bg-brand-950 py-20 sm:py-28">
+      <section className="relative overflow-hidden py-20 sm:py-28">
+        <img src="/1_3bg.jpg" alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover object-center" />
+        <div className="absolute inset-0 bg-brand-950/75" aria-hidden />
         <div className="relative container-x text-white">
-          <ImageNote label={IMG.issueFarm} className="mb-6" />
           <p className="eyebrow !text-gold">THE REALITY ｜ 引退競走馬の現実</p>
           <h2 className="section-title mt-4 !text-white">
             引退した競走馬を、待つのは。

@@ -70,6 +70,25 @@
 }
 
 /* 画像のフォールバック背景（読み込み中も緑系で自然に） */
-img {
-  background-color: #dcebde;
+
+
+/* ページトップへ戻る馬：前進する（駆ける）アニメーション */
+@keyframes gallop {
+  0%   { transform: translateY(0)     scaleY(1)    scaleX(1);    }
+  20%  { transform: translateY(-4px)  scaleY(1.04) scaleX(0.98); }
+  50%  { transform: translateY(0)     scaleY(0.97) scaleX(1.03); }
+  70%  { transform: translateY(-3px)  scaleY(1.03) scaleX(0.99); }
+  100% { transform: translateY(0)     scaleY(1)    scaleX(1);    }
+}
+.top-horse {
+  background-color: transparent; /* 上記の img 背景色を打ち消す */
+  animation: gallop 0.6s ease-in-out infinite;
+  transform-origin: 50% 90%;     /* 後ろ足を軸に蹴り出すように */
+  will-change: transform;
+}
+.group:hover .top-horse {
+  animation-duration: 0.38s;      /* ホバーで加速＝全力疾走 */
+}
+@media (prefers-reduced-motion: reduce) {
+  .top-horse { animation: none; }
 }

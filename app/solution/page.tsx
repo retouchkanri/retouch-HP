@@ -51,7 +51,7 @@ export default function SolutionPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[42vh] overflow-hidden py-24 sm:min-h-[360px] sm:py-32">
+      <section data-hero className="relative min-h-[42vh] overflow-hidden py-24 sm:min-h-[360px] sm:py-32">
         <Image
           src="/4_h.png"
           alt=""
@@ -223,6 +223,7 @@ export default function SolutionPage() {
       <Section alt className="!pb-24">
         <Reveal direction="scale">
           <CTA
+            backgroundImage="/cta-bg.jpg"
             title="馬たちに、新しい未来を。"
             body={
               <>
