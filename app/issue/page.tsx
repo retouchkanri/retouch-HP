@@ -113,7 +113,9 @@ export default function IssuePage() {
             <ul className="mt-4 space-y-3 text-sm leading-relaxed text-ink/80">
               {PETITION_DEMANDS.map((x) => (
                 <li key={x} className="flex gap-3">
-                  <span className="shrink-0 text-gold" aria-hidden>✅</span>
+                  <svg className="shrink-0 mt-0.5 h-5 w-5 text-gold" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm3.707-9.293a1 1 0 0 0-1.414-1.414L9 10.586 7.707 9.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4z" />
+                  </svg>
                   {x}
                 </li>
               ))}

@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function ScrollToTop() {
   const [visible, setVisible] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
+    setVisible(false);
+
     const hero = document.querySelector<HTMLElement>("[data-hero]");
     if (!hero) {
       const onScroll = () => setVisible(window.scrollY > 400);
@@ -23,7 +27,7 @@ export default function ScrollToTop() {
 
     observer.observe(hero);
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

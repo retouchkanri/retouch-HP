@@ -5,7 +5,7 @@ export default function DonateBanner() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="肥育場で過ごす馬たちに、新しい未来を。"
-      className="fixed bottom-0 left-0 z-40 w-40 sm:w-52 transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600"
+      className="fixed bottom-0 left-0 z-40 w-40 sm:w-[26rem] transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img

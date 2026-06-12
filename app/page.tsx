@@ -1,10 +1,10 @@
 import Link from "next/link";
 import SiteLink from "@/components/SiteLink";
-import { SITE, STATS } from "@/lib/site";
+import { SITE } from "@/lib/site";
 import { IMG } from "@/lib/images";
 import { HORSES, NEWS, MEDIA } from "@/lib/data";
 import { Section, SectionHeading } from "@/components/Section";
-import { StatGrid, HorseCard, CTA } from "@/components/Blocks";
+import { HorseCard, CTA } from "@/components/Blocks";
 import SupportRanking from "@/components/SupportRanking";
 import { AdBanner, AdGrid } from "@/components/Ads";
 import Image from "next/image";
@@ -44,34 +44,54 @@ export default function Home() {
           className="object-cover sm:hidden"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-900/55 to-brand-900/30" aria-hidden />
-        <div className="relative z-10 container-x flex h-full flex-col justify-end pb-20 sm:pb-28">
-          <p className="eyebrow !text-gold animate-fadeUp">RETOUCH ｜ 引退競走馬の保護団体</p>
-          <h1 className="mt-4 max-w-4xl text-4xl sm:text-6xl font-semibold leading-[1.4] text-white animate-fadeUp">
-            命をつなぐ。
-            <br />
-            引退競走馬と、人と、
-            <br />
-            地域の未来へ。
-          </h1>
-          <p className="mt-6 max-w-2xl text-sm sm:text-lg leading-loose text-brand-100 animate-fadeUp">
-            役目を終えた競走馬の多くは、肥育場で肉用馬として最期を迎えます。
-            Retouch（リタッチ）は、その馬たちを救い出し、再調教を通じて
-            人と共に生きる新しい道を切り拓きます。
-          </p>
-          <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap animate-fadeUp">
-            <SiteLink href={SITE.membersUrl} className="btn-gold w-full text-base sm:w-auto sm:text-sm">いますぐ応援する</SiteLink>
-            <Link href="/issue" className="btn-white w-full text-base sm:w-auto sm:text-sm">引退馬の現実を知る</Link>
+        <div className="relative z-10 w-full h-full flex flex-col justify-between pt-4 pb-20 px-5 sm:justify-center sm:pl-[30vw] sm:pr-[6vw] sm:pb-10 sm:pt-0">
+          {/* バッジ（モバイル：最上部に4列一行） */}
+          <div className="grid grid-cols-4 gap-2 sm:hidden animate-fadeUp">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/badge-1.png" alt="53頭 累計保護馬" className="w-full rounded-lg" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/badge-2.png" alt="600名超 支援者・会員" className="w-full rounded-lg" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/badge-3.png" alt="2万人超 YouTube登録者" className="w-full rounded-lg" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/badge-4.png" alt="5万人超 署名" className="w-full rounded-lg" />
+          </div>
+          {/* テキスト＋バッジ（デスクトップ：縦並び） */}
+          <div className="sm:max-w-xl">
+            <p className="eyebrow !text-gold animate-fadeUp">RETOUCH ｜ 引退競走馬の保護団体</p>
+            <h1 className="mt-3 text-3xl sm:text-5xl font-semibold leading-[1.4] text-white animate-fadeUp">
+              命をつなぐ。
+              <br />
+              引退競走馬と、人と、
+              <br />
+              地域の未来へ。
+            </h1>
+            <p className="mt-4 text-xs sm:text-base leading-loose text-brand-100 animate-fadeUp">
+              役目を終えた競走馬の多くは、肥育場で肉用馬として最期を迎えます。
+              Retouch（リタッチ）は、その馬たちを救い出し、再調教を通じて
+              人と共に生きる新しい道を切り拓きます。
+            </p>
+            <div className="mt-6 flex flex-col items-center gap-3 sm:mt-8 sm:flex-row sm:flex-wrap animate-fadeUp">
+              <SiteLink href={SITE.membersUrl} className="btn-gold w-full text-base sm:w-auto sm:text-sm">いますぐ応援する</SiteLink>
+              <Link href="/issue" className="btn-white w-full text-base sm:w-auto sm:text-sm">引退馬の現実を知る</Link>
+            </div>
+            {/* バッジ（デスクトップ：テキスト下に4列） */}
+            <div className="hidden sm:grid grid-cols-4 gap-x-3 mt-8 w-full animate-fadeUp">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/badge-1.png" alt="53頭 累計保護馬" className="w-full" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/badge-2.png" alt="600名超 支援者・会員" className="w-full" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/badge-3.png" alt="2万人超 YouTube登録者" className="w-full" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/badge-4.png" alt="5万人超 署名" className="w-full" />
+            </div>
           </div>
         </div>
         <ScrollDownArrow />
       </section>
 
-      {/* ===== 統計バー ===== */}
-      <div data-stats className="bg-brand-900">
-        <div className="container-x py-10">
-          <StatGrid stats={STATS} dark />
-        </div>
-      </div>
+      <div data-stats aria-hidden />
 
       {/* ===== 私たちの想い ===== */}
       <Section alt>
