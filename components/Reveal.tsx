@@ -15,6 +15,15 @@ export default function Reveal({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onMotionChange = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
+    setReduceMotion(motion.matches);
+    motion.addEventListener("change", onMotionChange);
+    return () => motion.removeEventListener("change", onMotionChange);
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -33,20 +42,22 @@ export default function Reveal({
 
   const hidden =
     direction === "left"
-      ? "translate-x-[-28px]"
+      ? "-translate-x-4 sm:-translate-x-7"
       : direction === "right"
-        ? "translate-x-[28px]"
+        ? "translate-x-4 sm:translate-x-7"
         : direction === "scale"
-          ? "scale-[0.94]"
-          : "translate-y-8";
+          ? "scale-[0.96]"
+          : "translate-y-6 sm:translate-y-8";
+
+  const isVisible = visible || reduceMotion;
 
   return (
     <div
       ref={ref}
-      className={`transition-all duration-700 ease-out will-change-transform ${
-        visible ? "opacity-100 translate-x-0 translate-y-0 scale-100" : `opacity-0 ${hidden}`
+      className={`overflow-hidden transition-all duration-700 ease-out ${
+        isVisible ? "opacity-100 translate-x-0 translate-y-0 scale-100" : `opacity-0 ${hidden}`
       } ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
+      style={{ transitionDelay: reduceMotion ? "0ms" : `${delay}ms` }}
     >
       {children}
     </div>

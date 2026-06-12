@@ -9,10 +9,12 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: clip;
   }
   body {
     @apply bg-white text-black font-serif antialiased;
     font-feature-settings: "palt";
+    overflow-x: clip;
   }
   h1, h2, h3, h4 {
     @apply font-serif font-semibold tracking-wide;
@@ -30,7 +32,7 @@
 
   /* セクション見出し */
   .eyebrow {
-    @apply inline-block text-xs sm:text-sm font-semibold tracking-[0.3em] text-brand-600 uppercase;
+    @apply inline-block text-xs sm:text-sm font-semibold tracking-[0.3em] text-orange-600 uppercase;
   }
   .section-title {
     @apply text-2xl sm:text-4xl font-semibold text-brand-700 leading-snug;
@@ -59,7 +61,12 @@
 
   /* カード */
   .card {
-    @apply rounded-2xl bg-white shadow-sm ring-1 ring-brand-900/5 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+    @apply rounded-2xl bg-white shadow-sm ring-1 ring-brand-900/5 overflow-hidden transition-all duration-300;
+  }
+  @media (hover: hover) {
+    .card {
+      @apply hover:shadow-xl hover:-translate-y-1;
+    }
   }
 
   /* 縦書き風アクセント線 */
@@ -89,6 +96,33 @@
 .group:hover .top-horse {
   animation-duration: 0.38s;      /* ホバーで加速＝全力疾走 */
 }
+@keyframes petitionShine {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+.petition-progress-active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%);
+  transform: translateX(-120%);
+  animation: petitionShine 2.4s ease-in-out 0.4s 1 both;
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   .top-horse { animation: none; }
+  .future-vision-card { transition: none !important; }
+  .petition-progress-active::after { animation: none; }
+  .animate-bounce,
+  .animate-fadeUp,
+  .animate-fadeInLeft,
+  .animate-fadeInRight,
+  .animate-scaleIn,
+  .animate-drawLine,
+  .animate-float,
+  .animate-kenburns {
+    animation: none !important;
+  }
 }

@@ -23,6 +23,13 @@ export default function Header() {
     setOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <header
       className={`sticky top-0 z-50 bg-white transition-all duration-300 ${
@@ -53,15 +60,10 @@ export default function Header() {
               <SiteLink
                 key={item.href}
                 href={item.href}
-                className={`group relative px-2.5 py-2 text-center transition-colors ${
-                  active ? "text-black" : "text-black/80 hover:text-black"
-                }`}
+                className="group relative px-2.5 py-2 text-center text-black transition-colors"
               >
-                <span className="block text-[12px] font-medium leading-none whitespace-nowrap">
+                <span className="block text-[13px] font-semibold leading-none whitespace-nowrap">
                   {item.label}
-                </span>
-                <span className="mt-1 block text-[9px] tracking-[0.15em] text-black/50">
-                  {item.labelEn}
                 </span>
                 <span
                   className={`absolute left-2.5 right-2.5 -bottom-0.5 h-px bg-gold transition-transform origin-left ${
@@ -76,8 +78,9 @@ export default function Header() {
         {/* モバイルメニューボタン */}
         <button
           onClick={() => setOpen((v) => !v)}
-          className="xl:hidden flex flex-col gap-1.5 p-2"
+          className="xl:hidden flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-3"
           aria-label="メニュー"
+          aria-expanded={open}
         >
           <span className={`h-0.5 w-6 bg-black transition-transform ${open ? "translate-y-2 rotate-45" : ""}`} />
           <span className={`h-0.5 w-6 bg-black transition-opacity ${open ? "opacity-0" : ""}`} />
@@ -96,10 +99,9 @@ export default function Header() {
             <SiteLink
               key={item.href}
               href={item.href}
-              className="flex items-baseline justify-between py-3 border-b border-brand-900/5"
+              className="block py-3 border-b border-brand-900/5 text-base font-semibold text-black"
             >
-              <span className="text-base text-black">{item.label}</span>
-              <span className="text-[10px] tracking-widest text-black/50">{item.labelEn}</span>
+              {item.label}
             </SiteLink>
           ))}
           <SiteLink href={SITE.membersUrl} className="btn-gold mt-5">応援する</SiteLink>

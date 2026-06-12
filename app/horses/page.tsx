@@ -46,7 +46,7 @@ export default function HorsesPage() {
             <a
               key={n.id}
               href={`#${n.id}`}
-              className="rounded-full border border-brand-600/30 px-4 py-1.5 text-sm text-brand-800 hover:bg-brand-50"
+              className="min-h-11 rounded-full border border-brand-600/30 px-4 py-2.5 text-sm text-brand-800 hover:bg-brand-50"
             >
               {n.label}
             </a>
@@ -55,7 +55,7 @@ export default function HorsesPage() {
       </div>
 
       {/* 現在の保護馬 */}
-      <Section id="現在の保護馬" alt>
+      <Section id="現在の保護馬" alt className="scroll-mt-[7.5rem] sm:scroll-mt-40">
         <SectionHeading
           eyebrow="PROTECTED"
           title={`現在の保護馬（${protectedHorses.length}頭）`}
@@ -69,7 +69,7 @@ export default function HorsesPage() {
       </Section>
 
       {/* 卒業馬（＝オーナー決定馬）。Before → After */}
-      <Section id="卒業馬">
+      <Section id="卒業馬" className="scroll-mt-[7.5rem] sm:scroll-mt-40">
         <SectionHeading
           eyebrow="GRADUATES"
           title="卒業馬（オーナー決定馬）"
@@ -122,7 +122,7 @@ export default function HorsesPage() {
 
       {/* 馬たちの物語（特集記事形式：保護前 → 保護 → 現在） */}
       {featured && (
-        <Section id="馬たちの物語">
+        <Section id="馬たちの物語" className="scroll-mt-[7.5rem] sm:scroll-mt-40">
           <SectionHeading
             eyebrow="THEIR STORIES"
             title="馬たちの物語"
@@ -157,7 +157,7 @@ export default function HorsesPage() {
       )}
 
       {/* 支援中の馬を探す（検索機能） */}
-      <Section id="支援中の馬を探す" alt>
+      <Section id="支援中の馬を探す" alt className="scroll-mt-[7.5rem] sm:scroll-mt-40">
         <SectionHeading
           eyebrow="SEARCH"
           title="支援中の馬を探す"

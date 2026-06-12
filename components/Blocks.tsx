@@ -193,7 +193,7 @@ export function CTA({
 
   if (backgroundImage) {
     return (
-      <div className="relative overflow-hidden rounded-3xl px-8 py-12 text-center font-serif text-white">
+      <div className="relative overflow-hidden rounded-3xl px-5 py-10 text-center font-serif text-white sm:px-8 sm:py-12">
         <Image
           src={backgroundImage}
           alt=""
@@ -208,7 +208,7 @@ export function CTA({
   }
 
   return (
-    <div className="rounded-3xl bg-brand-700 px-8 py-12 text-center font-serif text-white">
+    <div className="rounded-3xl bg-brand-700 px-5 py-10 text-center font-serif text-white sm:px-8 sm:py-12">
       {content}
     </div>
   );

@@ -7,9 +7,9 @@ import { NAV, SITE } from "@/lib/site";
 
 export default function Footer() {
   return (
-    <footer className="mt-24 bg-brand-900 text-brand-100">
+    <footer className="mt-24 overflow-x-clip bg-brand-900 text-brand-100">
       {/* 上部CTA帯 */}
-      <div className="relative h-[50vh] w-full overflow-hidden">
+      <div className="relative h-[40dvh] min-h-[240px] max-h-[360px] w-full overflow-hidden sm:h-[50dvh] sm:max-h-none">
         <Image
           src={IMG.contactCta}
           alt=""
@@ -29,8 +29,8 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="container-x py-14 grid gap-10 md:grid-cols-[1.3fr_2fr]">
-        <div>
+      <div className="container-x min-w-0 py-14 grid gap-10 md:grid-cols-[1.3fr_2fr]">
+        <div className="min-w-0">
           <Link href="/">
             <Image
               src="/logo.png"
@@ -60,26 +60,23 @@ export default function Footer() {
           </div>
         </div>
 
-        <nav className="grid grid-cols-2 gap-x-8 gap-y-0.5 self-start text-sm sm:grid-cols-2">
+        <nav className="grid min-w-0 grid-cols-1 gap-y-0.5 self-start text-sm sm:grid-cols-2 sm:gap-x-6">
           {NAV.map((item) => (
             <SiteLink
               key={item.href}
               href={item.href}
-              className="group flex items-baseline gap-2 border-b border-white/5 py-2 text-brand-200 transition-colors hover:text-white"
+              className="block min-w-0 border-b border-white/5 py-2.5 text-brand-200 transition-colors hover:text-white"
             >
-              <span>{item.label}</span>
-              <span className="text-[10px] tracking-widest text-brand-400 group-hover:text-gold">
-                {item.labelEn}
-              </span>
+              {item.label}
             </SiteLink>
           ))}
         </nav>
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-x py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-brand-300">
-          <p>© {new Date().getFullYear()} Retouch（リタッチ）All Rights Reserved.</p>
-          <p className="tracking-wider">命をつなぐ。引退競走馬と、人と、地域の未来へ。</p>
+        <div className="container-x min-w-0 py-5 flex flex-col items-center gap-3 text-center text-xs leading-relaxed text-brand-300 sm:flex-row sm:items-center sm:justify-between sm:text-left">
+          <p className="max-w-full break-words">© {new Date().getFullYear()} Retouch（リタッチ）All Rights Reserved.</p>
+          <p className="max-w-full break-words text-balance sm:tracking-wider">命をつなぐ。引退競走馬と、人と、地域の未来へ。</p>
         </div>
       </div>
     </footer>

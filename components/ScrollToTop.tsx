@@ -39,7 +39,7 @@ export default function ScrollToTop() {
       onClick={scrollToTop}
       aria-label="ページトップへ戻る"
       title="ページトップへ戻る"
-      className={`group fixed bottom-6 right-5 sm:bottom-8 sm:right-8 z-40 flex flex-col items-center transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-600 ${
+      className={`group fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] right-4 sm:bottom-8 sm:right-8 z-50 flex min-h-11 min-w-11 flex-col items-center justify-center transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-600 ${
         visible
           ? "pointer-events-auto opacity-100 translate-y-0"
           : "pointer-events-none opacity-0 translate-y-3"

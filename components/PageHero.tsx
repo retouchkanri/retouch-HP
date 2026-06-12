@@ -22,7 +22,7 @@ export default function PageHero({
   crumbs?: Crumb[];
 }) {
   return (
-    <section data-hero className="relative h-[42vh] min-h-[320px] w-full overflow-hidden">
+    <section data-hero className="relative h-[36dvh] min-h-[260px] max-h-[400px] w-full overflow-hidden sm:h-[42vh] sm:min-h-[320px] sm:max-h-none">
       {backgroundImage ? (
         <Image
           src={backgroundImage}

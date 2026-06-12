@@ -44,39 +44,39 @@ export default function Home() {
           className="object-cover sm:hidden"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-900/55 to-brand-900/30" aria-hidden />
-        <div className="relative z-10 w-full h-full flex flex-col justify-between pt-4 pb-20 px-5 sm:justify-center sm:pl-[30vw] sm:pr-[6vw] sm:pb-10 sm:pt-0">
-          {/* バッジ（モバイル：最上部に4列一行） */}
-          <div className="grid grid-cols-4 gap-2 sm:hidden animate-fadeUp">
+        <div className="relative z-10 w-full h-full flex flex-col justify-between pt-4 pb-10 px-5 sm:justify-center sm:pl-[24vw] sm:pr-[8vw] lg:pl-[20vw] lg:pr-[10vw] sm:pb-10 sm:pt-0">
+          {/* バッジ（モバイル：1行4列・約半分サイズ） */}
+          <div className="grid grid-cols-4 gap-1.5 sm:hidden motion-safe:animate-fadeUp">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/badge-1.png" alt="53頭 累計保護馬" className="w-full rounded-lg" />
+            <img src="/badge-1.png" alt="53頭 累計保護馬" className="w-full rounded-md" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/badge-2.png" alt="600名超 支援者・会員" className="w-full rounded-lg" />
+            <img src="/badge-2.png" alt="600名超 支援者・会員" className="w-full rounded-md" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/badge-3.png" alt="2万人超 YouTube登録者" className="w-full rounded-lg" />
+            <img src="/badge-3.png" alt="2万人超 YouTube登録者" className="w-full rounded-md" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/badge-4.png" alt="5万人超 署名" className="w-full rounded-lg" />
+            <img src="/badge-4.png" alt="5万人超 署名" className="w-full rounded-md" />
           </div>
           {/* テキスト＋バッジ（デスクトップ：縦並び） */}
-          <div className="sm:max-w-xl">
-            <p className="eyebrow !text-gold animate-fadeUp">RETOUCH ｜ 引退競走馬の保護団体</p>
-            <h1 className="mt-3 text-3xl sm:text-5xl font-semibold leading-[1.4] text-white animate-fadeUp">
+          <div className="sm:max-w-2xl lg:max-w-3xl">
+            <p className="eyebrow !text-gold animate-fadeUp sm:!text-sm lg:!text-base">RETOUCH ｜ 引退競走馬の保護団体</p>
+            <h1 className="mt-3 text-3xl sm:text-5xl lg:text-6xl font-semibold leading-[1.35] text-white animate-fadeUp">
               命をつなぐ。
               <br />
               引退競走馬と、人と、
               <br />
               地域の未来へ。
             </h1>
-            <p className="mt-4 text-xs sm:text-base leading-loose text-brand-100 animate-fadeUp">
+            <p className="mt-5 text-sm sm:text-lg lg:text-xl leading-loose text-brand-100 motion-safe:animate-fadeUp">
               役目を終えた競走馬の多くは、肥育場で肉用馬として最期を迎えます。
               Retouch（リタッチ）は、その馬たちを救い出し、再調教を通じて
               人と共に生きる新しい道を切り拓きます。
             </p>
-            <div className="mt-6 flex flex-col items-center gap-3 sm:mt-8 sm:flex-row sm:flex-wrap animate-fadeUp">
-              <SiteLink href={SITE.membersUrl} className="btn-gold w-full text-base sm:w-auto sm:text-sm">いますぐ応援する</SiteLink>
-              <Link href="/issue" className="btn-white w-full text-base sm:w-auto sm:text-sm">引退馬の現実を知る</Link>
+            <div className="mt-6 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:flex-wrap animate-fadeUp">
+              <SiteLink href={SITE.membersUrl} className="btn-gold w-full text-base sm:w-auto sm:px-8 sm:py-4 sm:text-base lg:text-lg">いますぐ応援する</SiteLink>
+              <Link href="/issue" className="btn-white w-full text-base sm:w-auto sm:px-8 sm:py-4 sm:text-base lg:text-lg">引退馬の現実を知る</Link>
             </div>
             {/* バッジ（デスクトップ：テキスト下に4列） */}
-            <div className="hidden sm:grid grid-cols-4 gap-x-3 mt-8 w-full animate-fadeUp">
+            <div className="hidden sm:grid grid-cols-4 gap-x-4 lg:gap-x-6 mt-10 lg:mt-12 w-full animate-fadeUp">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/badge-1.png" alt="53頭 累計保護馬" className="w-full" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -241,12 +241,14 @@ export default function Home() {
             <SectionHeading eyebrow="NEWS ｜ お知らせ" title="新着情報" />
             <ul className="mt-8 divide-y divide-brand-900/10">
               {NEWS.slice(0, 5).map((n) => (
-                <li key={n.title} className="flex gap-4 py-4">
-                  <time className="shrink-0 text-sm text-ink/50">{n.date}</time>
-                  <span className="shrink-0 rounded-full bg-brand-100 px-3 py-0.5 text-[11px] font-semibold text-brand-700 h-fit">
-                    {n.category}
-                  </span>
-                  <p className="text-sm text-ink/80 hover:text-brand-700">{n.title}</p>
+                <li key={n.title} className="flex flex-col gap-2 py-4 sm:flex-row sm:items-start sm:gap-4">
+                  <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
+                    <time className="text-sm text-ink/50">{n.date}</time>
+                    <span className="rounded-full bg-brand-100 px-3 py-0.5 text-[11px] font-semibold text-brand-700">
+                      {n.category}
+                    </span>
+                  </div>
+                  <p className="min-w-0 text-sm leading-relaxed text-ink/80 sm:flex-1">{n.title}</p>
                 </li>
               ))}
             </ul>

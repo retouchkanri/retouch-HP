@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { SITE } from "@/lib/site";
+import { IMG } from "@/lib/images";
 import { Section } from "@/components/Section";
 import { CTA } from "@/components/Blocks";
 import Reveal from "@/components/Reveal";
@@ -206,12 +207,12 @@ export default function SolutionPage() {
 
         {/* Quick nav pills */}
         <Reveal delay={120}>
-          <div className="mt-16 flex flex-wrap justify-center gap-3 sm:mt-20">
+          <div className="-mx-5 mt-16 flex gap-2 overflow-x-auto px-5 pb-2 sm:mx-0 sm:mt-20 sm:flex-wrap sm:justify-center sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0">
             {PILLARS.map((pillar) => (
               <a
                 key={pillar.id}
                 href={`#${pillar.id}`}
-                className="rounded-full border border-brand-200 bg-white px-5 py-2.5 text-xs font-semibold text-brand-800 transition-all duration-300 hover:border-gold hover:bg-brand-50 hover:text-brand-900 hover:shadow-md"
+                className="shrink-0 rounded-full border border-brand-200 bg-white px-4 py-2.5 text-xs font-semibold text-brand-800 transition-all duration-300 hover:border-gold hover:bg-brand-50 hover:text-brand-900 hover:shadow-md sm:px-5"
               >
                 {pillar.no}｜{pillar.title}
               </a>
@@ -223,12 +224,12 @@ export default function SolutionPage() {
       <Section alt className="!pb-24">
         <Reveal direction="scale">
           <CTA
-            backgroundImage="/cta-bg.jpg"
+            backgroundImage={IMG.ctaBg}
             title="馬たちに、新しい未来を。"
             body={
               <>
                 あなたの支援や連携が、救える馬の数を増やします。できることから、
-                <span className="whitespace-nowrap">一緒に始めてください。</span>
+                一緒に始めてください。
               </>
             }
             primary={{ label: "私たちの活動を応援する", href: SITE.donateUrl }}

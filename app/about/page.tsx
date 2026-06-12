@@ -8,6 +8,7 @@ import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { CTA } from "@/components/Blocks";
 import { AdGrid } from "@/components/Ads";
+import FutureVisionCarousel from "@/components/FutureVisionCarousel";
 export const metadata: Metadata = {
   title: "Retouchとは",
   description:
@@ -29,12 +30,12 @@ const mapLinkUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIC
 const FUTURE_FIELDS = ["観光", "教育", "福祉", "地域活性化", "乗馬", "ホースセラピー"];
 
 const VISION = [
-  "引退馬問題の認知向上",
-  "保護頭数の拡大",
-  "全国への活動展開",
-  "教育・福祉分野との連携",
-  "持続可能な支援モデル構築",
-  "人と馬が共生する社会の実現",
+  { image: "/2c_1.png", label: "引退馬問題の認知向上" },
+  { image: "/2c_2.png", label: "保護頭数の拡大" },
+  { image: "/2c_3.png", label: "全国への活動展開" },
+  { image: "/2c_4.png", label: "教育・福祉分野との連携" },
+  { image: "/2c_5.png", label: "持続可能な支援モデル構築" },
+  { image: "/2c_6.png", label: "人と馬が共生する社会の実現" },
 ];
 
 export default function AboutPage() {
@@ -99,8 +100,8 @@ export default function AboutPage() {
                 Retouchは、馬たちが新しい人生を歩むためのスタート地点でありたいと考えています。
               </p>
             </div>
-            <p className="mt-8 text-right text-sm text-ink/60">
-              Retouch 代表　{SITE.ceo}
+            <p className="mt-8 text-right text-base text-ink/70">
+              Retouch 代表　<span className="text-lg font-semibold text-ink">{SITE.ceo}</span>
             </p>
           </div>
         </div>
@@ -112,12 +113,12 @@ export default function AboutPage() {
       <Section id="会社概要" alt>
         <SectionHeading eyebrow="SECTION 03" title="会社概要" lead="Retouchについて" />
         <div className="mt-12 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
-          <table className="w-full text-left text-sm">
-            <tbody>
+          <table className="w-full text-left text-sm max-md:block">
+            <tbody className="max-md:block">
               {PROFILE.map(([k, v]) => (
-                <tr key={k} className="border-b border-brand-900/5">
-                  <th className="w-32 align-top py-4 pr-5 font-semibold text-brand-800">{k}</th>
-                  <td className="py-4 leading-relaxed text-black/80 whitespace-pre-line">{v}</td>
+                <tr key={k} className="border-b border-brand-900/5 max-md:block max-md:py-4">
+                  <th className="w-32 align-top py-4 pr-5 font-semibold text-brand-800 max-md:block max-md:w-full max-md:pb-1 max-md:py-0">{k}</th>
+                  <td className="py-4 leading-relaxed text-black/80 whitespace-pre-line max-md:block max-md:py-0">{v}</td>
                 </tr>
               ))}
             </tbody>
@@ -188,19 +189,7 @@ export default function AboutPage() {
         {/* Future Vision */}
         <div className="mt-14">
           <p className="eyebrow">FUTURE VISION</p>
-          <div className="mx-auto mt-6 grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {VISION.map((v, i) => (
-              <div
-                key={v}
-                className="flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-brand-900/5"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold text-sm font-bold text-white">
-                  {i + 1}
-                </span>
-                <p className="text-sm font-medium text-brand-900">{v}</p>
-              </div>
-            ))}
-          </div>
+          <FutureVisionCarousel items={VISION} />
         </div>
 
         <div className="mt-14">

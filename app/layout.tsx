@@ -50,7 +50,7 @@ export default function RootLayout({
       </head>
       <body>
         <Header />
-        <main>{children}</main>
+        <main className="max-sm:pb-24">{children}</main>
         <Footer />
         <ScrollToTop />
         <DonateBanner />

@@ -14,7 +14,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={`scroll-mt-28 py-16 sm:py-24 ${alt ? "bg-white" : ""} ${className}`}
+      className={`scroll-mt-32 py-16 sm:scroll-mt-36 sm:py-24 ${alt ? "bg-white" : ""} ${className}`}
     >
       <div className="container-x">{children}</div>
     </section>

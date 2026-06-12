@@ -29,7 +29,7 @@ function RankRow({
       : "bg-gold text-white";
 
   return (
-    <li className="flex items-center gap-4 rounded-2xl bg-white p-4 ring-1 ring-brand-900/5 shadow-sm">
+    <li className="flex flex-col gap-3 rounded-2xl bg-white p-4 ring-1 ring-brand-900/5 shadow-sm sm:flex-row sm:items-center sm:gap-4">
       {/* 順位 */}
       <span
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${rankColor}`}
@@ -83,7 +83,7 @@ function RankRow({
       {/* 支援ボタン */}
       <SiteLink
         href={SITE.membersUrl}
-        className={`hidden shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors sm:inline-block ${
+        className={`w-full shrink-0 rounded-full px-4 py-2.5 text-center text-xs font-semibold transition-colors sm:w-auto sm:py-2 ${
           tone === "urgent"
             ? "bg-rose-500 text-white hover:bg-rose-600"
             : "bg-brand-700 text-white hover:bg-brand-800"

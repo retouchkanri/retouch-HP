@@ -129,13 +129,13 @@ export default function ContactForm() {
         />
       </label>
 
-      <label className="mt-5 flex items-start gap-3 text-sm text-ink/75">
+      <label className="mt-5 flex min-h-11 cursor-pointer items-start gap-3 py-1 text-sm text-ink/75">
         <input
           required
           type="checkbox"
           checked={form.agree}
           onChange={(e) => update("agree", e.target.checked)}
-          className="mt-1 h-4 w-4 accent-brand-600"
+          className="mt-0.5 h-5 w-5 shrink-0 accent-brand-600"
         />
         <span>プライバシーポリシーに同意のうえ送信します。</span>
       </label>

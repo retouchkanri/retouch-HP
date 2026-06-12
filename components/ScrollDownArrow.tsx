@@ -13,7 +13,7 @@ export default function ScrollDownArrow() {
       type="button"
       onClick={handleClick}
       aria-label="次のセクションへスクロール"
-      className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center text-white/70 hover:text-white transition-colors duration-200 focus-visible:outline-none"
+      className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 hidden min-h-11 min-w-11 flex-col items-center justify-center text-white/70 transition-colors duration-200 hover:text-white focus-visible:outline-none sm:bottom-8 sm:flex"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +25,7 @@ export default function ScrollDownArrow() {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="animate-bounce drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]"
+        className="motion-safe:animate-bounce drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]"
         aria-hidden="true"
       >
         <polyline points="6 9 12 15 18 9" />

@@ -6,6 +6,7 @@ import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { SplitBlock, CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
+import PetitionCounter from "@/components/PetitionCounter";
 
 export const metadata: Metadata = {
   title: "引退競走馬の現実",
@@ -124,16 +125,7 @@ export default function IssuePage() {
               夢を与えてくれた馬たちに、引退後の未来を。
             </p>
             <p className="mt-2 section-lead">あなたの署名が、その第一歩になります。</p>
-            <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-brand-900/5">
-              <div className="flex items-end justify-between">
-                <span className="text-sm font-semibold text-brand-800">署名数</span>
-                <span className="text-2xl font-bold text-brand-700">57,614<span className="text-sm">人</span></span>
-              </div>
-              <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-brand-100">
-                <div className="h-full w-[96%] rounded-full bg-gold" />
-              </div>
-              <p className="mt-2 text-xs text-ink/50">目標 60,000人に向けて、ご署名をお願いします。</p>
-            </div>
+            <PetitionCounter />
           </div>
           <a
             href={SITE.petitionVideoUrl}

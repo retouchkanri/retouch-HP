@@ -98,7 +98,7 @@ export function AdGrid() {
       <div className="grid gap-5 md:grid-cols-3">
         {cards.map((card) => (
           <SiteLink key={card.title} href={card.href} className="card group flex flex-col">
-            <div className="relative h-[312px] overflow-hidden">
+            <div className="relative h-48 overflow-hidden sm:h-[312px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={card.img}

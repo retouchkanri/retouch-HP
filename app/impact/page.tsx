@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { IMG } from "@/lib/images";
-import { SITE, STATS } from "@/lib/site";
+import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
-import { StatGrid, CTA } from "@/components/Blocks";
+import { CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
 import Placeholder from "@/components/Placeholder";
 import YouTubeGrid from "@/components/YouTubeGrid";
@@ -60,17 +60,6 @@ export default function ImpactPage() {
         crumbs={[{ label: "活動実績" }]}
       />
 
-      {/* 大型カウンター */}
-      <div className="bg-brand-900">
-        <div className="container-x py-14">
-          <p className="eyebrow !text-gold">BY THE NUMBERS</p>
-          <h2 className="section-title mt-3 mb-10 !text-white">
-            これまでの歩み
-          </h2>
-          <StatGrid stats={STATS} dark />
-        </div>
-      </div>
-
       {/* 各指標の詳細 */}
       {HIGHLIGHTS.map((h, i) => (
         <Section key={h.id} id={h.id} alt={i % 2 === 0}>
@@ -122,10 +111,10 @@ export default function ImpactPage() {
       {/* 年表 */}
       <Section id="年表">
         <SectionHeading eyebrow="HISTORY" title="活動の歩み（年表）" />
-        <ol className="mx-auto mt-12 max-w-3xl border-l-2 border-brand-200 pl-8">
+        <ol className="mx-auto mt-12 max-w-3xl border-l-2 border-brand-200 pl-10 sm:pl-12">
           {TIMELINE.map((t) => (
             <li key={t.year} className="relative pb-10 last:pb-0">
-              <span className="absolute -left-[41px] flex h-7 w-7 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-white ring-4 ring-cream">
+              <span className="absolute -left-[45px] flex h-7 w-7 items-center justify-center rounded-full bg-gold text-[10px] font-bold text-white ring-4 ring-cream sm:-left-[49px]">
                 ●
               </span>
               <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-brand-900/5">
