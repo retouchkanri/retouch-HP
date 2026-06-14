@@ -8,11 +8,25 @@ import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
+import MediaCard from "@/components/MediaCard";
 import Placeholder from "@/components/Placeholder";
 
 export const metadata: Metadata = {
-  title: "メディア・取材",
-  description: "メディア掲載実績、プレスリリース、取材依頼、写真素材、代表プロフィール。報道関係者の皆さまへ。",
+  title: {
+    absolute: "引退馬問題への取材依頼・メディア掲載／引退競走馬の問題・社会課題",
+  },
+  description:
+    "引退馬に関する記事、取材依頼については、Retouch（リタッチ）として全面協力させて頂きます。現在の引退馬問題に関する取材・記事掲載をお願いいたします。大阪・千葉・東京での打ち合わせ可能。",
+  keywords: [
+    "取材",
+    "記事",
+    "プレスリリース",
+    "引退馬",
+    "競馬",
+    "引退競走馬",
+    "情報",
+    "JRA",
+  ],
 };
 
 const CAREER = [
@@ -40,16 +54,7 @@ export default function MediaPage() {
         <SectionHeading eyebrow="PRESS" title="メディア掲載実績" lead="新聞・テレビ・Web・専門誌など、多数のメディアで取り上げられています。" />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {MEDIA.map((m) => (
-            <article key={m.title} className="card flex flex-col">
-              <Placeholder label={`${m.outlet}（掲載イメージ）`} className="h-40 w-full" />
-              <div className="flex flex-1 flex-col p-5">
-                <div className="flex items-center justify-between text-xs text-ink/50">
-                  <span className="font-semibold text-brand-600">{m.outlet}</span>
-                  <span>{m.date}</span>
-                </div>
-                <p className="mt-2 flex-1 text-sm leading-snug text-ink/85">{m.title}</p>
-              </div>
-            </article>
+            <MediaCard key={`${m.date}-${m.title}`} item={m} />
           ))}
         </div>
       </Section>
@@ -119,9 +124,10 @@ export default function MediaPage() {
             <Image
               src={IMG.ceoPhoto}
               alt={`代表 ${SITE.ceo}`}
-              width={800}
-              height={1000}
-              className="aspect-[4/5] w-full object-cover object-top"
+              width={IMG.ceoPhotoSize.width}
+              height={IMG.ceoPhotoSize.height}
+              className="block w-full h-auto"
+              sizes="(max-width: 1024px) 90vw, 280px"
             />
             <div className="bg-brand-800 p-5 text-center text-white">
               <p className="text-lg font-semibold">{SITE.ceo}</p>

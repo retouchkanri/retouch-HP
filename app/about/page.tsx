@@ -10,9 +10,22 @@ import { CTA } from "@/components/Blocks";
 import { AdGrid } from "@/components/Ads";
 import FutureVisionCarousel from "@/components/FutureVisionCarousel";
 export const metadata: Metadata = {
-  title: "Retouchとは",
+  title: {
+    absolute: "引退競走馬の保護団体 リタッチとは？／引退馬支援Retouch（リタッチ）",
+  },
   description:
-    "引退競走馬保護団体 Retouch（リタッチ）の想い・代表メッセージ・会社概要・目指す未来。「引退馬に、もう一度役割を。」",
+    "競馬を盛り上げてくれる引退競走馬はどこへいく？年間5000頭を越える競馬を引退したサラブレッドの行き先とは？人気競馬の裏側での『引退馬の問題・課題』に取り組むRetouch（リタッチ）の活動。",
+  keywords: [
+    "引退馬問題",
+    "動物愛護",
+    "馬",
+    "食肉",
+    "農林水産",
+    "畜産局",
+    "行方不明",
+    "競走馬",
+    "引退",
+  ],
 };
 
 const PROFILE: [string, string][] = [
@@ -65,14 +78,15 @@ export default function AboutPage() {
       {/* ===== SECTION 02 代表メッセージ ===== */}
       <Section id="代表メッセージ">
         <SectionHeading eyebrow="SECTION 02" title="代表メッセージ" lead="「走れなかったから価値がないのでしょうか。」" />
-        <div className="mt-12 grid items-start gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-          <div>
+        <div className="mt-12 grid items-start gap-10 lg:grid-cols-[minmax(0,360px)_1fr] lg:gap-14">
+          <div className="mx-auto w-full max-w-[360px] lg:mx-0">
             <Image
               src={IMG.ceoPhoto}
               alt={`代表 ${SITE.ceo}`}
-              width={800}
-              height={1000}
-              className="aspect-[4/5] w-full object-cover"
+              width={IMG.ceoPhotoSize.width}
+              height={IMG.ceoPhotoSize.height}
+              className="block w-full h-auto"
+              sizes="(max-width: 1024px) 90vw, 360px"
             />
             <div className="bg-brand-800 p-5 text-center text-white">
               <p className="text-lg font-semibold">{SITE.ceo}</p>

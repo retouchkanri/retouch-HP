@@ -7,8 +7,22 @@ import { CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
 
 export const metadata: Metadata = {
-  title: "共に未来を創る",
-  description: "企業スポンサー募集、行政連携、乗馬クラブ募集、観光牧場募集、学校・教育機関との連携。Retouchのパートナーシップ。",
+  title: {
+    absolute: "企業スポンサー募集・法人協賛支援／引退馬の保護・支援協賛企業",
+  },
+  description:
+    "引退馬を大切にしてくれる法人様・企業様との連携・乗馬クラブや観光牧場との提携！馬と地域の未来をともに、Retouch（リタッチ）では、協力パートナー会社・法人様との連携を図ります。",
+  keywords: [
+    "スポンサー",
+    "引退馬",
+    "引退競走馬",
+    "動物",
+    "企業",
+    "広告",
+    "看板",
+    "保護活動",
+    "財団法人",
+  ],
 };
 
 const PARTNERS = [

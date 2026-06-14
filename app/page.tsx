@@ -8,7 +8,8 @@ import { HorseCard, CTA } from "@/components/Blocks";
 import SupportRanking from "@/components/SupportRanking";
 import { AdBanner, AdGrid } from "@/components/Ads";
 import Image from "next/image";
-import Placeholder, { ImageNote } from "@/components/Placeholder";
+import MediaCard from "@/components/MediaCard";
+import Placeholder from "@/components/Placeholder";
 import ScrollDownArrow from "@/components/ScrollDownArrow";
 
 const SOLUTIONS = [
@@ -99,9 +100,10 @@ export default function Home() {
           <Image
             src={IMG.ceoPhoto}
             alt="代表 野口佳槻と馬"
-            width={800}
-            height={1000}
-            className="aspect-[4/3] w-full object-cover object-top"
+            width={IMG.ceoPhotoSize.width}
+            height={IMG.ceoPhotoSize.height}
+            className="w-full h-auto"
+            sizes="(max-width: 1024px) 100vw, 50vw"
           />
           <div>
             <p className="eyebrow">OUR MISSION ｜ 私たちの想い</p>
@@ -225,9 +227,9 @@ export default function Home() {
           <SectionHeading
             eyebrow="SUPPORT STATUS ｜ 馬ごとの支援状況"
             title="いま、応援を待っている子がいます。"
-            lead="一頭ごとの月間支援の達成状況を、retouch.salon と連動して公開しています。支援が手薄な子も、応援が集まっている子も、あなたの一歩で次の命へつながります。"
+            lead="一頭ごとの月間支援の達成状況を公開しています。支援が手薄な子も、応援が集まっている子も、あなたの一歩で次の命へつながります。"
           />
-          <SiteLink href={SITE.membersUrl} className="btn-outline">支援状況をすべて見る</SiteLink>
+          <Link href="/support/status" className="btn-outline">支援状況をすべて見る</Link>
         </div>
         <div className="mt-12">
           <SupportRanking />
@@ -257,16 +259,7 @@ export default function Home() {
             <SectionHeading eyebrow="MEDIA ｜ メディア掲載" title="取材・掲載実績" />
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {MEDIA.slice(0, 4).map((m) => (
-                <article key={m.title} className="card flex flex-col">
-                  <Placeholder label={`${m.outlet}（掲載イメージ）`} className="h-28 w-full" />
-                  <div className="p-4">
-                    <div className="flex items-center justify-between text-[11px] text-ink/50">
-                      <span className="font-semibold text-brand-600">{m.outlet}</span>
-                      <span>{m.date}</span>
-                    </div>
-                    <p className="mt-2 text-sm leading-snug text-ink/85">{m.title}</p>
-                  </div>
-                </article>
+                <MediaCard key={`${m.date}-${m.title}`} item={m} />
               ))}
             </div>
             <Link href="/media" className="btn-outline mt-6">メディア情報を見る</Link>

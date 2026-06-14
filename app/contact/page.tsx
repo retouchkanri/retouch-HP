@@ -7,8 +7,12 @@ import ContactForm from "@/components/ContactForm";
 import { AdSidebar } from "@/components/Ads";
 
 export const metadata: Metadata = {
-  title: "お問い合わせ",
-  description: "Retouch（リタッチ）へのお問い合わせ。会員・支援・協賛・連携・取材など、お気軽にご連絡ください。",
+  title: {
+    absolute: "引退馬支援団体リタッチ／お問い合わせ・質問Q&A",
+  },
+  description:
+    "引退馬の引き取りや引退馬保護・引退馬支援へのお問い合わせはリタッチまでお気軽にお問い合わせください。Retouch事務局、大阪府河内長野市",
+  keywords: ["質問", "リタッチ", "電話", "馬", "支援団体", "申し込み方法"],
 };
 
 export default function ContactPage() {

@@ -1,12 +1,11 @@
 // ============================================================================
 // サイトコンテンツデータ / Site content data
 // ============================================================================
-import { mediaImg } from "./images";
 
 export type Horse = {
   name: string;
   sex?: "牡" | "牝" | "騙";
-  age?: string; // 表示用ラベル
+  age?: string; // 表示用ラベル（肥育場出身は「不明」）
   ageYears?: number; // 絞り込み用
   status: "protected" | "graduated" | "owner";
   statusLabel: string;
@@ -22,8 +21,7 @@ export const HORSES: Horse[] = [
   {
     name: "ハル号",
     sex: "騙",
-    age: "8歳（令和5年引退）",
-    ageYears: 8,
+    age: "不明",
     status: "protected",
     statusLabel: "現在の保護馬",
     personality: "穏やか・人なつっこい",
@@ -33,8 +31,7 @@ export const HORSES: Horse[] = [
   {
     name: "ソラ号",
     sex: "牡",
-    age: "7歳",
-    ageYears: 7,
+    age: "不明",
     status: "protected",
     statusLabel: "現在の保護馬",
     personality: "好奇心旺盛・甘えん坊",
@@ -44,8 +41,7 @@ export const HORSES: Horse[] = [
   {
     name: "ナギサ号",
     sex: "牝",
-    age: "9歳",
-    ageYears: 9,
+    age: "不明",
     status: "protected",
     statusLabel: "現在の保護馬",
     personality: "繊細・芯が強い",
@@ -145,7 +141,9 @@ export const HORSES: Horse[] = [
 ];
 
 // ============================================================================
-// 馬ごとの支援状況 / Per-horse support status（retouch.salon と連動）
+// 馬ごとの支援状況 / Per-horse support status
+// retouch.salon の実績を lib/data.ts に反映してください（API自動連携は今後対応予定）。
+// ランキング順位・達成率はデータ更新時に lib/horses.ts 側で自動計算されます。
 // goal=月間支援目標（円）, raised=現在の月間支援額（円）, supporters=支援者数
 // ============================================================================
 export type SupportHorse = {
@@ -162,34 +160,24 @@ export type SupportHorse = {
 
 export const SUPPORT_HORSES: SupportHorse[] = [
   // ―― 支援が手薄な保護馬たち ――
-  { name: "ナギサ号", sex: "牝", age: "9歳", status: "protected", statusLabel: "現在の保護馬", goal: 200000, raised: 36000, supporters: 12, note: "繊細で再調教に時間が必要。月々の飼養費が大きく不足しています。" },
-  { name: "リク号", sex: "牡", age: "7歳", status: "protected", statusLabel: "現在の保護馬", goal: 180000, raised: 41000, supporters: 15, note: "肥育場から保護されたばかり。健康管理と治療の支援を募集中です。" },
-  { name: "ハル号", sex: "騙", age: "8歳", status: "protected", statusLabel: "現在の保護馬", goal: 200000, raised: 58000, supporters: 22, note: "人なつっこい人気者ですが、継続支援が目標に届いていません。" },
-  { name: "アオ号", sex: "牝", age: "6歳", status: "protected", statusLabel: "現在の保護馬", goal: 180000, raised: 64000, supporters: 19, note: "若く伸びしろのある一頭。蹄の治療費の支援が必要です。" },
-  { name: "ソラ号", sex: "牡", age: "7歳", status: "protected", statusLabel: "現在の保護馬", goal: 190000, raised: 78000, supporters: 28, note: "リトレーニング中。あと一歩で月間目標に届きます。" },
-  { name: "ホシ号", sex: "騙", age: "10歳", status: "protected", statusLabel: "現在の保護馬", goal: 210000, raised: 99000, supporters: 31, note: "高齢でケア費用がかさむため、長期の支援者を探しています。" },
+  { name: "ナギサ号", sex: "牝", age: "不明", status: "protected", statusLabel: "現在の保護馬", goal: 200000, raised: 36000, supporters: 12, note: "繊細で再調教に時間が必要。月々の飼養費が大きく不足しています。" },
+  { name: "リク号", sex: "牡", age: "不明", status: "protected", statusLabel: "現在の保護馬", goal: 180000, raised: 41000, supporters: 15, note: "肥育場から保護されたばかり。健康管理と治療の支援を募集中です。" },
+  { name: "ハル号", sex: "騙", age: "不明", status: "protected", statusLabel: "現在の保護馬", goal: 200000, raised: 58000, supporters: 22, note: "人なつっこい人気者ですが、継続支援が目標に届いていません。" },
+  { name: "アオ号", sex: "牝", age: "不明", status: "protected", statusLabel: "現在の保護馬", goal: 180000, raised: 64000, supporters: 19, note: "若く伸びしろのある一頭。蹄の治療費の支援が必要です。" },
+  { name: "ソラ号", sex: "牡", age: "不明", status: "protected", statusLabel: "現在の保護馬", goal: 190000, raised: 78000, supporters: 28, note: "リトレーニング中。あと一歩で月間目標に届きます。" },
+  { name: "ホシ号", sex: "騙", age: "不明", status: "protected", statusLabel: "現在の保護馬", goal: 210000, raised: 99000, supporters: 31, note: "高齢でケア費用がかさむため、長期の支援者を探しています。" },
   // ―― 多くの応援が集まっている子たち ――
-  { name: "ミナト号", sex: "騙", age: "11歳", status: "graduated", statusLabel: "卒業馬", goal: 180000, raised: 138000, supporters: 69, note: "指導馬として活躍中。応援の輪が広がっています。" },
-  { name: "ユキ号", sex: "牝", age: "10歳", status: "graduated", statusLabel: "卒業馬", goal: 160000, raised: 132000, supporters: 74, note: "観光牧場のふれあい馬として安定した支援を受けています。" },
-  { name: "サクラ号", sex: "牝", age: "7歳", status: "owner", statusLabel: "オーナー決定馬", goal: 190000, raised: 165000, supporters: 88, note: "オーナー決定後も多くのサポーターに見守られています。" },
-  { name: "カイト号", sex: "騙", age: "8歳", status: "graduated", statusLabel: "卒業馬", goal: 170000, raised: 156000, supporters: 96, note: "乗用馬デビューを果たし、たくさんの応援が集まりました。" },
-  { name: "テンマ号", sex: "牡", age: "6歳", status: "owner", statusLabel: "オーナー決定馬", goal: 200000, raised: 192000, supporters: 128, note: "馬術競技馬を目指して調教中。目標達成まであと一歩です。" },
-  { name: "コハク号", sex: "牝", age: "5歳", status: "owner", statusLabel: "オーナー決定馬", goal: 180000, raised: 178000, supporters: 142, note: "クラウドファンディング発の人気馬。ほぼ満額を達成しています。" },
+  { name: "ミナト号", sex: "騙", age: "不明", status: "graduated", statusLabel: "卒業馬", goal: 180000, raised: 138000, supporters: 69, note: "指導馬として活躍中。応援の輪が広がっています。" },
+  { name: "ユキ号", sex: "牝", age: "不明", status: "graduated", statusLabel: "卒業馬", goal: 160000, raised: 132000, supporters: 74, note: "観光牧場のふれあい馬として安定した支援を受けています。" },
+  { name: "サクラ号", sex: "牝", age: "不明", status: "owner", statusLabel: "オーナー決定馬", goal: 190000, raised: 165000, supporters: 88, note: "オーナー決定後も多くのサポーターに見守られています。" },
+  { name: "カイト号", sex: "騙", age: "不明", status: "graduated", statusLabel: "卒業馬", goal: 170000, raised: 156000, supporters: 96, note: "乗用馬デビューを果たし、たくさんの応援が集まりました。" },
+  { name: "テンマ号", sex: "牡", age: "不明", status: "owner", statusLabel: "オーナー決定馬", goal: 200000, raised: 192000, supporters: 128, note: "馬術競技馬を目指して調教中。目標達成まであと一歩です。" },
+  { name: "コハク号", sex: "牝", age: "不明", status: "owner", statusLabel: "オーナー決定馬", goal: 180000, raised: 178000, supporters: 142, note: "クラウドファンディング発の人気馬。ほぼ満額を達成しています。" },
 ];
 
 /** 支援達成率（%）= 現在額 / 目標額 */
-export const supportRate = (h: SupportHorse) =>
-  Math.min(100, Math.round((h.raised / h.goal) * 100));
-
-/** 支援が必要な子ランキング（達成率の低い順・ワースト6頭） */
-export const SUPPORT_NEEDED: SupportHorse[] = [...SUPPORT_HORSES]
-  .sort((a, b) => supportRate(a) - supportRate(b))
-  .slice(0, 6);
-
-/** 応援が集まっている子ランキング（達成率の高い順・上位6頭） */
-export const SUPPORT_TOP: SupportHorse[] = [...SUPPORT_HORSES]
-  .sort((a, b) => supportRate(b) - supportRate(a))
-  .slice(0, 6);
+export const supportRate = (h: Pick<SupportHorse, "goal" | "raised">) =>
+  h.goal > 0 ? Math.min(100, Math.round((h.raised / h.goal) * 100)) : 0;
 
 export type NewsItem = {
   date: string;
@@ -211,13 +199,55 @@ export type MediaItem = {
   date: string;
   title: string;
   img: string;
+  url?: string;
+  imgAlt?: string;
 };
 
 export const MEDIA: MediaItem[] = [
-  { outlet: "全国紙・新聞", date: "2026.04", title: "肥育場から命をつなぐ ― 引退競走馬を救う取り組み", img: mediaImg(201) },
-  { outlet: "テレビ・情報番組", date: "2026.02", title: "第二の馬生へ ― 再調教で乗馬になる引退馬たち", img: mediaImg(202) },
-  { outlet: "Webメディア", date: "2025.12", title: "ふるさと納税で1頭まるごと保護という選択", img: mediaImg(203) },
-  { outlet: "競馬専門メディア", date: "2025.10", title: "引退競走馬の行き先 ― Retouchの挑戦", img: mediaImg(204) },
-  { outlet: "地域情報誌", date: "2025.08", title: "馬と地域をつなぐ ― 観光・教育・福祉への広がり", img: mediaImg(205) },
-  { outlet: "業界紙", date: "2025.06", title: "馬事学院と連携した人材育成と引退馬活用", img: mediaImg(206) },
+  {
+    outlet: "Yahooニュース",
+    date: "2026.05.03",
+    title: "引退競走馬年7000頭ほぼ「行方不明」に・・・",
+    img: "/media/media-yahoo.jpg",
+    imgAlt: "Yahooニュース掲載：引退競走馬年7000頭ほぼ行方不明に",
+  },
+  {
+    outlet: "NEWSポストセブン",
+    date: "2026.05.03",
+    title: "「1億円で競り落とされた馬も、賞金数千万円稼いだ馬も」・・・",
+    img: "/media/media-postseven.jpg",
+    url: "https://www.news-postseven.com/archives/20260503_2106795.html?DETAIL",
+    imgAlt: "NEWSポストセブン掲載記事",
+  },
+  {
+    outlet: "朝日新聞GLOBE",
+    date: "2026.04.23",
+    title: "馬という物語　人間社会を映す、もうひとつの鏡",
+    img: "/media/media-asahi.jpg",
+    imgAlt: "朝日新聞全国紙紙面",
+  },
+  {
+    outlet: "全部救ってやる（７）",
+    date: "2026.03.12",
+    title: "リタッチの取り組みが【全部救ってやる】漫画に・・・",
+    img: "/media/media-manga.jpg",
+    url: "https://www.amazon.co.jp/dp/B0GPCTFC6T",
+    imgAlt: "全部救ってやる（７）漫画表紙",
+  },
+  {
+    outlet: "西日本新聞",
+    date: "2025.10.27",
+    title: "「ふるさと納税で引退馬支援」名付け親やふれあい体験",
+    img: "/media/media-nishinippon.jpg",
+    url: "https://www.nishinippon.co.jp/item/1416070/",
+    imgAlt: "西日本新聞掲載記事",
+  },
+  {
+    outlet: "産経新聞",
+    date: "2025.10.04",
+    title: "「引退競走馬の余生を支援」ふるさと納税／河内長野市",
+    img: "/media/media-sankei.jpg",
+    url: "https://www.sankei.com/article/20251004-OONUYWECOFLI3EMCHF2JT6U2DE/",
+    imgAlt: "産経新聞掲載記事",
+  },
 ];

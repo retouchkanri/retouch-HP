@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import SiteLink from "@/components/SiteLink";
 import { Horse } from "@/lib/data";
+import { slugFromName } from "@/lib/horses";
 import Placeholder from "@/components/Placeholder";
 
 function isImagePath(src: string) {
@@ -92,8 +93,18 @@ export function HorseCard({ horse }: { horse: Horse }) {
       : horse.status === "graduated"
       ? "bg-gold"
       : "bg-ink";
+  const slug = slugFromName(horse.name);
+  const meta =
+    horse.sex && horse.age
+      ? `${horse.sex}・${horse.age}`
+      : horse.order
+      ? `肥育場から${horse.order}番目`
+      : horse.sex
+      ? horse.sex
+      : "";
+
   return (
-    <article className="card group flex flex-col">
+    <Link href={`/horses/${slug}`} className="card group flex flex-col">
       <div className="relative aspect-square overflow-hidden">
         <Placeholder label={`${horse.name}（${horse.statusLabel}）の写真`} className="h-full w-full" />
         <span
@@ -103,20 +114,19 @@ export function HorseCard({ horse }: { horse: Horse }) {
         </span>
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-baseline justify-between">
-          <h3 className="text-lg font-semibold text-black">{horse.name}</h3>
-          <span className="text-xs text-ink/50">
-            {horse.sex && horse.age
-              ? `${horse.sex}・${horse.age}`
-              : horse.order
-              ? `肥育場から${horse.order}番目`
-              : ""}
-          </span>
+        <div className="flex items-baseline justify-between gap-2">
+          <h3 className="text-lg font-semibold text-black group-hover:text-brand-700">{horse.name}</h3>
+          {meta && <span className="shrink-0 text-xs text-ink/50">{meta}</span>}
         </div>
-        <p className="mt-2 text-xs font-semibold text-brand-600">性格：{horse.personality}</p>
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-black/80">{horse.story}</p>
+        {horse.personality && (
+          <p className="mt-2 text-xs font-semibold text-brand-600">性格：{horse.personality}</p>
+        )}
+        {horse.story && (
+          <p className="mt-2 flex-1 text-sm leading-relaxed text-black/80 line-clamp-3">{horse.story}</p>
+        )}
+        <span className="mt-4 text-sm font-semibold text-gold">詳しく →</span>
       </div>
-    </article>
+    </Link>
   );
 }
 

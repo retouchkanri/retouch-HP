@@ -8,9 +8,21 @@ import { CTA } from "@/components/Blocks";
 import Reveal from "@/components/Reveal";
 
 export const metadata: Metadata = {
-  title: "私たちの取り組み",
+  title: {
+    absolute: "新しい引退馬支援／肥育場からの直接引退馬の保護へ",
+  },
   description:
-    "伝える・支える・新しい役割・次世代を育てる。馬が社会の中で役割を持ち、人が馬から学び、支え合える仕組みをつくる Retouch の4つの取り組み。",
+    "引退馬の保護で私たちが出来ること／引退馬の里親、引退馬への一口支援、引退馬への寄付など、一口馬主とはまた違う新しい引退馬支援のかたち。Retouch（リタッチ）",
+  keywords: [
+    "大阪府",
+    "河内長野市",
+    "会社",
+    "Retouch",
+    "リタッチ",
+    "馬",
+    "寄付",
+    "ふるさと納税",
+  ],
 };
 
 const PILLARS = [

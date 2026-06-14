@@ -9,8 +9,22 @@ import { AdBanner } from "@/components/Ads";
 import PetitionCounter from "@/components/PetitionCounter";
 
 export const metadata: Metadata = {
-  title: "引退競走馬の現実",
-  description: "肥育場の現実、引退馬問題とは、署名活動、私たちが向き合う課題。引退競走馬が直面する厳しい現実を伝えます。",
+  title: {
+    absolute: "引退競走馬の現実／引退馬はどこへ行く？Retouch（リタッチ）",
+  },
+  description:
+    "引退馬問題について三井名さまと一緒に考えるべき、動物愛護の観点から引退馬保護・引退馬支援団体。食肉センターに運ばれる肥育場で過ごす多くの引退競走馬の現実とは？",
+  keywords: [
+    "屠殺件数",
+    "屠殺",
+    "馬肉",
+    "馬",
+    "乗馬",
+    "引退馬",
+    "問題",
+    "動物愛護",
+    "行方不明",
+  ],
 };
 
 const PETITION_DEMANDS = [

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import SiteLink from "@/components/SiteLink";
 import { SITE } from "@/lib/site";
 import { IMG } from "@/lib/images";
@@ -9,8 +10,22 @@ import { CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
 
 export const metadata: Metadata = {
-  title: "応援する",
-  description: "会員になる、一口支援、ポニーチーム、法人協賛、寄付・支援。あなたに合った方法で引退競走馬の命をつなぐ。",
+  title: {
+    absolute: "Retouch（リタッチ）引退馬支援／入会の方法",
+  },
+  description:
+    "引退馬保護団体リタッチの入会方法について、メンバーになるには？メンバーズ会員・サポーター会員をはじめ一口支援制度も充実。ポニーのリタポメンバー入会案内。",
+  keywords: [
+    "入会方法",
+    "Retouch",
+    "リタッチ",
+    "馬",
+    "メンバー会員",
+    "方法",
+    "支援方法",
+    "法人協賛",
+    "スポンサー募集",
+  ],
 };
 
 // 会員種別による特典内容の違いはなし。月額のみが異なる3プラン。
@@ -43,8 +58,23 @@ export default function SupportPage() {
         subtitle="あなたの応援が、一頭の命をつなぎます。"
         image={IMG.bannerSupport}
         backgroundImage={IMG.supportHeroBg}
+        imagePosition="72% center"
+        overlay="strong"
         crumbs={[{ label: "応援する" }]}
       />
+
+      <Section alt>
+        <SectionHeading
+          eyebrow="SUPPORT STATUS"
+          title="馬ごとの支援状況"
+          lead="月間支援の達成率・支援者数から、いま応援を必要としている馬を探せます。"
+        />
+        <div className="mt-8 text-center">
+          <Link href="/support/status" className="btn-primary">
+            支援状況をすべて見る
+          </Link>
+        </div>
+      </Section>
 
       {/* 会員になる */}
       <Section id="会員になる" alt>
@@ -90,8 +120,8 @@ export default function SupportPage() {
         badge="SUPPORT ｜ ふるさと納税"
         title="ふるさと納税で、1頭まるごと保護。"
         body="大阪府河内長野市のふるさと納税を通じて、引退馬の保護を直接応援。返礼として馬に会える・乗れる体験もご用意しています。"
-        cta="寄付・支援を見る"
-        href={SITE.membersUrl}
+        cta="支援状況を見る"
+        href="/support/status"
         tone="gold"
       />
 

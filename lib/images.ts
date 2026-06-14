@@ -15,7 +15,9 @@ export const IMG = {
   // ── ヒーロー / 大判（馬・風景：人物なしでOK）──────────────────────
   aboutHeroBg: "/2_1.png",
   aboutMessage: "/2_2.png",
-  ceoPhoto: "/2_3.jpg",
+  ceoPhoto: "/画像２.jpg",
+  /** 代表写真（画像２.jpg）の実寸。表示時はこの比率を維持すること */
+  ceoPhotoSize: { width: 2048, height: 1365 },
   adSponsor: "/2_4_1.png",
   adFurusato: "/2_4_2.png",
   contactCta: "/contact.png",

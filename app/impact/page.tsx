@@ -10,9 +10,23 @@ import Placeholder from "@/components/Placeholder";
 import YouTubeGrid from "@/components/YouTubeGrid";
 
 export const metadata: Metadata = {
-  title: "活動実績",
+  title: {
+    absolute: "Retouch（リタッチ）活動実績／引退馬問題・引退馬支援のカタチ",
+  },
   description:
-    "保護馬53頭、支援者600名超、YouTube登録者2万人超、署名5万人超、メディア掲載多数。数字が証明する、支援の力。",
+    "大阪府河内長野市を拠点とした株式会社リタッチでの引退馬保護実績・引退馬保護活動の様子。引退馬を守る制度としてRetouchが取り組むべき課題。",
+  keywords: [
+    "取材",
+    "引退馬",
+    "問題",
+    "実績",
+    "競馬",
+    "動物保護団体",
+    "里親募集",
+    "引退競走馬",
+    "乗馬",
+    "馬",
+  ],
 };
 
 const HIGHLIGHTS = [
@@ -89,12 +103,12 @@ export default function ImpactPage() {
         </Section>
       ))}
 
-      {/* メディア掲載（ロゴ一覧） */}
-      <Section id="メディア掲載" alt>
+      {/* YouTube配信活動 */}
+      <Section id="Youtube配信活動" alt>
         <SectionHeading
-          eyebrow="MEDIA"
-          title="メディア掲載"
-          lead="テレビ・新聞・Webなど、多くのメディアにRetouchの取り組みを取り上げていただいています。"
+          eyebrow="YOUTUBE"
+          title="Youtube配信活動"
+          lead="Retouch代表が配信するYouTubeでの引退馬問題への啓発活動実績多数"
         />
         <YouTubeGrid videos={YOUTUBE_VIDEOS} />
       </Section>

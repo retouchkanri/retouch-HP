@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { HORSES } from "@/lib/data";
+import { ALL_HORSES } from "@/lib/horses";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
@@ -10,9 +12,21 @@ import Placeholder from "@/components/Placeholder";
 import HorseExplorer from "@/components/HorseExplorer";
 
 export const metadata: Metadata = {
-  title: "馬たちの紹介",
+  title: {
+    absolute: "もうこの世には存在しなかった馬の紹介／引退馬の保護馬の紹介",
+  },
   description:
-    "現在の保護馬、卒業馬、オーナー決定馬、馬たちの物語、支援中の馬を探す。一頭一頭に、物語がある。",
+    "行方不明の引退馬（引退競走馬）肥育場から保護した馬たちの紹介・最新情報。引退競走馬の保護・引退馬の引き取り、馬の受け入れ実績、里親情報など",
+  keywords: [
+    "馬の購入",
+    "里親募集",
+    "引退馬",
+    "引き取り",
+    "保護馬",
+    "動物愛護",
+    "支援",
+    "財団法人",
+  ],
 };
 
 const protectedHorses = HORSES.filter((h) => h.status === "protected");
@@ -156,15 +170,29 @@ export default function HorsesPage() {
         </Section>
       )}
 
+      {/* 支援状況 */}
+      <Section id="支援状況" alt className="scroll-mt-[7.5rem] sm:scroll-mt-40">
+        <SectionHeading
+          eyebrow="SUPPORT STATUS"
+          title="馬ごとの支援状況"
+          lead="月間支援の達成率・支援者数から、いま応援を必要としている馬を探せます。"
+        />
+        <div className="mt-8 text-center">
+          <Link href="/support/status" className="btn-primary">
+            支援状況をすべて見る
+          </Link>
+        </div>
+      </Section>
+
       {/* 支援中の馬を探す（検索機能） */}
       <Section id="支援中の馬を探す" alt className="scroll-mt-[7.5rem] sm:scroll-mt-40">
         <SectionHeading
           eyebrow="SEARCH"
           title="支援中の馬を探す"
-          lead="年齢・性別・カテゴリーから、応援したい馬を探せます。"
+          lead="性別・カテゴリーから、応援したい馬を探せます。肥育場出身の馬は年齢不明のため、年齢での絞り込みは行っていません。"
         />
         <div className="mt-10">
-          <HorseExplorer horses={HORSES} />
+          <HorseExplorer horses={ALL_HORSES.filter((h) => !h.pendingDetails)} />
         </div>
       </Section>
 

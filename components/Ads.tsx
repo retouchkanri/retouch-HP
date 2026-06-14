@@ -95,17 +95,17 @@ export function AdGrid() {
       <p className="mb-4 text-center text-[10px] tracking-[0.3em] text-ink/40">
         — ADVERTISEMENT / 協賛・支援のご案内 —
       </p>
-      <div className="grid gap-5 md:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((card) => (
           <SiteLink key={card.title} href={card.href} className="card group flex flex-col">
-            <div className="relative h-48 overflow-hidden sm:h-[312px]">
+            <div className="relative overflow-hidden bg-brand-50">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={card.img}
                 alt={card.alt}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
               />
-              <span className="absolute top-3 left-3 rounded-full bg-brand-900/80 px-3 py-1 text-[10px] font-semibold tracking-wider text-white">
+              <span className="absolute top-2 left-2 max-w-[calc(100%-1rem)] rounded-full bg-brand-900/80 px-2 py-0.5 text-[9px] font-semibold leading-tight tracking-wider text-white sm:top-3 sm:left-3 sm:px-3 sm:py-1 sm:text-[10px]">
                 {card.badge}
               </span>
             </div>

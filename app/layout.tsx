@@ -12,16 +12,22 @@ import DonateBanner from "@/components/DonateBanner";
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE.name}（${SITE.nameJa}）｜引退競走馬保護団体`,
+    default: SITE.seoTitle,
     template: `%s｜${SITE.name}（${SITE.nameJa}）`,
   },
   description: SITE.description,
+  keywords: SITE.keywords,
   metadataBase: new URL("https://retouch-members.com"),
   openGraph: {
-    title: `${SITE.name}（${SITE.nameJa}）｜引退競走馬保護団体`,
+    title: SITE.seoTitle,
     description: SITE.description,
     type: "website",
     locale: "ja_JP",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE.seoTitle,
+    description: SITE.description,
   },
   icons: {
     icon: "/favicon.png",
