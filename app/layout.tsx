@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SITE } from "@/lib/site";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ScrollToTop from "@/components/ScrollToTop";
-import DonateBanner from "@/components/DonateBanner";
+import ConditionalShell from "@/components/ConditionalShell";
 
 // フォント（Noto Serif JP）はビルド時取得を避け、実行時に Google Fonts から
 // 読み込みます。--font-noto-serif-jp は globals.css の :root で定義済み。
@@ -55,11 +52,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Header />
-        <main className="max-sm:pb-24">{children}</main>
-        <Footer />
-        <ScrollToTop />
-        <DonateBanner />
+        <ConditionalShell>{children}</ConditionalShell>
       </body>
     </html>
   );

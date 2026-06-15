@@ -3,12 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { SITE } from "@/lib/site";
 import { IMG } from "@/lib/images";
-import { MEDIA, NEWS } from "@/lib/data";
+import { getMedia, getNews } from "@/lib/content";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
-import MediaCard from "@/components/MediaCard";
+import MediaCardStack from "@/components/MediaCardStack";
 import Placeholder from "@/components/Placeholder";
 
 export const metadata: Metadata = {
@@ -37,7 +37,9 @@ const CAREER = [
   "引退競走馬の再調教・乗馬転用に取り組み、年間60頭以上を乗馬クラブへ。引退馬保護団体 Retouch 代表に就任。",
 ];
 
-export default function MediaPage() {
+export default async function MediaPage() {
+  const [media, news] = await Promise.all([getMedia(), getNews()]);
+
   return (
     <>
       <PageHero
@@ -52,10 +54,8 @@ export default function MediaPage() {
       {/* メディア掲載実績 */}
       <Section id="メディア掲載実績" alt>
         <SectionHeading eyebrow="PRESS" title="メディア掲載実績" lead="新聞・テレビ・Web・専門誌など、多数のメディアで取り上げられています。" />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {MEDIA.map((m) => (
-            <MediaCard key={`${m.date}-${m.title}`} item={m} />
-          ))}
+        <div className="mt-12 lg:mt-16">
+          <MediaCardStack items={media} className="max-w-3xl" />
         </div>
       </Section>
 
@@ -63,11 +63,43 @@ export default function MediaPage() {
       <Section id="プレスリリース">
         <SectionHeading eyebrow="NEWS RELEASE" title="プレスリリース" />
         <ul className="mt-8 divide-y divide-brand-900/10">
-          {NEWS.map((n) => (
-            <li key={n.title} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-4">
-              <time className="text-sm text-ink/50">{n.date}</time>
-              <span className="rounded-full bg-brand-100 px-3 py-0.5 text-[11px] font-semibold text-brand-700">{n.category}</span>
-              <p className="text-sm text-ink/80">{n.title}</p>
+          {news.map((n) => (
+            <li key={n.title} className="py-5">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                <time className="text-sm text-ink/50">{n.date}</time>
+                <span className="rounded-full bg-brand-100 px-3 py-0.5 text-[11px] font-semibold text-brand-700">
+                  {n.category}
+                </span>
+                {n.linkUrl ? (
+                  <a
+                    href={n.linkUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium text-brand-700 hover:underline"
+                  >
+                    {n.title}
+                  </a>
+                ) : (
+                  <p className="text-sm text-ink/80">{n.title}</p>
+                )}
+              </div>
+              {(n.body || n.img) && (
+                <div className="mt-3 flex gap-4">
+                  {n.img && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={n.img}
+                      alt={n.title}
+                      className="h-20 w-28 shrink-0 rounded-xl object-cover"
+                    />
+                  )}
+                  {n.body && (
+                    <p className="text-sm leading-relaxed text-ink/70 whitespace-pre-line">
+                      {n.body}
+                    </p>
+                  )}
+                </div>
+              )}
             </li>
           ))}
         </ul>

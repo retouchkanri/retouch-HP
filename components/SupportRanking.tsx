@@ -1,12 +1,16 @@
-import { SUPPORT_NEEDED, SUPPORT_TOP } from "@/lib/horses";
+import { getHorses, supportRate } from "@/lib/content";
 import SupportHorseRow from "@/components/SupportHorseRow";
 
-// ============================================================================
-// 馬ごとの支援状況ランキング / Per-horse support ranking
-// データは lib/data.ts → lib/horses.ts 経由。順位は達成率から自動計算。
-// ============================================================================
+export default async function SupportRanking() {
+  const allHorses = await getHorses();
+  const withSupport = allHorses.filter((h) => h.goal > 0);
+  const supportNeeded = [...withSupport]
+    .sort((a, b) => supportRate(a) - supportRate(b))
+    .slice(0, 6);
+  const supportTop = [...withSupport]
+    .sort((a, b) => supportRate(b) - supportRate(a))
+    .slice(0, 6);
 
-export default function SupportRanking() {
   return (
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-8">
       <div>
@@ -20,7 +24,7 @@ export default function SupportRanking() {
           月間支援の達成率が低い、いま応援を必要としている6頭です。
         </p>
         <ol className="mt-5 space-y-3">
-          {SUPPORT_NEEDED.map((h, i) => (
+          {supportNeeded.map((h, i) => (
             <SupportHorseRow key={h.slug} horse={h} rank={i + 1} tone="urgent" />
           ))}
         </ol>
@@ -37,7 +41,7 @@ export default function SupportRanking() {
           たくさんの支援が届いている上位6頭。あなたの応援が、次の一頭へつながります。
         </p>
         <ol className="mt-5 space-y-3">
-          {SUPPORT_TOP.map((h, i) => (
+          {supportTop.map((h, i) => (
             <SupportHorseRow key={h.slug} horse={h} rank={i + 1} tone="top" />
           ))}
         </ol>

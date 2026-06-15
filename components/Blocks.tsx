@@ -2,8 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
 import SiteLink from "@/components/SiteLink";
-import { Horse } from "@/lib/data";
-import { slugFromName } from "@/lib/horses";
+import { type HorseProfile } from "@/lib/horses";
 import Placeholder from "@/components/Placeholder";
 
 function isImagePath(src: string) {
@@ -86,14 +85,13 @@ export function FeatureCard({
 }
 
 // 馬カード
-export function HorseCard({ horse }: { horse: Horse }) {
+export function HorseCard({ horse }: { horse: HorseProfile }) {
   const badgeColor =
     horse.status === "protected"
       ? "bg-brand-600"
       : horse.status === "graduated"
       ? "bg-gold"
       : "bg-ink";
-  const slug = slugFromName(horse.name);
   const meta =
     horse.sex && horse.age
       ? `${horse.sex}・${horse.age}`
@@ -104,7 +102,7 @@ export function HorseCard({ horse }: { horse: Horse }) {
       : "";
 
   return (
-    <Link href={`/horses/${slug}`} className="card group flex flex-col">
+    <Link href={`/horses/${horse.slug}`} className="card group flex flex-col">
       <div className="relative aspect-square overflow-hidden">
         <Placeholder label={`${horse.name}（${horse.statusLabel}）の写真`} className="h-full w-full" />
         <span

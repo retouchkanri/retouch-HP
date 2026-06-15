@@ -183,6 +183,9 @@ export type NewsItem = {
   date: string;
   category: string;
   title: string;
+  img?: string;
+  body?: string;
+  linkUrl?: string;
 };
 
 export const NEWS: NewsItem[] = [
@@ -201,6 +204,7 @@ export type MediaItem = {
   img: string;
   url?: string;
   imgAlt?: string;
+  mediaType?: string;
 };
 
 export const MEDIA: MediaItem[] = [
@@ -208,8 +212,9 @@ export const MEDIA: MediaItem[] = [
     outlet: "Yahooニュース",
     date: "2026.05.03",
     title: "引退競走馬年7000頭ほぼ「行方不明」に・・・",
-    img: "/media/media-yahoo.jpg",
+    img: "/画像３.JPG",
     imgAlt: "Yahooニュース掲載：引退競走馬年7000頭ほぼ行方不明に",
+    mediaType: "Webメディア",
   },
   {
     outlet: "NEWSポストセブン",
@@ -218,13 +223,15 @@ export const MEDIA: MediaItem[] = [
     img: "/media/media-postseven.jpg",
     url: "https://www.news-postseven.com/archives/20260503_2106795.html?DETAIL",
     imgAlt: "NEWSポストセブン掲載記事",
+    mediaType: "Webメディア",
   },
   {
     outlet: "朝日新聞GLOBE",
     date: "2026.04.23",
     title: "馬という物語　人間社会を映す、もうひとつの鏡",
-    img: "/media/media-asahi.jpg",
+    img: "/画像４.JPG",
     imgAlt: "朝日新聞全国紙紙面",
+    mediaType: "朝日新聞全国紙紙面",
   },
   {
     outlet: "全部救ってやる（７）",
@@ -233,6 +240,7 @@ export const MEDIA: MediaItem[] = [
     img: "/media/media-manga.jpg",
     url: "https://www.amazon.co.jp/dp/B0GPCTFC6T",
     imgAlt: "全部救ってやる（７）漫画表紙",
+    mediaType: "コミック漫画",
   },
   {
     outlet: "西日本新聞",
@@ -241,6 +249,7 @@ export const MEDIA: MediaItem[] = [
     img: "/media/media-nishinippon.jpg",
     url: "https://www.nishinippon.co.jp/item/1416070/",
     imgAlt: "西日本新聞掲載記事",
+    mediaType: "紙面＆Web両方掲載",
   },
   {
     outlet: "産経新聞",
@@ -249,5 +258,6 @@ export const MEDIA: MediaItem[] = [
     img: "/media/media-sankei.jpg",
     url: "https://www.sankei.com/article/20251004-OONUYWECOFLI3EMCHF2JT6U2DE/",
     imgAlt: "産経新聞掲載記事",
+    mediaType: "紙面＆Web両方掲載",
   },
 ];

@@ -2,13 +2,13 @@ import Link from "next/link";
 import SiteLink from "@/components/SiteLink";
 import { SITE } from "@/lib/site";
 import { IMG } from "@/lib/images";
-import { HORSES, NEWS, MEDIA } from "@/lib/data";
+import { getMedia, getNews, getHorses } from "@/lib/content";
 import { Section, SectionHeading } from "@/components/Section";
 import { HorseCard, CTA } from "@/components/Blocks";
 import SupportRanking from "@/components/SupportRanking";
 import { AdBanner, AdGrid } from "@/components/Ads";
 import Image from "next/image";
-import MediaCard from "@/components/MediaCard";
+import MediaCardStack from "@/components/MediaCardStack";
 import Placeholder from "@/components/Placeholder";
 import ScrollDownArrow from "@/components/ScrollDownArrow";
 
@@ -21,7 +21,9 @@ const SOLUTIONS = [
   { no: "06", image: "/1_6.jpg", title: "地域活性化", body: "馬を核に、観光・雇用・交流を生み、地域とともに歩む未来をつくります。", href: "/solution#地域活性化" },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const [news, media, horses] = await Promise.all([getNews(), getMedia(), getHorses()]);
+
   return (
     <>
       {/* ===== ヒーロー ===== */}
@@ -215,8 +217,8 @@ export default function Home() {
           <Link href="/horses" className="btn-outline">すべての馬を見る</Link>
         </div>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {HORSES.slice(0, 4).map((h) => (
-            <HorseCard key={h.name} horse={h} />
+          {horses.filter((h) => !h.pendingDetails).slice(0, 4).map((h) => (
+            <HorseCard key={h.slug} horse={h} />
           ))}
         </div>
       </Section>
@@ -242,7 +244,7 @@ export default function Home() {
           <div>
             <SectionHeading eyebrow="NEWS ｜ お知らせ" title="新着情報" />
             <ul className="mt-8 divide-y divide-brand-900/10">
-              {NEWS.slice(0, 5).map((n) => (
+              {news.slice(0, 5).map((n) => (
                 <li key={n.title} className="flex flex-col gap-2 py-4 sm:flex-row sm:items-start sm:gap-4">
                   <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
                     <time className="text-sm text-ink/50">{n.date}</time>
@@ -257,10 +259,8 @@ export default function Home() {
           </div>
           <div>
             <SectionHeading eyebrow="MEDIA ｜ メディア掲載" title="取材・掲載実績" />
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {MEDIA.slice(0, 4).map((m) => (
-                <MediaCard key={`${m.date}-${m.title}`} item={m} />
-              ))}
+            <div className="mt-8">
+              <MediaCardStack items={media} />
             </div>
             <Link href="/media" className="btn-outline mt-6">メディア情報を見る</Link>
           </div>

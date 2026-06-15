@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { HORSES } from "@/lib/data";
-import { ALL_HORSES } from "@/lib/horses";
+import { getHorses } from "@/lib/content";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
@@ -17,22 +16,8 @@ export const metadata: Metadata = {
   },
   description:
     "行方不明の引退馬（引退競走馬）肥育場から保護した馬たちの紹介・最新情報。引退競走馬の保護・引退馬の引き取り、馬の受け入れ実績、里親情報など",
-  keywords: [
-    "馬の購入",
-    "里親募集",
-    "引退馬",
-    "引き取り",
-    "保護馬",
-    "動物愛護",
-    "支援",
-    "財団法人",
-  ],
+  keywords: ["馬の購入", "里親募集", "引退馬", "引き取り", "保護馬", "動物愛護", "支援", "財団法人"],
 };
-
-const protectedHorses = HORSES.filter((h) => h.status === "protected");
-// 卒業馬＝オーナー決定馬（卒業＝オーナーが決まった馬）として統合
-const graduatedHorses = HORSES.filter((h) => h.status === "graduated");
-const featured = graduatedHorses[0]; // 馬たちの物語の特集馬
 
 const NAV = [
   { id: "現在の保護馬", label: "現在の保護馬" },
@@ -41,7 +26,13 @@ const NAV = [
   { id: "支援中の馬を探す", label: "支援中の馬を探す" },
 ];
 
-export default function HorsesPage() {
+export default async function HorsesPage() {
+  const allHorses = await getHorses();
+  const protectedHorses = allHorses.filter((h) => h.status === "protected" && !h.pendingDetails);
+  const graduatedHorses = allHorses.filter((h) => h.status === "graduated" && !h.pendingDetails);
+  const featured = graduatedHorses[0];
+  const explorerHorses = allHorses.filter((h) => !h.pendingDetails);
+
   return (
     <>
       <PageHero
@@ -77,12 +68,12 @@ export default function HorsesPage() {
         />
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {protectedHorses.map((h) => (
-            <HorseCard key={h.name} horse={h} />
+            <HorseCard key={h.slug} horse={h} />
           ))}
         </div>
       </Section>
 
-      {/* 卒業馬（＝オーナー決定馬）。Before → After */}
+      {/* 卒業馬（＝オーナー決定馬）Before → After */}
       <Section id="卒業馬" className="scroll-mt-[7.5rem] sm:scroll-mt-40">
         <SectionHeading
           eyebrow="GRADUATES"
@@ -92,7 +83,7 @@ export default function HorsesPage() {
         <div className="mt-10 space-y-6">
           {graduatedHorses.map((h) => (
             <article
-              key={h.name}
+              key={h.slug}
               className="grid items-stretch gap-0 overflow-hidden rounded-3xl shadow-sm ring-1 ring-brand-900/5 lg:grid-cols-[300px_1fr]"
             >
               {h.photo ? (
@@ -117,11 +108,13 @@ export default function HorsesPage() {
                       : ""}
                   </span>
                 </div>
-                <p className="mt-1 text-xs font-semibold text-brand-600">特徴：{h.personality}</p>
+                {h.personality && (
+                  <p className="mt-1 text-xs font-semibold text-brand-600">特徴：{h.personality}</p>
+                )}
                 <div className="mt-5 grid gap-4 sm:grid-cols-2">
                   <div className="rounded-2xl bg-ink/5 p-5">
                     <span className="text-[11px] font-bold tracking-widest text-ink/50">BEFORE</span>
-                    <p className="mt-2 text-sm leading-relaxed text-ink/75">{h.before}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-ink/75">{h.before ?? "保護前の情報は準備中です。"}</p>
                   </div>
                   <div className="rounded-2xl bg-brand-50 p-5 ring-1 ring-brand-200">
                     <span className="text-[11px] font-bold tracking-widest text-brand-600">AFTER</span>
@@ -134,7 +127,7 @@ export default function HorsesPage() {
         </div>
       </Section>
 
-      {/* 馬たちの物語（特集記事形式：保護前 → 保護 → 現在） */}
+      {/* 馬たちの物語（特集記事形式） */}
       {featured && (
         <Section id="馬たちの物語" className="scroll-mt-[7.5rem] sm:scroll-mt-40">
           <SectionHeading
@@ -146,7 +139,7 @@ export default function HorsesPage() {
             {[
               { step: "保護前", body: featured.before ?? "行き場を失い、命の期限が迫っていました。" },
               { step: "保護", body: "Retouchが引き取り、健康管理とリトレーニングを開始しました。" },
-              { step: "現在", body: featured.story },
+              { step: "現在", body: featured.story ?? "" },
             ].map((s, i) => (
               <div key={s.step} className="relative rounded-3xl bg-white p-7 shadow-sm ring-1 ring-brand-900/5">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gold text-sm font-bold text-white">
@@ -170,7 +163,7 @@ export default function HorsesPage() {
         </Section>
       )}
 
-      {/* 支援状況 */}
+      {/* 支援状況リンク */}
       <Section id="支援状況" alt className="scroll-mt-[7.5rem] sm:scroll-mt-40">
         <SectionHeading
           eyebrow="SUPPORT STATUS"
@@ -178,9 +171,7 @@ export default function HorsesPage() {
           lead="月間支援の達成率・支援者数から、いま応援を必要としている馬を探せます。"
         />
         <div className="mt-8 text-center">
-          <Link href="/support/status" className="btn-primary">
-            支援状況をすべて見る
-          </Link>
+          <Link href="/support/status" className="btn-primary">支援状況をすべて見る</Link>
         </div>
       </Section>
 
@@ -192,7 +183,7 @@ export default function HorsesPage() {
           lead="性別・カテゴリーから、応援したい馬を探せます。肥育場出身の馬は年齢不明のため、年齢での絞り込みは行っていません。"
         />
         <div className="mt-10">
-          <HorseExplorer horses={ALL_HORSES.filter((h) => !h.pendingDetails)} />
+          <HorseExplorer horses={explorerHorses} />
         </div>
       </Section>
 

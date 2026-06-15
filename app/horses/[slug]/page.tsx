@@ -8,23 +8,20 @@ import Placeholder from "@/components/Placeholder";
 import { CTA } from "@/components/Blocks";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
-import {
-  ALL_HORSES,
-  formatHorseMeta,
-  getHorseBySlug,
-  getHorseSlugs,
-  supportRate,
-} from "@/lib/horses";
+import { getHorseBySlugDb, getHorses, supportRate } from "@/lib/content";
+import { getHorseBySlug, getHorseSlugs, formatHorseMeta } from "@/lib/horses";
 
 type Props = { params: Promise<{ slug: string }> };
 
+// Keep static params for build-time pre-rendering using static horse slugs
 export function generateStaticParams() {
   return getHorseSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const horse = getHorseBySlug(slug);
+  // Try DB first, fall back to static
+  const horse = (await getHorseBySlugDb(slug)) ?? getHorseBySlug(slug);
   if (!horse) return { title: "馬が見つかりません" };
   return {
     title: `${horse.name}｜支援状況`,
@@ -36,9 +33,10 @@ const yen = (n: number) => `¥${n.toLocaleString("ja-JP")}`;
 
 export default async function HorseDetailPage({ params }: Props) {
   const { slug } = await params;
-  const horse = getHorseBySlug(slug);
+  const horse = (await getHorseBySlugDb(slug)) ?? getHorseBySlug(slug);
   if (!horse) notFound();
 
+  const allHorses = await getHorses();
   const rate = supportRate(horse);
   const hasSupport = horse.goal > 0;
 
@@ -69,7 +67,7 @@ export default async function HorseDetailPage({ params }: Props) {
                 className="aspect-square w-full rounded-2xl object-cover"
               />
             ) : (
-              <Placeholder label={`${horse.name}の写真（lib/data.ts の photo にURLを設定）`} className="aspect-square w-full rounded-2xl" />
+              <Placeholder label={`${horse.name}の写真`} className="aspect-square w-full rounded-2xl" />
             )}
           </div>
 
@@ -77,10 +75,12 @@ export default async function HorseDetailPage({ params }: Props) {
             <p className="eyebrow">PROFILE</p>
             <h2 className="section-title mt-3">{horse.name}</h2>
             <dl className="mt-6 space-y-3 text-sm">
-              <div className="flex gap-3">
-                <dt className="w-16 shrink-0 font-semibold text-brand-800">性別</dt>
-                <dd>{horse.sex}</dd>
-              </div>
+              {horse.sex && (
+                <div className="flex gap-3">
+                  <dt className="w-16 shrink-0 font-semibold text-brand-800">性別</dt>
+                  <dd>{horse.sex}</dd>
+                </div>
+              )}
               <div className="flex gap-3">
                 <dt className="w-16 shrink-0 font-semibold text-brand-800">年齢</dt>
                 <dd>{horse.age}</dd>
@@ -107,7 +107,6 @@ export default async function HorseDetailPage({ params }: Props) {
             {horse.pendingDetails ? (
               <p className="section-lead mt-6">
                 この馬の詳細情報（写真・コメント・支援数値）は順次公開予定です。
-                馬名・性別は lib/data.ts に登録後、自動的にこのページへ反映されます。
               </p>
             ) : (
               <>
@@ -130,7 +129,7 @@ export default async function HorseDetailPage({ params }: Props) {
         <SectionHeading
           eyebrow="SUPPORT STATUS"
           title="この子の支援状況"
-          lead="月間支援の達成状況です。データは retouch.salon の実績を lib/data.ts に反映して更新します。"
+          lead="月間支援の達成状況です。"
         />
 
         {hasSupport ? (
@@ -161,7 +160,7 @@ export default async function HorseDetailPage({ params }: Props) {
       <Section alt>
         <CTA
           title="他の馬の支援状況も見る"
-          body={`Retouchでは累計${ALL_HORSES.length}頭の引退競走馬を保護しています。`}
+          body={`Retouchでは累計${allHorses.length}頭の引退競走馬を保護しています。`}
           primary={{ label: "支援状況一覧へ", href: "/support/status" }}
           secondary={{ label: "馬たちの紹介へ", href: "/horses" }}
         />
