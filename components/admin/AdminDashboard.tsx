@@ -81,9 +81,11 @@ export default function AdminDashboard({ news, media, horses, faq, dbReady }: Pr
         </div>
       )}
 
-      {dbReady && news.length === 0 && media.length === 0 && (
+      {dbReady && (news.length === 0 || media.length === 0 || horses.length === 0 || faq.length === 0) && (
         <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6">
-          <p className="text-sm text-brand-100">テーブルは準備済みです。既存のサイトデータを投入できます。</p>
+          <p className="text-sm text-brand-100">
+            一部のテーブルが空です。既存のサイトデータを投入できます。
+          </p>
           <button
             type="button"
             onClick={handleSeed}
@@ -160,6 +162,7 @@ function NewsPanel({
     setUploading(true);
     const fd = new FormData();
     fd.append("file", file);
+    fd.append("bucket", "news-images");
     const result = await uploadImage(fd);
     setUploading(false);
     if (result.error) {
@@ -246,6 +249,9 @@ function NewsPanel({
       {/* Edit / Create form */}
       <form onSubmit={submit} className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-5">
         <h2 className="font-semibold text-white">{editing ? "編集" : "新規作成"}</h2>
+        {!editing && (
+          <p className="text-xs text-brand-300">タイトルのみ入力すれば保存できます。日付・カテゴリは未入力時に自動設定されます。</p>
+        )}
 
         {/* Image */}
         <div>
@@ -298,6 +304,7 @@ function NewsPanel({
           value={form.date}
           onChange={(v) => setForm({ ...form, date: v })}
           placeholder="2026.05.20"
+          optional
         />
         <Field
           label="カテゴリ"
@@ -305,6 +312,7 @@ function NewsPanel({
           value={form.category}
           onChange={(v) => setForm({ ...form, category: v })}
           placeholder="お知らせ"
+          optional
         />
         <Field
           label="タイトル"
@@ -312,6 +320,7 @@ function NewsPanel({
           value={form.title}
           onChange={(v) => setForm({ ...form, title: v })}
           placeholder="タイトルを入力"
+          required
         />
 
         {/* Body text */}
@@ -364,10 +373,28 @@ function MediaPanel({
   const [editing, setEditing] = useState<DbMediaItem | null>(null);
   const [form, setForm] = useState(emptyMedia);
   const [pending, startTransition] = useTransition();
+  const [uploading, setUploading] = useState(false);
 
   const openNew = () => {
     setEditing(null);
     setForm(emptyMedia);
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("bucket", "media-image");
+    const result = await uploadImage(fd);
+    setUploading(false);
+    if (result.error) onMessage(`画像アップロードエラー: ${result.error}`);
+    else if (result.url) {
+      setForm((f) => ({ ...f, img: result.url! }));
+      onMessage(null);
+    }
+    e.target.value = "";
   };
 
   const openEdit = (item: DbMediaItem) => {
@@ -388,6 +415,7 @@ function MediaPanel({
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     if (editing) fd.set("id", editing.id);
+    fd.set("img", form.img);
     startTransition(async () => {
       const result = await saveMedia(fd);
       onMessage(result?.error ? `エラー: ${result.error}` : "メディア情報を保存しました。");
@@ -439,15 +467,56 @@ function MediaPanel({
 
       <form onSubmit={submit} className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-4">
         <h2 className="font-semibold text-white">{editing ? "編集" : "新規作成"}</h2>
-        <Field label="媒体名" name="outlet" value={form.outlet} onChange={(v) => setForm({ ...form, outlet: v })} />
-        <Field label="日付" name="date" value={form.date} onChange={(v) => setForm({ ...form, date: v })} />
-        <Field label="タイトル" name="title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} />
-        <Field label="画像パス" name="img" value={form.img} onChange={(v) => setForm({ ...form, img: v })} placeholder="/media/media-example.jpg" />
-        <Field label="URL" name="url" value={form.url} onChange={(v) => setForm({ ...form, url: v })} />
-        <Field label="画像 alt" name="imgAlt" value={form.imgAlt} onChange={(v) => setForm({ ...form, imgAlt: v })} />
-        <Field label="媒体種別" name="mediaType" value={form.mediaType} onChange={(v) => setForm({ ...form, mediaType: v })} />
-        <Field label="表示順" name="sortOrder" value={form.sortOrder} onChange={(v) => setForm({ ...form, sortOrder: v })} />
-        <button type="submit" disabled={pending} className="btn-gold disabled:opacity-60">
+        {!editing && (
+          <p className="text-xs text-brand-300">タイトルのみ入力すれば保存できます。その他は未入力時に仮の値が入ります。</p>
+        )}
+        <Field label="媒体名" name="outlet" value={form.outlet} onChange={(v) => setForm({ ...form, outlet: v })} optional />
+        <Field label="日付" name="date" value={form.date} onChange={(v) => setForm({ ...form, date: v })} optional />
+        <Field label="タイトル" name="title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
+
+        {/* Image */}
+        <div>
+          <p className="mb-1.5 text-sm text-brand-100">画像</p>
+          {form.img && (
+            <div className="relative mb-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={form.img} alt="プレビュー" className="h-36 w-full rounded-xl object-cover" />
+              <button
+                type="button"
+                onClick={() => setForm((f) => ({ ...f, img: "" }))}
+                className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-xs text-white hover:bg-black/80"
+              >
+                ✕ 削除
+              </button>
+            </div>
+          )}
+          <label className="mb-1 block text-xs text-brand-300">ファイルをアップロード</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            disabled={uploading || pending}
+            className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-3 py-2.5 text-sm text-white
+              file:mr-3 file:rounded-lg file:border-0 file:bg-gold file:px-3 file:py-1
+              file:text-xs file:font-semibold file:text-white file:cursor-pointer disabled:opacity-50"
+          />
+          {uploading && <p className="mt-1 text-xs text-brand-200">アップロード中…</p>}
+          <label className="mt-2 mb-1 block text-xs text-brand-300">または画像 URL を直接入力</label>
+          <input
+            type="text"
+            name="img"
+            value={form.img}
+            onChange={(e) => setForm((f) => ({ ...f, img: e.target.value }))}
+            placeholder="https://... または /media/media-example.jpg"
+            className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-4 py-3 text-sm text-white outline-none ring-gold focus:ring-2"
+          />
+        </div>
+
+        <Field label="URL" name="url" value={form.url} onChange={(v) => setForm({ ...form, url: v })} optional />
+        <Field label="画像 alt" name="imgAlt" value={form.imgAlt} onChange={(v) => setForm({ ...form, imgAlt: v })} optional />
+        <Field label="媒体種別" name="mediaType" value={form.mediaType} onChange={(v) => setForm({ ...form, mediaType: v })} optional />
+        <Field label="表示順" name="sortOrder" value={form.sortOrder} onChange={(v) => setForm({ ...form, sortOrder: v })} optional />
+        <button type="submit" disabled={pending || uploading} className="btn-gold disabled:opacity-60">
           {pending ? "保存中…" : "保存"}
         </button>
       </form>
@@ -498,6 +567,7 @@ function HorsePanel({
     setUploading(true);
     const fd = new FormData();
     fd.append("file", file);
+    fd.append("bucket", "horse-images");
     const result = await uploadImage(fd);
     setUploading(false);
     if (result.error) onMessage(`画像アップロードエラー: ${result.error}`);
@@ -561,6 +631,9 @@ function HorsePanel({
       {/* Form */}
       <form onSubmit={submit} className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-4 max-h-[80vh] overflow-y-auto">
         <h2 className="font-semibold text-white sticky top-0 bg-brand-950/95 py-1">{editing ? "編集" : "新規作成"}</h2>
+        {!editing && (
+          <p className="text-xs text-brand-300">馬名だけ入力すれば登録できます。詳細は後から編集できます。</p>
+        )}
 
         {/* Photo */}
         <div>
@@ -585,8 +658,8 @@ function HorsePanel({
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Field label="馬名" name="name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="ハル号" />
-          <Field label="スラッグ" name="slug" value={form.slug} onChange={(v) => setForm({ ...form, slug: v })} placeholder="haru" />
+          <Field label="馬名" name="name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="ハル号" required />
+          <Field label="スラッグ" name="slug" value={form.slug} onChange={(v) => setForm({ ...form, slug: v })} placeholder="haru（空欄で自動生成）" optional />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -600,7 +673,7 @@ function HorsePanel({
               <option value="騙">騙</option>
             </select>
           </div>
-          <Field label="年齢" name="age" value={form.age} onChange={(v) => setForm({ ...form, age: v })} placeholder="不明" />
+          <Field label="年齢" name="age" value={form.age} onChange={(v) => setForm({ ...form, age: v })} placeholder="不明" optional />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -616,26 +689,26 @@ function HorsePanel({
               <option value="owner">オーナー決定馬</option>
             </select>
           </div>
-          <Field label="ステータスラベル" name="statusLabel" value={form.statusLabel} onChange={(v) => setForm({ ...form, statusLabel: v })} />
+          <Field label="ステータスラベル" name="statusLabel" value={form.statusLabel} onChange={(v) => setForm({ ...form, statusLabel: v })} optional />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Field label="肥育場番号" name="orderNum" value={form.orderNum} onChange={(v) => setForm({ ...form, orderNum: v })} placeholder="16" />
-          <Field label="表示順" name="sortOrder" value={form.sortOrder} onChange={(v) => setForm({ ...form, sortOrder: v })} />
+          <Field label="肥育場番号" name="orderNum" value={form.orderNum} onChange={(v) => setForm({ ...form, orderNum: v })} placeholder="16" optional />
+          <Field label="表示順" name="sortOrder" value={form.sortOrder} onChange={(v) => setForm({ ...form, sortOrder: v })} optional />
         </div>
 
-        <Field label="性格・特徴" name="personality" value={form.personality} onChange={(v) => setForm({ ...form, personality: v })} placeholder="穏やか・人なつっこい" />
+        <Field label="性格・特徴" name="personality" value={form.personality} onChange={(v) => setForm({ ...form, personality: v })} placeholder="穏やか・人なつっこい" optional />
 
-        <Textarea label="現在の様子（story）" name="story" value={form.story} onChange={(v) => setForm({ ...form, story: v })} rows={3} />
+        <Textarea label="現在の様子（story）" name="story" value={form.story} onChange={(v) => setForm({ ...form, story: v })} rows={3} optional />
         <Textarea label="保護前の様子（before）" name="beforeStory" value={form.beforeStory} onChange={(v) => setForm({ ...form, beforeStory: v })} rows={2} optional />
         <Textarea label="支援が必要な理由（note）" name="note" value={form.note} onChange={(v) => setForm({ ...form, note: v })} rows={2} optional />
         <Textarea label="オーナーストーリー" name="ownerStory" value={form.ownerStory} onChange={(v) => setForm({ ...form, ownerStory: v })} rows={2} optional />
 
         <p className="text-xs font-semibold text-brand-200 pt-2">支援データ</p>
         <div className="grid grid-cols-3 gap-3">
-          <Field label="月間目標額（円）" name="goal" value={form.goal} onChange={(v) => setForm({ ...form, goal: v })} placeholder="200000" />
-          <Field label="現在の支援額（円）" name="raised" value={form.raised} onChange={(v) => setForm({ ...form, raised: v })} placeholder="58000" />
-          <Field label="支援者数" name="supporters" value={form.supporters} onChange={(v) => setForm({ ...form, supporters: v })} placeholder="22" />
+          <Field label="月間目標額（円）" name="goal" value={form.goal} onChange={(v) => setForm({ ...form, goal: v })} placeholder="200000" optional />
+          <Field label="現在の支援額（円）" name="raised" value={form.raised} onChange={(v) => setForm({ ...form, raised: v })} placeholder="58000" optional />
+          <Field label="支援者数" name="supporters" value={form.supporters} onChange={(v) => setForm({ ...form, supporters: v })} placeholder="22" optional />
         </div>
 
         <button type="submit" disabled={pending || uploading} className="btn-gold w-full disabled:opacity-60">
@@ -711,13 +784,16 @@ function FaqPanel({
 
       <form onSubmit={submit} className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-4">
         <h2 className="font-semibold text-white">{editing ? "編集" : "新規作成"}</h2>
+        {!editing && (
+          <p className="text-xs text-brand-300">質問だけ入力すれば保存できます。回答は後から追記できます。</p>
+        )}
         <div>
           <label className="mb-1.5 block text-sm text-brand-100">質問</label>
           <input name="question" value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} required
             placeholder="質問を入力" className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-4 py-3 text-sm text-white outline-none ring-gold focus:ring-2" />
         </div>
-        <Textarea label="回答" name="answer" value={form.answer} onChange={(v) => setForm({ ...form, answer: v })} rows={5} />
-        <Field label="表示順" name="sortOrder" value={form.sortOrder} onChange={(v) => setForm({ ...form, sortOrder: v })} />
+        <Textarea label="回答" name="answer" value={form.answer} onChange={(v) => setForm({ ...form, answer: v })} rows={5} optional />
+        <Field label="表示順" name="sortOrder" value={form.sortOrder} onChange={(v) => setForm({ ...form, sortOrder: v })} optional />
         <button type="submit" disabled={pending} className="btn-gold w-full disabled:opacity-60">
           {pending ? "保存中…" : "保存"}
         </button>
@@ -749,17 +825,22 @@ function Field({
   value,
   onChange,
   placeholder,
+  required = false,
+  optional = false,
 }: {
   label: string;
   name: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  required?: boolean;
+  optional?: boolean;
 }) {
   return (
     <div>
       <label htmlFor={name} className="mb-1.5 block text-sm text-brand-100">
         {label}
+        {optional && <span className="ml-2 text-xs font-normal text-brand-300">（任意）</span>}
       </label>
       <input
         id={name}
@@ -767,7 +848,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        required={name !== "url" && name !== "imgAlt" && name !== "mediaType"}
+        required={required}
         className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-4 py-3 text-sm text-white outline-none ring-gold focus:ring-2"
       />
     </div>

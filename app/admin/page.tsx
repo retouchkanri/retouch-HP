@@ -1,4 +1,5 @@
 import AdminDashboard from "@/components/admin/AdminDashboard";
+import { seedDatabase } from "@/app/admin/actions";
 import {
   getAdminMedia,
   getAdminNews,
@@ -22,6 +23,22 @@ export default async function AdminPage() {
         getAdminHorses(),
         getAdminFaq(),
       ]);
+
+      const needsSeed =
+        news.length === 0 ||
+        media.length === 0 ||
+        horses.length === 0 ||
+        faq.length === 0;
+
+      if (needsSeed) {
+        await seedDatabase();
+        [news, media, horses, faq] = await Promise.all([
+          getAdminNews(),
+          getAdminMedia(),
+          getAdminHorses(),
+          getAdminFaq(),
+        ]);
+      }
     } catch {
       // Tables exist but query failed — show empty state
     }

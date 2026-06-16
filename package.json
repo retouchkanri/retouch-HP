@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "next lint",
     "db:setup": "node scripts/setup-db.mjs",
-    "seed:admin": "node --env-file=.env.local scripts/seed-admin.mjs"
+    "seed:admin": "node --env-file=.env.local scripts/seed-admin.mjs",
+    "seed:content": "npx tsx --env-file=.env.local scripts/seed-content.ts",
+    "upload:images": "npx tsx --env-file=.env.local scripts/upload-images.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

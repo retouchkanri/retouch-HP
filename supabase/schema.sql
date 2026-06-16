@@ -173,6 +173,31 @@ create policy "Authenticated delete horse-images"
   on storage.objects for delete
   using (bucket_id = 'horse-images' and auth.role() = 'authenticated');
 
+-- Storage bucket for general media coverage images
+insert into storage.buckets (id, name, public)
+values ('media-image', 'media-image', true)
+on conflict (id) do nothing;
+
+drop policy if exists "Public read media-image" on storage.objects;
+create policy "Public read media-image"
+  on storage.objects for select
+  using (bucket_id = 'media-image');
+
+drop policy if exists "Authenticated upload media-image" on storage.objects;
+create policy "Authenticated upload media-image"
+  on storage.objects for insert
+  with check (bucket_id = 'media-image' and auth.role() = 'authenticated');
+
+drop policy if exists "Authenticated update media-image" on storage.objects;
+create policy "Authenticated update media-image"
+  on storage.objects for update
+  using (bucket_id = 'media-image' and auth.role() = 'authenticated');
+
+drop policy if exists "Authenticated delete media-image" on storage.objects;
+create policy "Authenticated delete media-image"
+  on storage.objects for delete
+  using (bucket_id = 'media-image' and auth.role() = 'authenticated');
+
 -- ============================================================================
 -- FAQ
 -- ============================================================================

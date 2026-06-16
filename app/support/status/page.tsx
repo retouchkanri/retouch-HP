@@ -7,7 +7,8 @@ import SupportStatusExplorer from "@/components/SupportStatusExplorer";
 import { CTA } from "@/components/Blocks";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
-import { TOTAL_PROTECTED_HORSES, HORSES_WITH_SUPPORT } from "@/lib/horses";
+import { getHorses } from "@/lib/content";
+import { TOTAL_PROTECTED_HORSES } from "@/lib/horses";
 
 export const metadata: Metadata = {
   title: "馬ごとの支援状況",
@@ -15,7 +16,10 @@ export const metadata: Metadata = {
     "引退競走馬53頭の支援状況一覧。月間支援の達成率・支援者数から、いま応援を必要としている馬を探せます。",
 };
 
-export default function SupportStatusPage() {
+export default async function SupportStatusPage() {
+  const allHorses = await getHorses();
+  const withSupport = allHorses.filter((h) => h.goal > 0);
+
   return (
     <>
       <PageHero
@@ -34,7 +38,7 @@ export default function SupportStatusPage() {
         <SectionHeading
           eyebrow="OVERVIEW"
           title={`累計${TOTAL_PROTECTED_HORSES}頭の保護実績`}
-          lead={`現在、支援データが登録されているのは ${HORSES_WITH_SUPPORT.length} 頭です。支援口数・金額は retouch.salon の実績を lib/data.ts に反映して更新します（ランキング順位・達成率はデータ更新時に自動計算）。`}
+          lead={`現在、支援データが登録されているのは ${withSupport.length} 頭です。管理画面（/admin）から馬の支援数値・紹介文を更新できます。`}
         />
         <div className="mt-10">
           <SupportRanking />
@@ -48,14 +52,12 @@ export default function SupportStatusPage() {
           lead="カテゴリーや並び替えから、応援したい馬を探してください。馬名をクリックすると個別ページへ移動します。"
         />
         <div className="mt-10">
-          <SupportStatusExplorer />
+          <SupportStatusExplorer horses={allHorses} />
         </div>
         <p className="mt-8 text-sm leading-relaxed text-ink/60">
-          ※ 写真・コメントの登録方法：各馬の名前・性別・写真（photo）・紹介文（story / note）・支援数値（goal / raised / supporters）は
-          <code className="mx-1 rounded bg-brand-50 px-1.5 py-0.5 text-xs">lib/data.ts</code>
-          の <code className="mx-1 rounded bg-brand-50 px-1.5 py-0.5 text-xs">HORSES</code> および
-          <code className="mx-1 rounded bg-brand-50 px-1.5 py-0.5 text-xs">SUPPORT_HORSES</code>
-          に追記してください。馬たちの紹介ページ（/horses）と支援状況は同じデータから自動連動します。
+          ※ 写真・コメント・支援数値は
+          <Link href="/admin" className="mx-1 text-gold hover:underline">管理画面</Link>
+          から編集できます。馬たちの紹介ページ（/horses）と支援状況は同じデータから自動連動します。
         </p>
       </Section>
 

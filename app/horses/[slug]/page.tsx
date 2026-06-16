@@ -14,7 +14,11 @@ import { getHorseBySlug, getHorseSlugs, formatHorseMeta } from "@/lib/horses";
 type Props = { params: Promise<{ slug: string }> };
 
 // Keep static params for build-time pre-rendering using static horse slugs
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const horses = await getHorses();
+  if (horses.length > 0) {
+    return horses.map((h) => ({ slug: h.slug }));
+  }
   return getHorseSlugs().map((slug) => ({ slug }));
 }
 

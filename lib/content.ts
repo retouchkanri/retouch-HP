@@ -207,7 +207,7 @@ export function dbHorseToProfile(h: DbHorse): HorseProfile {
     goal: h.goal,
     raised: h.raised,
     supporters: h.supporters,
-    pendingDetails: h.pendingDetails,
+    pendingDetails: h.pendingDetails ?? h.name.includes("登録待ち"),
   };
 }
 

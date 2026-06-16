@@ -5,9 +5,19 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { isAdminEmail } from "@/lib/admin";
-import { NEWS, MEDIA } from "@/lib/data";
-import { ALL_HORSES, slugFromName } from "@/lib/horses";
-import { FAQ_FALLBACK } from "@/lib/content";
+import { slugFromName } from "@/lib/horses";
+import { seedDatabaseContent } from "@/lib/seed-database";
+
+const PLACEHOLDER_MEDIA_IMG = "/media/media-postseven.jpg";
+const PLACEHOLDER_FAQ_ANSWER = "（回答を準備中です）";
+
+function todayDateLabel() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}.${m}.${day}`;
+}
 
 export async function signIn(
   _prev: { error?: string } | null,
@@ -36,15 +46,23 @@ export async function signOut() {
   redirect("/admin/login");
 }
 
+const UPLOAD_BUCKETS = ["news-images", "horse-images", "media-image"] as const;
+type UploadBucket = (typeof UPLOAD_BUCKETS)[number];
+
 export async function uploadImage(formData: FormData) {
   const file = formData.get("file") as File | null;
   if (!file || file.size === 0) return { error: "ファイルが選択されていません。" };
+
+  const requested = String(formData.get("bucket") ?? "news-images");
+  const bucket: UploadBucket = UPLOAD_BUCKETS.includes(requested as UploadBucket)
+    ? (requested as UploadBucket)
+    : "news-images";
 
   const supabase = await createClient();
   const svc = createServiceClient();
 
   // Ensure bucket exists
-  const { error: bucketErr } = await svc.storage.createBucket("news-images", { public: true });
+  const { error: bucketErr } = await svc.storage.createBucket(bucket, { public: true });
   // Ignore "already exists" error (code 409 / message contains "already exists")
   if (bucketErr && !bucketErr.message.includes("already exists")) {
     return { error: bucketErr.message };
@@ -56,23 +74,25 @@ export async function uploadImage(formData: FormData) {
   const path = `${timestamp}-${rand}.${ext}`;
 
   const { error: uploadErr } = await supabase.storage
-    .from("news-images")
+    .from(bucket)
     .upload(path, file, { contentType: file.type, upsert: false });
 
   if (uploadErr) return { error: uploadErr.message };
 
-  const { data } = supabase.storage.from("news-images").getPublicUrl(path);
+  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
   return { url: data.publicUrl };
 }
 
 export async function saveNews(formData: FormData) {
   const id = String(formData.get("id") ?? "");
-  const date = String(formData.get("date") ?? "");
-  const category = String(formData.get("category") ?? "");
-  const title = String(formData.get("title") ?? "");
+  const date = String(formData.get("date") ?? "").trim() || todayDateLabel();
+  const category = String(formData.get("category") ?? "").trim() || "お知らせ";
+  const title = String(formData.get("title") ?? "").trim();
   const img = String(formData.get("img") ?? "") || null;
   const body = String(formData.get("body") ?? "") || null;
   const linkUrl = String(formData.get("linkUrl") ?? "") || null;
+
+  if (!title) return { error: "タイトルは必須です。" };
 
   const supabase = await createClient();
   const payload = { date, category, title, img, body, link_url: linkUrl };
@@ -103,14 +123,16 @@ export async function deleteNews(id: string) {
 
 export async function saveMedia(formData: FormData) {
   const id = String(formData.get("id") ?? "");
-  const outlet = String(formData.get("outlet") ?? "");
-  const date = String(formData.get("date") ?? "");
-  const title = String(formData.get("title") ?? "");
-  const img = String(formData.get("img") ?? "");
+  const outlet = String(formData.get("outlet") ?? "").trim() || "（媒体名未設定）";
+  const date = String(formData.get("date") ?? "").trim() || todayDateLabel();
+  const title = String(formData.get("title") ?? "").trim();
+  const img = String(formData.get("img") ?? "").trim() || PLACEHOLDER_MEDIA_IMG;
   const url = String(formData.get("url") ?? "") || null;
   const imgAlt = String(formData.get("imgAlt") ?? "") || null;
   const mediaType = String(formData.get("mediaType") ?? "") || null;
   const sortOrder = Number(formData.get("sortOrder") ?? 0);
+
+  if (!title) return { error: "タイトルは必須です。" };
 
   const supabase = await createClient();
   const payload = {
@@ -154,8 +176,10 @@ export async function deleteMedia(id: string) {
 
 export async function saveHorse(formData: FormData) {
   const id = String(formData.get("id") ?? "");
-  const name = String(formData.get("name") ?? "");
-  const slug = String(formData.get("slug") ?? "") || slugFromName(name);
+  const name = String(formData.get("name") ?? "").trim();
+  const slug = String(formData.get("slug") ?? "").trim() || slugFromName(name);
+
+  if (!name) return { error: "馬名は必須です。" };
   const sex = String(formData.get("sex") ?? "") || null;
   const age = String(formData.get("age") ?? "") || null;
   const ageYears = Number(formData.get("ageYears") ?? 0) || null;
@@ -212,9 +236,11 @@ export async function deleteHorse(id: string) {
 
 export async function saveFaq(formData: FormData) {
   const id = String(formData.get("id") ?? "");
-  const question = String(formData.get("question") ?? "");
-  const answer = String(formData.get("answer") ?? "");
+  const question = String(formData.get("question") ?? "").trim();
+  const answer = String(formData.get("answer") ?? "").trim() || PLACEHOLDER_FAQ_ANSWER;
   const sortOrder = Number(formData.get("sortOrder") ?? 0);
+
+  if (!question) return { error: "質問は必須です。" };
 
   const supabase = await createClient();
   const payload = { question, answer, sort_order: sortOrder };
@@ -245,82 +271,8 @@ export async function deleteFaq(id: string) {
 // ============================================================================
 
 export async function seedDatabase() {
-  const supabase = createServiceClient();
-
-  const { count: newsCount } = await supabase
-    .from("news_items")
-    .select("*", { count: "exact", head: true });
-
-  if (!newsCount) {
-    const { error } = await supabase.from("news_items").insert(
-      NEWS.map((item) => ({
-        date: item.date,
-        category: item.category,
-        title: item.title,
-      }))
-    );
-    if (error) return { error: error.message };
-  }
-
-  const { count: mediaCount } = await supabase
-    .from("media_items")
-    .select("*", { count: "exact", head: true });
-
-  if (!mediaCount) {
-    const { error } = await supabase.from("media_items").insert(
-      MEDIA.map((item, index) => ({
-        outlet: item.outlet,
-        date: item.date,
-        title: item.title,
-        img: item.img,
-        url: item.url ?? null,
-        img_alt: item.imgAlt ?? null,
-        media_type: item.mediaType ?? null,
-        sort_order: index,
-      }))
-    );
-    if (error) return { error: error.message };
-  }
-
-  const { count: horseCount } = await supabase
-    .from("horses")
-    .select("*", { count: "exact", head: true });
-
-  if (!horseCount) {
-    const knownHorses = ALL_HORSES.filter((h) => !h.pendingDetails);
-    const { error } = await supabase.from("horses").insert(
-      knownHorses.map((h, index) => ({
-        name: h.name,
-        slug: h.slug,
-        sex: h.sex ?? null,
-        age: h.age ?? null,
-        status: h.status,
-        status_label: h.statusLabel,
-        order_num: h.order ?? null,
-        personality: h.personality ?? "",
-        story: h.story ?? "",
-        before_story: h.before ?? null,
-        photo: h.photo ?? null,
-        sort_order: index,
-        goal: h.goal,
-        raised: h.raised,
-        supporters: h.supporters,
-        note: h.note ?? null,
-      }))
-    );
-    if (error) return { error: error.message };
-  }
-
-  const { count: faqCount } = await supabase
-    .from("faq_items")
-    .select("*", { count: "exact", head: true });
-
-  if (!faqCount) {
-    const { error } = await supabase.from("faq_items").insert(
-      FAQ_FALLBACK.map((f, i) => ({ question: f.question, answer: f.answer, sort_order: i }))
-    );
-    if (error) return { error: error.message };
-  }
+  const result = await seedDatabaseContent();
+  if (result.error) return { error: result.error };
 
   revalidatePath("/admin");
   revalidatePath("/");
