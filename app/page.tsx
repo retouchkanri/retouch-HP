@@ -47,7 +47,7 @@ export default async function Home() {
           className="object-cover sm:hidden"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-900/55 to-brand-900/30" aria-hidden />
-        <div className="relative z-10 w-full h-full flex flex-col justify-between pt-4 pb-10 px-5 sm:justify-center sm:pl-[24vw] sm:pr-[8vw] lg:pl-[20vw] lg:pr-[10vw] sm:pb-10 sm:pt-0">
+        <div className="relative z-10 w-full h-full flex flex-col justify-between pt-4 pb-6 px-5 sm:justify-center sm:pl-[24vw] sm:pr-[8vw] lg:pl-[20vw] lg:pr-[10vw] sm:pb-10 sm:pt-0">
           {/* バッジ（モバイル：1行4列・約半分サイズ） */}
           <div className="grid grid-cols-4 gap-1.5 sm:hidden motion-safe:animate-fadeUp">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -98,7 +98,7 @@ export default async function Home() {
 
       {/* ===== 私たちの想い ===== */}
       <Section alt>
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-16">
           <Image
             src={IMG.ceoPhoto}
             alt="代表 野口佳槻と馬"
@@ -125,7 +125,9 @@ export default async function Home() {
               競馬と乗馬の両分野で人材を育成してきた馬のプロフェッショナル。
               その知見を活かし、保護・再調教・人材育成・地域活性化を一体で進めます。
             </p>
-            <Link href="/about" className="btn-outline mt-8">Retouchについて</Link>
+            <div className="mt-8 flex justify-center max-sm:w-full sm:justify-start">
+              <Link href="/about" className="btn-outline">Retouchについて</Link>
+            </div>
           </div>
         </div>
       </Section>
@@ -134,7 +136,7 @@ export default async function Home() {
       <AdGrid />
 
       {/* ===== 引退馬の現実（ISSUE） ===== */}
-      <section className="relative overflow-hidden py-20 sm:py-28">
+      <section className="relative overflow-hidden py-12 sm:py-28">
         <img src="/1_3bg.jpg" alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover object-center" />
         <div className="absolute inset-0 bg-brand-950/75" aria-hidden />
         <div className="relative container-x text-white">
@@ -159,7 +161,9 @@ export default async function Home() {
               </div>
             ))}
           </div>
-          <Link href="/issue" className="btn-gold mt-10">私たちが向き合う課題を見る</Link>
+          <div className="mt-10 flex justify-center max-sm:w-full">
+            <Link href="/issue" className="btn-gold">私たちが向き合う課題を見る</Link>
+          </div>
         </div>
       </section>
 
@@ -170,7 +174,7 @@ export default async function Home() {
           title="保護して終わり、ではない。"
           lead="救出から、再調教、譲渡、教育、福祉、観光、そして地域活性化まで。Retouchは馬の一生に寄り添い、馬と人と地域がともに幸せになる仕組みをつくります。"
         />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
           {SOLUTIONS.map((s) => (
             <Link key={s.no} href={s.href} className="group block">
               <figure>
@@ -209,14 +213,16 @@ export default async function Home() {
 
       {/* ===== 馬たちの紹介（HORSES） ===== */}
       <Section>
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <SectionHeading
             eyebrow="OUR HORSES ｜ 馬たちの紹介"
             title="救われた、それぞれの物語。"
           />
-          <Link href="/horses" className="btn-outline">すべての馬を見る</Link>
+          <div className="flex w-full justify-center sm:w-auto sm:justify-end">
+            <Link href="/horses" className="btn-outline">すべての馬を見る</Link>
+          </div>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-6 sm:mt-12 sm:grid-cols-2 lg:grid-cols-4">
           {horses.filter((h) => !h.pendingDetails).slice(0, 4).map((h) => (
             <HorseCard key={h.slug} horse={h} />
           ))}
@@ -225,23 +231,25 @@ export default async function Home() {
 
       {/* ===== 馬ごとの支援状況ランキング（SUPPORT） ===== */}
       <Section alt>
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
           <SectionHeading
             eyebrow="SUPPORT STATUS ｜ 馬ごとの支援状況"
             title="いま、応援を待っている子がいます。"
             lead="一頭ごとの月間支援の達成状況を公開しています。支援が手薄な子も、応援が集まっている子も、あなたの一歩で次の命へつながります。"
           />
-          <Link href="/support/status" className="btn-outline">支援状況をすべて見る</Link>
+          <div className="flex w-full justify-center sm:w-auto sm:justify-end">
+            <Link href="/support/status" className="btn-outline">支援状況をすべて見る</Link>
+          </div>
         </div>
-        <div className="mt-12">
+        <div className="mt-8 sm:mt-12">
           <SupportRanking />
         </div>
       </Section>
 
       {/* ===== お知らせ & メディア ===== */}
       <Section alt>
-        <div className="grid gap-12 lg:grid-cols-2">
-          <div>
+        <div className="flex flex-col gap-8 sm:gap-12">
+          <div className="w-full">
             <SectionHeading eyebrow="NEWS ｜ お知らせ" title="新着情報" />
             <ul className="mt-8 divide-y divide-brand-900/10">
               {news.slice(0, 5).map((n) => (
@@ -257,12 +265,14 @@ export default async function Home() {
               ))}
             </ul>
           </div>
-          <div>
+          <div className="w-full">
             <SectionHeading eyebrow="MEDIA ｜ メディア掲載" title="取材・掲載実績" />
             <div className="mt-8">
               <MediaCardStack items={media} />
             </div>
-            <Link href="/media" className="btn-outline mt-6">メディア情報を見る</Link>
+            <div className="mt-6 flex justify-center">
+              <Link href="/media" className="btn-outline">メディア情報を見る</Link>
+            </div>
           </div>
         </div>
       </Section>

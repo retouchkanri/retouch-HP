@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useMemo } from "react";
 import type { DbFaqItem, DbHorse, DbMediaItem, DbNewsItem } from "@/lib/content";
 import {
   deleteMedia,
@@ -534,6 +534,51 @@ const emptyHorse = {
   ownerStory: "", sortOrder: "0", goal: "0", raised: "0", supporters: "0", note: "",
 };
 
+function horseToForm(item: DbHorse) {
+  return {
+    name: item.name,
+    slug: item.slug,
+    sex: item.sex ?? "",
+    age: item.age ?? "",
+    status: item.status,
+    statusLabel: item.statusLabel,
+    orderNum: String(item.orderNum ?? ""),
+    personality: item.personality ?? "",
+    story: item.story ?? "",
+    beforeStory: item.before ?? "",
+    photo: item.photo ?? "",
+    ownerStory: item.ownerStory ?? "",
+    sortOrder: String(item.sortOrder),
+    goal: String(item.goal),
+    raised: String(item.raised),
+    supporters: String(item.supporters),
+    note: item.note ?? "",
+  };
+}
+
+function horseFormToFormData(form: typeof emptyHorse, id?: string) {
+  const fd = new FormData();
+  if (id) fd.set("id", id);
+  fd.set("name", form.name);
+  fd.set("slug", form.slug);
+  fd.set("sex", form.sex);
+  fd.set("age", form.age);
+  fd.set("status", form.status);
+  fd.set("statusLabel", form.statusLabel);
+  fd.set("orderNum", form.orderNum);
+  fd.set("personality", form.personality);
+  fd.set("story", form.story);
+  fd.set("beforeStory", form.beforeStory);
+  fd.set("photo", form.photo);
+  fd.set("ownerStory", form.ownerStory);
+  fd.set("sortOrder", form.sortOrder);
+  fd.set("goal", form.goal);
+  fd.set("raised", form.raised);
+  fd.set("supporters", form.supporters);
+  fd.set("note", form.note);
+  return fd;
+}
+
 function HorsePanel({
   items,
   onMessage,
@@ -543,22 +588,26 @@ function HorsePanel({
 }) {
   const [editing, setEditing] = useState<DbHorse | null>(null);
   const [form, setForm] = useState(emptyHorse);
+  const [baseline, setBaseline] = useState(emptyHorse);
   const [pending, startTransition] = useTransition();
   const [uploading, setUploading] = useState(false);
 
-  const openNew = () => { setEditing(null); setForm(emptyHorse); };
+  const isDirty = useMemo(
+    () => JSON.stringify(form) !== JSON.stringify(baseline),
+    [form, baseline]
+  );
+
+  const openNew = () => {
+    setEditing(null);
+    setForm(emptyHorse);
+    setBaseline(emptyHorse);
+  };
 
   const openEdit = (item: DbHorse) => {
+    const next = horseToForm(item);
     setEditing(item);
-    setForm({
-      name: item.name, slug: item.slug, sex: item.sex ?? "", age: item.age ?? "",
-      status: item.status, statusLabel: item.statusLabel,
-      orderNum: String(item.orderNum ?? ""), personality: item.personality,
-      story: item.story, beforeStory: item.before ?? "", photo: item.photo ?? "",
-      ownerStory: item.ownerStory ?? "", sortOrder: String(item.sortOrder),
-      goal: String(item.goal), raised: String(item.raised), supporters: String(item.supporters),
-      note: item.note ?? "",
-    });
+    setForm(next);
+    setBaseline(next);
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -577,17 +626,16 @@ function HorsePanel({
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    if (editing) fd.set("id", editing.id);
-    fd.set("photo", form.photo);
-    fd.set("story", form.story);
-    fd.set("beforeStory", form.beforeStory);
-    fd.set("ownerStory", form.ownerStory);
-    fd.set("note", form.note);
+    if (!isDirty) return;
+    const fd = horseFormToFormData(form, editing?.id);
     startTransition(async () => {
       const result = await saveHorse(fd);
       onMessage(result?.error ? `エラー: ${result.error}` : "馬情報を保存しました。");
-      if (!result?.error) { setForm(emptyHorse); setEditing(null); }
+      if (!result?.error) {
+        setForm(emptyHorse);
+        setBaseline(emptyHorse);
+        setEditing(null);
+      }
     });
   };
 
@@ -632,7 +680,7 @@ function HorsePanel({
       <form onSubmit={submit} className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-4 max-h-[80vh] overflow-y-auto">
         <h2 className="font-semibold text-white sticky top-0 bg-brand-950/95 py-1">{editing ? "編集" : "新規作成"}</h2>
         {!editing && (
-          <p className="text-xs text-brand-300">馬名だけ入力すれば登録できます。詳細は後から編集できます。</p>
+          <p className="text-xs text-brand-300">任意の項目を入力して保存できます。未入力の項目は空のまま登録されます。</p>
         )}
 
         {/* Photo */}
@@ -658,7 +706,7 @@ function HorsePanel({
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Field label="馬名" name="name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="ハル号" required />
+          <Field label="馬名" name="name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="ハル号" optional />
           <Field label="スラッグ" name="slug" value={form.slug} onChange={(v) => setForm({ ...form, slug: v })} placeholder="haru（空欄で自動生成）" optional />
         </div>
 
@@ -711,7 +759,11 @@ function HorsePanel({
           <Field label="支援者数" name="supporters" value={form.supporters} onChange={(v) => setForm({ ...form, supporters: v })} placeholder="22" optional />
         </div>
 
-        <button type="submit" disabled={pending || uploading} className="btn-gold w-full disabled:opacity-60">
+        <button
+          type="submit"
+          disabled={pending || uploading || !isDirty}
+          className="btn-gold w-full disabled:opacity-60 disabled:cursor-not-allowed"
+        >
           {pending ? "保存中…" : "保存"}
         </button>
       </form>

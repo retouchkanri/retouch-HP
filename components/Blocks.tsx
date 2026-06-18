@@ -193,7 +193,12 @@ export function CTA({
       <div className="mt-7 flex flex-wrap justify-center gap-4">
         <SiteLink href={primary.href} className="btn-gold">{primary.label}</SiteLink>
         {secondary && (
-          <SiteLink href={secondary.href} className="btn-white">{secondary.label}</SiteLink>
+          <SiteLink
+            href={secondary.href}
+            className={backgroundImage ? "btn-white-on-image" : "btn-white"}
+          >
+            {secondary.label}
+          </SiteLink>
         )}
       </div>
     </>

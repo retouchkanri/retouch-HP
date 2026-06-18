@@ -21,6 +21,7 @@ type Props = {
 export default function MediaCardStack({ items, className = "" }: Props) {
   const [featuredIndex, setFeaturedIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [compact, setCompact] = useState(false);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -29,29 +30,44 @@ export default function MediaCardStack({ items, className = "" }: Props) {
     return () => window.clearInterval(timer);
   }, [items.length]);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const update = () => setCompact(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   const getZIndex = (index: number) => {
     if (index === featuredIndex) return 100;
     const offset = (index - featuredIndex + items.length) % items.length;
     return 20 + (items.length - offset);
   };
 
+  const scatterScale = compact ? 0.38 : 1;
+  const featuredScale = compact ? 1.05 : 1.18;
+  const containerHeight = compact ? "min(400px, 70vw)" : "min(580px, 82vw)";
+
   return (
     <div
-      className={`relative mx-auto w-full ${className}`}
-      style={{ height: "min(580px, 82vw)" }}
+      className={`relative mx-auto w-full overflow-hidden ${className}`}
+      style={{ height: containerHeight }}
       aria-label="メディア掲載カード"
     >
       {items.map((item, index) => {
         const scatter = SCATTER[index % SCATTER.length];
         const isFeatured = index === featuredIndex;
         const isHovered = index === hoveredIndex;
+        const x = Math.round(scatter.x * scatterScale);
+        const y = Math.round(scatter.y * scatterScale);
+        const rotate = scatter.rotate * (compact ? 0.65 : 1);
         const transform = isFeatured
-          ? "translate(-50%, -50%) translate(0px, 0px) rotate(0deg) scale(1.18)"
-          : `translate(-50%, -50%) translate(${scatter.x}px, ${scatter.y}px) rotate(${scatter.rotate}deg) scale(1)`;
+          ? `translate(-50%, -50%) translate(0px, 0px) rotate(0deg) scale(${featuredScale})`
+          : `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${rotate}deg) scale(1)`;
 
         const card = (
           <div
-            className={`relative w-[min(280px,64vw)] overflow-hidden rounded-xl bg-white shadow-xl ring-1 ring-brand-900/10 transition-[transform,box-shadow,ring-color] duration-700 ease-out group-hover:shadow-2xl group-hover:ring-gold/35 group-focus-visible:ring-gold/50 motion-reduce:transition-none ${
+            className={`relative w-[min(260px,78vw)] overflow-hidden rounded-xl bg-white shadow-xl ring-1 ring-brand-900/10 transition-[transform,box-shadow,ring-color] duration-700 ease-out group-hover:shadow-2xl group-hover:ring-gold/35 group-focus-visible:ring-gold/50 motion-reduce:transition-none sm:w-[min(280px,64vw)] ${
               isFeatured ? "shadow-2xl ring-gold/40" : ""
             }`}
           >
@@ -60,14 +76,14 @@ export default function MediaCardStack({ items, className = "" }: Props) {
                 src={item.img}
                 alt={item.imgAlt ?? item.title}
                 fill
-                sizes="(max-width: 640px) 64vw, 280px"
+                sizes="(max-width: 640px) 78vw, 280px"
                 className="object-contain object-center"
                 priority={index < 2}
               />
             </div>
 
             <div
-              className={`absolute inset-0 flex flex-col justify-end bg-black/60 p-5 text-left transition-opacity duration-300 ${
+              className={`absolute inset-0 flex flex-col justify-end bg-black/60 p-4 text-left transition-opacity duration-300 sm:p-5 ${
                 isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             >

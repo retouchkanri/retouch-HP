@@ -172,10 +172,10 @@ export default async function MediaPage() {
               選手として日本一を経験し、指導者・経営者として馬産業を支えてきた
               知見を、いま引退馬を救う活動へと注いでいます。
             </p>
-            <ol className="mt-8 space-y-5 border-l-2 border-brand-200 pl-6">
+            <ol className="mt-8 space-y-5 border-l-2 border-brand-200 pl-10 sm:pl-12">
               {CAREER.map((c, i) => (
                 <li key={i} className="relative">
-                  <span className="absolute -left-[31px] top-1 h-3 w-3 rounded-full bg-gold ring-4 ring-cream" />
+                  <span className="absolute -left-[41px] top-1 h-3 w-3 rounded-full bg-gold ring-4 ring-cream sm:-left-[49px]" />
                   <p className="text-sm leading-relaxed text-ink/80">{c}</p>
                 </li>
               ))}

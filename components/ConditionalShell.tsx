@@ -17,7 +17,7 @@ export default function ConditionalShell({ children }: { children: React.ReactNo
   return (
     <>
       <Header />
-      <main className="max-sm:pb-24">{children}</main>
+      <main className="max-sm:pb-32">{children}</main>
       <Footer />
       <ScrollToTop />
       <DonateBanner />

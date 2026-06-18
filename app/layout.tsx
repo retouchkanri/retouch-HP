@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SITE } from "@/lib/site";
 import ConditionalShell from "@/components/ConditionalShell";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 // フォント（Noto Serif JP）はビルド時取得を避け、実行時に Google Fonts から
 // 読み込みます。--font-noto-serif-jp は globals.css の :root で定義済み。
@@ -30,6 +31,19 @@ export const metadata: Metadata = {
     icon: "/favicon.png",
     apple: "/favicon.png",
   },
+  // PWA（ホーム画面に追加してアプリ起動）
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: SITE.name,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1b3522",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -53,6 +67,7 @@ export default function RootLayout({
       </head>
       <body>
         <ConditionalShell>{children}</ConditionalShell>
+        <ServiceWorkerRegister />
       </body>
     </html>
   );

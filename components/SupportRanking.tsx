@@ -14,11 +14,11 @@ export default async function SupportRanking() {
   return (
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-8">
       <div>
-        <div className="flex items-center gap-2">
-          <span className="rounded-full bg-rose-500 px-3 py-1 text-[11px] font-bold tracking-wider text-white">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="shrink-0 rounded-full bg-rose-500 px-3 py-1 text-[11px] font-bold tracking-wider text-white">
             支援募集中
           </span>
-          <h3 className="text-lg font-semibold text-black">支援が必要な子ランキング</h3>
+          <h3 className="min-w-0 text-base font-semibold text-black sm:text-lg">支援が必要な子ランキング</h3>
         </div>
         <p className="mt-2 text-sm text-ink/60">
           月間支援の達成率が低い、いま応援を必要としている6頭です。
@@ -31,11 +31,11 @@ export default async function SupportRanking() {
       </div>
 
       <div>
-        <div className="flex items-center gap-2">
-          <span className="rounded-full bg-gold px-3 py-1 text-[11px] font-bold tracking-wider text-white">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="shrink-0 rounded-full bg-gold px-3 py-1 text-[11px] font-bold tracking-wider text-white">
             応援TOP
           </span>
-          <h3 className="text-lg font-semibold text-black">応援が集まっている子ランキング</h3>
+          <h3 className="min-w-0 text-base font-semibold text-black sm:text-lg">応援が集まっている子ランキング</h3>
         </div>
         <p className="mt-2 text-sm text-ink/60">
           たくさんの支援が届いている上位6頭。あなたの応援が、次の一頭へつながります。

@@ -176,10 +176,33 @@ export async function deleteMedia(id: string) {
 
 export async function saveHorse(formData: FormData) {
   const id = String(formData.get("id") ?? "");
-  const name = String(formData.get("name") ?? "").trim();
-  const slug = String(formData.get("slug") ?? "").trim() || slugFromName(name);
+  let name = String(formData.get("name") ?? "").trim();
+  let slug = String(formData.get("slug") ?? "").trim();
 
-  if (!name) return { error: "馬名は必須です。" };
+  const supabase = await createClient();
+
+  if (id && !name) {
+    const { data: existing } = await supabase
+      .from("horses")
+      .select("name, slug")
+      .eq("id", id)
+      .single();
+    if (existing) {
+      name = existing.name;
+      slug = slug || existing.slug;
+    }
+  }
+
+  if (!id && !name) {
+    const { count } = await supabase
+      .from("horses")
+      .select("*", { count: "exact", head: true });
+    const n = (count ?? 0) + 1;
+    name = `第${n}頭（登録待ち）`;
+    slug = slug || `horse-${String(n).padStart(2, "0")}`;
+  }
+
+  slug = slug || slugFromName(name);
   const sex = String(formData.get("sex") ?? "") || null;
   const age = String(formData.get("age") ?? "") || null;
   const ageYears = Number(formData.get("ageYears") ?? 0) || null;
@@ -197,7 +220,6 @@ export async function saveHorse(formData: FormData) {
   const supporters = Number(formData.get("supporters") ?? 0);
   const note = String(formData.get("note") ?? "") || null;
 
-  const supabase = await createClient();
   const payload = {
     name, slug, sex, age, age_years: ageYears, status, status_label: statusLabel,
     order_num: orderNum, personality, story, before_story: beforeStory,

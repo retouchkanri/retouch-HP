@@ -34,7 +34,7 @@ export function AdBanner({
   tone?: keyof typeof toneMap;
 }) {
   return (
-    <aside className="container-x my-12" aria-label="広告">
+    <aside className="container-x my-6 sm:my-12" aria-label="広告">
       <SiteLink
         href={href}
         className={`group relative block overflow-hidden rounded-2xl bg-gradient-to-r ${toneMap[tone]} shadow-lg`}
@@ -91,7 +91,7 @@ export function AdGrid() {
   ];
 
   return (
-    <aside className="container-x my-12" aria-label="広告">
+    <aside className="container-x my-6 sm:my-12" aria-label="広告">
       <p className="mb-4 text-center text-[10px] tracking-[0.3em] text-ink/40">
         — ADVERTISEMENT / 協賛・支援のご案内 —
       </p>

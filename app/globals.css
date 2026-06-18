@@ -58,6 +58,21 @@
   .btn-white {
     @apply btn bg-white text-black hover:bg-black/5 shadow-lg;
   }
+  .btn-white-on-image {
+    @apply btn bg-white text-black shadow-lg border border-transparent;
+  }
+  @media (hover: hover) {
+    .btn-white-on-image:hover {
+      @apply bg-transparent text-white border-white;
+    }
+  }
+  @media (max-width: 639px) {
+    .btn:not(.w-full):not(.btn-align-start) {
+      @apply flex w-fit;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
 
   /* カード */
   .card {

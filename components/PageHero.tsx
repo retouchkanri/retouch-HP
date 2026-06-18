@@ -44,7 +44,7 @@ export default function PageHero({
       <div
         className={`absolute inset-0 ${
           overlay === "strong"
-            ? "bg-gradient-to-r from-brand-950/92 via-brand-950/55 to-brand-950/15"
+            ? "bg-gradient-to-r from-brand-950/70 to-brand-950/30"
             : `${HERO_GRADIENT} opacity-30`
         }`}
         aria-hidden
@@ -55,7 +55,7 @@ export default function PageHero({
           <div
             className={`max-w-xl ${
               overlay === "strong"
-                ? "rounded-2xl bg-brand-950/35 px-5 py-4 backdrop-blur-[2px] sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-none"
+                ? "rounded-2xl px-5 py-4 sm:px-0 sm:py-0"
                 : ""
             }`}
           >

@@ -86,15 +86,15 @@ export default function IssuePage() {
         />
         <div className="mt-12 grid gap-8 lg:grid-cols-3">
           <div className="rounded-3xl bg-brand-700 p-8 text-white">
-            <p className="text-5xl font-bold text-gold">屠殺5000頭</p>
+            <p className="text-3xl font-bold text-gold text-balance break-words sm:text-4xl lg:text-5xl">屠殺5000頭</p>
             <p className="mt-2 text-sm text-brand-100">毎年、競走馬を引退し屠殺への向かう数といわれています。</p>
           </div>
           <div className="rounded-3xl bg-brand-800 p-8 text-white">
-            <p className="text-5xl font-bold text-gold">年間100万円</p>
+            <p className="text-3xl font-bold text-gold text-balance break-words sm:text-4xl lg:text-5xl">年間100万円</p>
             <p className="mt-2 text-sm text-brand-100">概ね1頭の飼養にかかる費用。継続的な支援なしには救えません。</p>
           </div>
           <div className="rounded-3xl bg-brand-900 p-8 text-white">
-            <p className="text-5xl font-bold text-gold">一生涯30年</p>
+            <p className="text-3xl font-bold text-gold text-balance break-words sm:text-4xl lg:text-5xl">一生涯30年</p>
             <p className="mt-2 text-sm text-brand-100">競走馬としての現役。30年近い馬の寿命に対し、あまりに短いものです。</p>
           </div>
         </div>

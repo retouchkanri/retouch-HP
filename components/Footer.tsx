@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import InfoLinks from "@/components/InfoLinks";
 import SiteLink from "@/components/SiteLink";
 import SocialLinks from "@/components/SocialLinks";
 import { IMG } from "@/lib/images";
@@ -7,9 +8,12 @@ import { NAV, SITE } from "@/lib/site";
 
 export default function Footer() {
   return (
-    <footer className="mt-24 overflow-x-clip bg-brand-900 text-brand-100">
+    <footer className="mt-6 overflow-x-clip bg-brand-900 text-brand-100 sm:mt-24">
+      {/* 引退馬の森 案内（提携牧場） */}
+      <InfoLinks />
+
       {/* 上部CTA帯 */}
-      <div className="relative h-[40dvh] min-h-[240px] max-h-[360px] w-full overflow-hidden sm:h-[50dvh] sm:max-h-none">
+      <div className="relative h-[32dvh] min-h-[200px] max-h-[300px] w-full overflow-hidden sm:h-[50dvh] sm:min-h-[240px] sm:max-h-none">
         <Image
           src={IMG.contactCta}
           alt=""
@@ -17,6 +21,7 @@ export default function Footer() {
           className="object-cover"
           aria-hidden
         />
+        <div className="absolute inset-0 bg-brand-950/60 sm:bg-transparent" aria-hidden />
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
           <p className="eyebrow !text-gold">JOIN US</p>
           <h2 className="mt-3 text-2xl sm:text-3xl font-semibold text-white">
@@ -29,7 +34,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="container-x min-w-0 py-14 grid gap-10 md:grid-cols-[1.3fr_2fr]">
+      <div className="container-x min-w-0 py-8 grid gap-8 sm:py-14 md:grid-cols-[1.3fr_2fr] md:gap-10">
         <div className="min-w-0">
           <Link href="/">
             <Image

@@ -8,6 +8,7 @@ import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import { CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
+import MembershipGuidelines from "@/components/MembershipGuidelines";
 
 export const metadata: Metadata = {
   title: {
@@ -114,6 +115,8 @@ export default function SupportPage() {
         <p className="mt-6 text-center text-xs text-ink/60">
           ※ 会員種別による特典内容の違いはございません。ご自身のご負担のない範囲で、応援いただけるプランをお選びください。
         </p>
+
+        <MembershipGuidelines />
       </Section>
 
       <AdBanner

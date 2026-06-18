@@ -83,9 +83,9 @@ export default async function ContactPage() {
         <div className="mx-auto mt-10 max-w-3xl space-y-4">
           {faqItems.map((f) => (
             <details key={f.question} className="group rounded-2xl bg-white p-6 shadow-sm ring-1 ring-brand-900/5">
-              <summary className="flex cursor-pointer items-center justify-between text-sm font-semibold text-brand-900">
-                {f.question}
-                <span className="ml-4 text-gold transition-transform group-open:rotate-45">＋</span>
+              <summary className="flex cursor-pointer items-start justify-between gap-3 text-sm font-semibold text-brand-900">
+                <span className="min-w-0 flex-1 text-pretty">{f.question}</span>
+                <span className="shrink-0 text-gold transition-transform group-open:rotate-45">＋</span>
               </summary>
               <p className="mt-3 text-sm leading-relaxed text-ink/75">{f.answer}</p>
             </details>
