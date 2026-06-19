@@ -11,8 +11,10 @@ export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -24,17 +26,20 @@ export default function Header() {
   }, [pathname]);
 
   useEffect(() => {
+    if (!mounted) return;
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [open]);
+  }, [open, mounted]);
+
+  const showShadow = mounted && (scrolled || open);
 
   return (
-    <header className="relative z-50">
-      <div
-        className={`max-xl:fixed max-xl:inset-x-0 max-xl:top-0 z-50 bg-white transition-shadow duration-300 xl:sticky xl:top-0 ${
-          scrolled || open ? "shadow-sm" : ""
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 bg-white transition-shadow duration-300 xl:sticky ${
+          showShadow ? "shadow-sm" : ""
         }`}
       >
         <div className="flex h-16 sm:h-20 items-center justify-between px-[5vw]">
@@ -49,7 +54,6 @@ export default function Header() {
             />
           </Link>
 
-          {/* PCナビ（全10メニュー） */}
           <nav className="hidden xl:flex items-center gap-0.5">
             {NAV.map((item) => {
               const active = isExternalUrl(item.href)
@@ -76,11 +80,11 @@ export default function Header() {
             })}
           </nav>
 
-          {/* モバイルメニューボタン */}
           <button
+            type="button"
             onClick={() => setOpen((v) => !v)}
             className="xl:hidden flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 p-3"
-            aria-label={open ? "メニューを閉じる" : "メニューを開く"}
+            aria-label="メニュー"
             aria-expanded={open}
           >
             <span className={`h-0.5 w-6 bg-black transition-transform ${open ? "translate-y-2 rotate-45" : ""}`} />
@@ -88,34 +92,30 @@ export default function Header() {
             <span className={`h-0.5 w-6 bg-black transition-transform ${open ? "-translate-y-2 -rotate-45" : ""}`} />
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* 固定ヘッダー分のスペーサー（モバイル） */}
+      {/* 固定ヘッダー分のスペーサー（モバイル・タブレット） */}
       <div className="h-16 sm:h-20 xl:hidden" aria-hidden />
 
-      {/* モバイルメニュー（ヘッダー直下に固定・一覧のみスクロール） */}
-      <div
-        className={`xl:hidden fixed inset-x-0 top-16 sm:top-20 z-40 overflow-y-auto border-t border-brand-900/10 bg-white transition-[opacity,visibility] duration-300 ${
-          open
-            ? "visible max-h-[calc(100dvh-4rem)] opacity-100 sm:max-h-[calc(100dvh-5rem)]"
-            : "invisible max-h-0 opacity-0 pointer-events-none"
-        }`}
-      >
-        <nav className="flex flex-col px-[5vw] py-4">
-          {NAV.map((item) => (
-            <SiteLink
-              key={item.href}
-              href={item.href}
-              className="block border-b border-brand-900/5 py-3 text-base font-semibold text-black"
-            >
-              {item.label}
+      {/* モバイルメニュー */}
+      {open && (
+        <div className="xl:hidden fixed inset-x-0 top-16 sm:top-20 z-40 max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-brand-900/10 bg-white sm:max-h-[calc(100dvh-5rem)]">
+          <nav className="flex flex-col px-[5vw] py-4">
+            {NAV.map((item) => (
+              <SiteLink
+                key={item.href}
+                href={item.href}
+                className="block border-b border-brand-900/5 py-3 text-base font-semibold text-black"
+              >
+                {item.label}
+              </SiteLink>
+            ))}
+            <SiteLink href={SITE.membersUrl} className="btn-gold mt-5 w-full">
+              応援する
             </SiteLink>
-          ))}
-          <SiteLink href={SITE.membersUrl} className="btn-gold mt-5 w-full">
-            応援する
-          </SiteLink>
-        </nav>
-      </div>
-    </header>
+          </nav>
+        </div>
+      )}
+    </>
   );
 }
