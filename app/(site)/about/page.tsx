@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import SiteLink from "@/components/SiteLink";
-import { SITE } from "@/lib/site";
+import { SITE, MAP_EMBED_URL, MAP_LINK_URL } from "@/lib/site";
 import { IMG } from "@/lib/images";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
@@ -36,9 +36,6 @@ const PROFILE: [string, string][] = [
   ["連絡先", `TEL ${SITE.tel}（${SITE.telNote}）`],
   ["活動拠点", `${SITE.activityBases}\n${SITE.activityBasesNote}`],
 ];
-
-const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(SITE.mapQuery)}&hl=ja&z=15&output=embed`;
-const mapLinkUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(SITE.mapQuery)}`;
 
 const FUTURE_FIELDS = ["観光", "教育", "福祉", "地域活性化", "乗馬", "ホースセラピー"];
 
@@ -139,7 +136,7 @@ export default function AboutPage() {
           </table>
           <div className="flex flex-col gap-5">
             <iframe
-              src={mapEmbedUrl}
+              src={MAP_EMBED_URL}
               title="所在地マップ（ホースレスト）"
               className="aspect-[4/3] w-full border-0"
               loading="lazy"
@@ -147,7 +144,7 @@ export default function AboutPage() {
               allowFullScreen
             />
             <a
-              href={mapLinkUrl}
+              href={MAP_LINK_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-semibold text-gold hover:underline"

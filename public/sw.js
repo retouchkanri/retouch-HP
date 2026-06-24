@@ -1,6 +1,6 @@
 // 軽量なサービスワーカー。PWA のインストール要件を満たし、
 // オフライン時もアプリ起動できるよう最小限のキャッシュを行う。
-const CACHE = "retouch-pwa-v1";
+const CACHE = "retouch-pwa-v2";
 const OFFLINE_URLS = ["/", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {

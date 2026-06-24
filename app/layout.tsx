@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SITE } from "@/lib/site";
-import ConditionalShell from "@/components/ConditionalShell";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 // フォント（Noto Serif JP）はビルド時取得を避け、実行時に Google Fonts から
@@ -66,7 +65,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ConditionalShell>{children}</ConditionalShell>
+        {children}
         <ServiceWorkerRegister />
       </body>
     </html>

@@ -1,12 +1,15 @@
-import { HORSES, SUPPORT_HORSES, supportRate, type Horse, type SupportHorse } from "./data";
+import { supportRate } from "./data";
+import { ROSTER } from "./roster";
 
 // ============================================================================
 // 馬マスター / Unified horse profiles
-// 累計53頭。名前・性別・写真・コメントは lib/data.ts で管理。
-// 支援口数（goal / raised / supporters）も同ファイルで更新（retouch.salon 実績を反映）。
-// ランキング順位はデータ更新時に自動計算されます。
+// 名前・写真・保護順は画像ファイル名から lib/roster.ts に自動生成されます
+// （scripts/sync-horses.mjs）。支援口数や物語は同スクリプト内の定義で管理。
+// 本番表示はDB（horses テーブル）優先・lib/content.getHorses()、DB不通時に
+// この静的データへフォールバックします。
 // ============================================================================
 
+/** 累計保護頭数（サイト表示用の対外数値）。実ロスター件数とは独立。 */
 export const TOTAL_PROTECTED_HORSES = 53;
 
 export type HorseProfile = {
@@ -66,70 +69,24 @@ export function slugFromName(name: string): string {
   return SLUG_MAP[name] ?? name.replace(/号$/, "").toLowerCase();
 }
 
-function mergeHorse(intro: Horse | undefined, support: SupportHorse | undefined): HorseProfile | null {
-  if (!intro && !support) return null;
-  const name = intro?.name ?? support!.name;
-  return {
-    slug: slugFromName(name),
-    name,
-    sex: intro?.sex ?? support?.sex ?? "牡",
-    age: intro?.age ?? support?.age ?? "不明",
-    status: intro?.status ?? support?.status ?? "graduated",
-    statusLabel: intro?.statusLabel ?? support?.statusLabel ?? "累計保護馬",
-    order: intro?.order,
-    personality: intro?.personality,
-    story: intro?.story,
-    before: intro?.before,
-    photo: intro?.photo,
-    note: support?.note,
-    goal: support?.goal ?? 0,
-    raised: support?.raised ?? 0,
-    supporters: support?.supporters ?? 0,
-  };
-}
-
-function buildKnownHorses(): HorseProfile[] {
-  const supportByName = new Map(SUPPORT_HORSES.map((h) => [h.name, h]));
-  const introByName = new Map(HORSES.map((h) => [h.name, h]));
-  const names = new Set([...supportByName.keys(), ...introByName.keys()]);
-
-  return [...names]
-    .map((name) => mergeHorse(introByName.get(name), supportByName.get(name)))
-    .filter((h): h is HorseProfile => h !== null);
-}
-
-function buildPlaceholders(count: number, startIndex: number): HorseProfile[] {
-  return Array.from({ length: count }, (_, i) => {
-    const n = startIndex + i;
-    return {
-      slug: `horse-${String(n).padStart(2, "0")}`,
-      name: `第${n}頭（登録待ち）`,
-      sex: "牡" as const,
-      age: "不明",
-      status: "graduated" as const,
-      statusLabel: "累計保護馬",
-      note: "馬名・性別・写真・コメントは lib/data.ts に追記してください。",
-      goal: 0,
-      raised: 0,
-      supporters: 0,
-      pendingDetails: true,
-    };
-  });
-}
-
-export const ALL_HORSES: HorseProfile[] = (() => {
-  const known = buildKnownHorses();
-  const remaining = Math.max(0, TOTAL_PROTECTED_HORSES - known.length);
-  const placeholders = buildPlaceholders(remaining, known.length + 1);
-  return [...known, ...placeholders].sort((a, b) => {
-    if (a.order && b.order) return a.order - b.order;
-    if (a.order) return -1;
-    if (b.order) return 1;
-    if (a.pendingDetails && !b.pendingDetails) return 1;
-    if (!a.pendingDetails && b.pendingDetails) return -1;
-    return a.name.localeCompare(b.name, "ja");
-  });
-})();
+export const ALL_HORSES: HorseProfile[] = ROSTER.map((r) => ({
+  slug: r.slug,
+  name: r.name,
+  sex: r.sex ?? "牡",
+  age: r.age ?? "不明",
+  status: r.status,
+  statusLabel: r.statusLabel,
+  order: r.order,
+  personality: r.personality,
+  story: r.story,
+  before: r.before,
+  photo: r.photo,
+  note: r.note,
+  goal: r.goal,
+  raised: r.raised,
+  supporters: r.supporters,
+  pendingDetails: false,
+}));
 
 export const HORSES_WITH_SUPPORT = ALL_HORSES.filter((h) => h.goal > 0);
 

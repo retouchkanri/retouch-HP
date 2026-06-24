@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE } from "@/lib/site";
+import { MAP_EMBED_URL } from "@/lib/site";
 import { IMG } from "@/lib/images";
 import { getFaq } from "@/lib/content";
 import PageHero from "@/components/PageHero";
@@ -43,34 +43,15 @@ export default async function ContactPage() {
           </div>
 
           <div className="space-y-6">
-            <div className="rounded-3xl bg-brand-800 p-7 text-brand-50">
-              <h3 className="text-lg font-semibold text-white">団体情報</h3>
-              <dl className="mt-4 space-y-3 text-sm">
-                <div>
-                  <dt className="text-brand-300">団体名</dt>
-                  <dd>Retouch（リタッチ）</dd>
-                </div>
-                <div>
-                  <dt className="text-brand-300">代表</dt>
-                  <dd>{SITE.ceo}</dd>
-                </div>
-                <div>
-                  <dt className="text-brand-300">所在地</dt>
-                  <dd>{SITE.addresses.map((a) => <span key={a} className="block">{a}</span>)}</dd>
-                </div>
-                <div>
-                  <dt className="text-brand-300">メール</dt>
-                  <dd>{SITE.email}</dd>
-                </div>
-                <div>
-                  <dt className="text-brand-300">公式YouTube</dt>
-                  <dd>
-                    <a href={SITE.youtube} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">
-                      @Retouch2023
-                    </a>
-                  </dd>
-                </div>
-              </dl>
+            <div className="overflow-hidden rounded-3xl shadow-sm ring-1 ring-brand-900/10">
+              <iframe
+                src={MAP_EMBED_URL}
+                title="所在地マップ（ホースレスト）"
+                className="aspect-[4/3] w-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
             </div>
             <AdSidebar />
           </div>

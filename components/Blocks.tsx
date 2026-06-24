@@ -104,7 +104,17 @@ export function HorseCard({ horse }: { horse: HorseProfile }) {
   return (
     <Link href={`/horses/${horse.slug}`} className="card group flex flex-col">
       <div className="relative aspect-square overflow-hidden">
-        <Placeholder label={`${horse.name}（${horse.statusLabel}）の写真`} className="h-full w-full" />
+        {horse.photo ? (
+          <Image
+            src={horse.photo}
+            alt={`${horse.name}（${horse.statusLabel}）`}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition group-hover:scale-105"
+          />
+        ) : (
+          <Placeholder label={`${horse.name}（${horse.statusLabel}）の写真`} className="h-full w-full" />
+        )}
         <span
           className={`absolute top-3 left-3 rounded-full ${badgeColor} px-3 py-1 text-[10px] font-semibold tracking-wider text-white`}
         >

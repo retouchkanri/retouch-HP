@@ -50,6 +50,9 @@ export const SITE = {
   ],
 };
 
+export const MAP_EMBED_URL = `https://maps.google.com/maps?q=${encodeURIComponent(SITE.mapQuery)}&hl=ja&z=15&output=embed`;
+export const MAP_LINK_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(SITE.mapQuery)}`;
+
 export const externalLinkProps = {
   target: "_blank",
   rel: "noopener noreferrer",
