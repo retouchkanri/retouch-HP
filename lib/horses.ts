@@ -64,6 +64,24 @@ export const canAcceptSupport = (h: Pick<HorseProfile, "status" | "isSupportable
 /** 口数の表示（整数はそのまま、半口は小数1桁）。 */
 export const formatUnits = (n: number) => (n % 1 === 0 ? `${n}` : n.toFixed(1));
 
+/** 1頭を継続維持管理するために必要な最低支援口数。 */
+export const MIN_SUPPORT_UNITS = 8;
+
+/** 馬ごとの月額支援合計の表示ラベル（個人の毎月負担ではない）。 */
+export const TOTAL_SUPPORT_AMOUNT_LABEL = "現在の総支援金額";
+
+/** 実際の支援口数。 */
+export const supportUnitsOf = (h: Pick<HorseProfile, "supportUnits">) => h.supportUnits ?? 0;
+
+/** 最低口数に満たない支援募集中の馬か。 */
+export const isBelowMinSupportUnits = (
+  h: Pick<HorseProfile, "status" | "isSupportable" | "supportUnits">,
+) => canAcceptSupport(h) && supportUnitsOf(h) < MIN_SUPPORT_UNITS;
+
+/** 最低口数まであと何口か。 */
+export const minSupportUnitsRemaining = (units: number) =>
+  Math.max(0, MIN_SUPPORT_UNITS - units);
+
 export function formatHorseName(horse: Pick<HorseProfile, "name" | "order">) {
   if (horse.order != null) {
     return `${String(horse.order).padStart(2, "0")}：${horse.name}`;

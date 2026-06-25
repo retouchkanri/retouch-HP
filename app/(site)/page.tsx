@@ -6,6 +6,7 @@ import { getMedia, getNews, getHorses } from "@/lib/content";
 import { Section, SectionHeading } from "@/components/Section";
 import { HorseCard, CTA } from "@/components/Blocks";
 import SupportRanking from "@/components/SupportRanking";
+import SupportMinUnitsAppeal from "@/components/SupportMinUnitsAppeal";
 import { AdBanner, AdGrid } from "@/components/Ads";
 import Image from "next/image";
 import MediaCardStack from "@/components/MediaCardStack";
@@ -235,13 +236,14 @@ export default async function Home() {
           <SectionHeading
             eyebrow="SUPPORT STATUS ｜ 馬ごとの支援状況"
             title="いま、応援を待っている子がいます。"
-            lead="一頭ごとの支援者数・月額支援を公開しています。支援が手薄な子も、応援が集まっている子も、あなたの一歩で次の命へつながります。"
+            lead="一頭ごとの支援者数・現在の総支援金額を公開しています。維持管理には最低8口の支援が必要です。あなたの一歩で次の命へつながります。"
           />
           <div className="flex w-full justify-center sm:w-auto sm:justify-end">
             <Link href="/support/status" className="btn-outline">支援状況をすべて見る</Link>
           </div>
         </div>
-        <div className="mt-8 sm:mt-12">
+        <SupportMinUnitsAppeal className="mt-6 sm:mt-8" />
+        <div className="mt-6 sm:mt-8">
           <SupportRanking />
         </div>
       </Section>

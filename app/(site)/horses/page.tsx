@@ -5,6 +5,7 @@ import { getHorses } from "@/lib/content";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
 import PageHero from "@/components/PageHero";
+import SupportMinUnitsAppeal from "@/components/SupportMinUnitsAppeal";
 import { Section, SectionHeading } from "@/components/Section";
 import { HorseCard, CTA } from "@/components/Blocks";
 import Placeholder from "@/components/Placeholder";
@@ -168,8 +169,9 @@ export default async function HorsesPage() {
         <SectionHeading
           eyebrow="SUPPORT STATUS"
           title="馬ごとの支援状況"
-          lead="支援者数・月額支援から、いま応援を必要としている馬を探せます。"
+          lead="支援者数・現在の総支援金額から、いま応援を必要としている馬を探せます。"
         />
+        <SupportMinUnitsAppeal className="mt-6" />
         <div className="mt-8 text-center">
           <Link href="/support/status" className="btn-primary">支援状況をすべて見る</Link>
         </div>

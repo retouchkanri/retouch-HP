@@ -2,6 +2,7 @@ import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 import SiteLink from "@/components/SiteLink";
 import SupportStatusBadge from "@/components/SupportStatusBadge";
+import SupportMinUnitsAppeal from "@/components/SupportMinUnitsAppeal";
 import { salonHorseSupportUrl } from "@/lib/salon";
 import {
   formatHorseMeta,
@@ -9,6 +10,9 @@ import {
   formatUnits,
   monthlyOf,
   supportersOf,
+  TOTAL_SUPPORT_AMOUNT_LABEL,
+  supportUnitsOf,
+  isBelowMinSupportUnits,
   hasSupport as horseHasSupport,
   canAcceptSupport,
   isOwnerHorse,
@@ -33,6 +37,8 @@ export default function SupportHorseRow({
   // retouch.salon 共有DBの実支援データ
   const supporters = supportersOf(horse);
   const monthly = monthlyOf(horse);
+  const units = supportUnitsOf(horse);
+  const belowMin = isBelowMinSupportUnits(horse);
   const hasSupport = horseHasSupport(horse);
   const canSupport = canAcceptSupport(horse);
   const isOwner = isOwnerHorse(horse);
@@ -87,8 +93,8 @@ export default function SupportHorseRow({
           <p className="mt-2.5 text-[12px]">
             <span className={`font-bold ${accent}`}>支援者 {supporters}名</span>
             <span className="mx-1.5 text-ink/30">|</span>
-            <span className="font-semibold text-ink/70">月額 {yen(monthly)}</span>
-            <span className="ml-1 font-normal text-ink/40">（{formatUnits(horse.supportUnits ?? 0)}口）</span>
+            <span className="font-semibold text-ink/70">{TOTAL_SUPPORT_AMOUNT_LABEL} {yen(monthly)}</span>
+            <span className="ml-1 font-normal text-ink/40">（{formatUnits(units)}口）</span>
           </p>
         ) : isOwner ? (
           <p className="mt-2 text-[11px] text-ink/45">オーナー決定済み｜新規支援は不要です</p>
@@ -100,6 +106,9 @@ export default function SupportHorseRow({
           <p className="mt-2 text-[11px] text-ink/45">現在は新規支援の受付を停止しています</p>
         ) : (
           <p className="mt-2 text-[11px] text-ink/45">支援状況データ準備中</p>
+        )}
+        {canSupport && belowMin && (
+          <SupportMinUnitsAppeal variant="compact" horse={horse} className="mt-1.5" />
         )}
       </div>
 

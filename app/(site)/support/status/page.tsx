@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
+import SupportMinUnitsAppeal from "@/components/SupportMinUnitsAppeal";
 import SupportRanking from "@/components/SupportRanking";
 import SupportStatusExplorer from "@/components/SupportStatusExplorer";
 import { CTA } from "@/components/Blocks";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
 import { getHorses } from "@/lib/content";
-import { TOTAL_PROTECTED_HORSES, monthlyOf, supportersOf } from "@/lib/horses";
+import { TOTAL_PROTECTED_HORSES, TOTAL_SUPPORT_AMOUNT_LABEL, monthlyOf, supportersOf } from "@/lib/horses";
 
 const yen = (n: number) => `¥${n.toLocaleString("ja-JP")}`;
 
@@ -43,13 +44,14 @@ export default async function SupportStatusPage() {
         <SectionHeading
           eyebrow="OVERVIEW"
           title={`累計${TOTAL_PROTECTED_HORSES}頭の保護実績`}
-          lead={`現在 ${withSupport.length} 頭に、合計 ${totalSupporters} 件・月額 ${yen(totalMonthly)} のご支援をいただいています。（retouch.salon の支援システムと連動・リアルタイム表示）`}
+          lead={`現在 ${withSupport.length} 頭に、合計 ${totalSupporters} 件・${TOTAL_SUPPORT_AMOUNT_LABEL} ${yen(totalMonthly)} のご支援をいただいています。（retouch.salon の支援システムと連動・リアルタイム表示）`}
         />
-        <dl className="mt-8 grid grid-cols-3 gap-4">
+        <SupportMinUnitsAppeal className="mt-6" />
+        <dl className="mt-6 grid grid-cols-3 gap-4">
           {[
             { label: "支援を受けている馬", value: `${withSupport.length}頭` },
             { label: "支援件数（のべ）", value: `${totalSupporters}件` },
-            { label: "毎月の支援額", value: yen(totalMonthly) },
+            { label: TOTAL_SUPPORT_AMOUNT_LABEL, value: yen(totalMonthly) },
           ].map((s) => (
             <div key={s.label} className="rounded-2xl bg-white p-5 text-center shadow-sm ring-1 ring-brand-900/5">
               <dd className="text-2xl font-bold text-brand-700 sm:text-3xl">{s.value}</dd>
@@ -72,7 +74,7 @@ export default async function SupportStatusPage() {
           <SupportStatusExplorer horses={allHorses} />
         </div>
         <p className="mt-8 text-sm leading-relaxed text-ink/60">
-          ※ 支援者数・月額支援・募集状況は
+          ※ 支援者数・{TOTAL_SUPPORT_AMOUNT_LABEL}・募集状況は
           <span className="mx-1 font-semibold text-brand-700">retouch.salon の支援システム</span>
           と連動して自動表示しています。写真・紹介文は
           <Link href="/admin" className="mx-1 text-gold hover:underline">管理画面</Link>
@@ -84,7 +86,7 @@ export default async function SupportStatusPage() {
         <CTA
           backgroundImage={IMG.ctaBg}
           title="この子の、力になりませんか。"
-          body="一口オーナー制度や会員支援で、馬の飼養・再調教を支えることができます。"
+          body="一口オーナー制度や会員支援で、馬の飼養・再調教を支えることができます。維持管理には最低8口の支援が必要です。"
           primary={{ label: "この子を支援する", href: SITE.horsesSupportUrl }}
           secondary={{ label: "応援する方法を見る", href: "/support" }}
         />

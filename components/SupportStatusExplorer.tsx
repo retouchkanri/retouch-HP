@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ALL_HORSES, canAcceptSupport, monthlyOf, supportersOf, type HorseProfile } from "@/lib/horses";
 import SupportHorseRow from "@/components/SupportHorseRow";
+import SupportMinUnitsAppeal from "@/components/SupportMinUnitsAppeal";
 
 const CATEGORIES = [
   { value: "all", label: "すべて" },
@@ -83,6 +84,8 @@ export default function SupportStatusExplorer({
           該当する馬：<span className="font-bold text-brand-700">{filtered.length}</span> 頭
         </p>
       </div>
+
+      <SupportMinUnitsAppeal variant="inline" className="mt-6" />
 
       <ol className="mt-8 space-y-3">
         {filtered.map((horse, i) => (

@@ -9,6 +9,7 @@ import { Section, SectionHeading } from "@/components/Section";
 import { CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
 import MembershipGuidelines from "@/components/MembershipGuidelines";
+import SupportMinUnitsAppeal from "@/components/SupportMinUnitsAppeal";
 
 export const metadata: Metadata = {
   title: {
@@ -41,7 +42,7 @@ const MEMBER_BENEFITS = ["見学会へのご参加", "会員専用情報の閲�
 
 const WAYS = [
   { id: "一口支援", title: "一口支援", image: IMG.supportOneShare, imageAlt: "一口オーナーと馬（日本人）",
-    body: "1頭の馬を、みんなで支える仕組み。月々の一口支援で、飼養・治療・再調教を支えます。支援した馬に会える・乗れる体験も。" },
+    body: "1頭の馬を、みんなで支える仕組み。月々の一口支援で、飼養・治療・再調教を支えます。Retouchで継続して維持管理していくには、最低8口の支援が必要です。支援した馬に会える・乗れる体験も。" },
   { id: "ポニーチーム", title: "ポニーチーム", image: IMG.supportPony, imageAlt: "ふれあい・教育・福祉で活躍するポニー",
     body: "ふれあい・教育・福祉で活躍するポニーたちを応援するチーム。子どもや家族で参加できる、やさしい支援のかたちです。" },
   { id: "法人協賛", title: "法人協賛", image: IMG.supportCorporate, imageAlt: "企業協賛・CSR活動",
@@ -68,8 +69,9 @@ export default function SupportPage() {
         <SectionHeading
           eyebrow="SUPPORT STATUS"
           title="馬ごとの支援状況"
-          lead="支援者数・月額支援から、いま応援を必要としている馬を探せます。"
+          lead="支援者数・現在の総支援金額から、いま応援を必要としている馬を探せます。"
         />
+        <SupportMinUnitsAppeal className="mt-6" />
         <div className="mt-8 text-center">
           <Link href="/support/status" className="btn-primary">
             支援状況をすべて見る

@@ -8,6 +8,7 @@ import Placeholder from "@/components/Placeholder";
 import SupportStatusBadge from "@/components/SupportStatusBadge";
 import { CTA } from "@/components/Blocks";
 import { IMG } from "@/lib/images";
+import SupportMinUnitsAppeal from "@/components/SupportMinUnitsAppeal";
 import { salonHorseSupportUrl } from "@/lib/salon";
 import { getHorseBySlugDb, getHorses } from "@/lib/content";
 import {
@@ -18,6 +19,8 @@ import {
   formatUnits,
   monthlyOf,
   supportersOf,
+  TOTAL_SUPPORT_AMOUNT_LABEL,
+  supportUnitsOf,
   hasSupport as horseHasSupport,
   canAcceptSupport,
   isOwnerHorse,
@@ -60,6 +63,7 @@ export default async function HorseDetailPage({ params }: Props) {
   // retouch.salon 共有DBの実支援データ
   const supporters = supportersOf(horse);
   const monthly = monthlyOf(horse);
+  const units = supportUnitsOf(horse);
   const hasSupport = horseHasSupport(horse);
   const canSupport = canAcceptSupport(horse);
   const isOwner = isOwnerHorse(horse);
@@ -158,8 +162,10 @@ export default async function HorseDetailPage({ params }: Props) {
         <SectionHeading
           eyebrow="SUPPORT STATUS"
           title="この子の支援状況"
-          lead="retouch.salon の支援システムと連動した、現在の支援状況です。"
+          lead="retouch.salon の支援システムと連動した、現在の支援状況です。金額はすべての支援者からの合計を表示しています。"
         />
+
+        <SupportMinUnitsAppeal className="mt-6" />
 
         {hasSupport ? (
           <div className="mt-8 max-w-2xl rounded-3xl bg-white p-8 shadow-sm ring-1 ring-brand-900/5">
@@ -170,13 +176,14 @@ export default async function HorseDetailPage({ params }: Props) {
               </div>
               <div>
                 <p className="text-3xl font-bold text-brand-700">{yen(monthly)}</p>
-                <p className="mt-1 text-xs text-ink/50">毎月の支援額</p>
+                <p className="mt-1 text-xs text-ink/50">{TOTAL_SUPPORT_AMOUNT_LABEL}</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-brand-700">{formatUnits(horse.supportUnits ?? 0)}<span className="ml-1 text-base font-normal text-ink/50">口</span></p>
+                <p className="text-3xl font-bold text-brand-700">{formatUnits(units)}<span className="ml-1 text-base font-normal text-ink/50">口</span></p>
                 <p className="mt-1 text-xs text-ink/50">支援口数</p>
               </div>
             </div>
+            <SupportMinUnitsAppeal variant="meter" horse={horse} className="mt-6" />
             {canSupport ? (
               <a href={salonHorseSupportUrl(horse)} target="_blank" rel="noopener noreferrer" className="btn-gold mt-8">
                 この子を支援する
@@ -196,6 +203,7 @@ export default async function HorseDetailPage({ params }: Props) {
             <p className="text-sm text-ink/70">
               この子はまだ支援者がいません。最初のサポーターになりませんか。
             </p>
+            <SupportMinUnitsAppeal variant="meter" horse={horse} className="mt-5" />
             <a href={salonHorseSupportUrl(horse)} target="_blank" rel="noopener noreferrer" className="btn-gold mt-6">
               この子を支援する
             </a>
