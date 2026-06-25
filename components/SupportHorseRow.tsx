@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 import SiteLink from "@/components/SiteLink";
+import SupportStatusBadge from "@/components/SupportStatusBadge";
 import { SITE } from "@/lib/site";
 import { formatHorseMeta, supportRate, type HorseProfile } from "@/lib/horses";
 
@@ -21,6 +22,8 @@ export default function SupportHorseRow({
 }) {
   const rate = supportRate(horse);
   const hasSupport = horse.goal > 0;
+  // salon DBで明示的に受付停止の馬は支援ボタンを出さない（未連携=undefinedは従来通り）
+  const canSupport = hasSupport && horse.isSupportable !== false;
   const barColor =
     tone === "urgent" ? "bg-rose-500" : tone === "top" ? "bg-gold" : "bg-brand-600";
   const rankColor =
@@ -58,6 +61,7 @@ export default function SupportHorseRow({
           <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold text-brand-700">
             {horse.statusLabel}
           </span>
+          <SupportStatusBadge isSupportable={horse.isSupportable} />
         </div>
 
         {(horse.note || horse.story) && (
@@ -96,7 +100,7 @@ export default function SupportHorseRow({
         >
           詳細を見る
         </Link>
-        {hasSupport && (
+        {canSupport && (
           <SiteLink
             href={SITE.donateUrl}
             className={`w-full rounded-full px-4 py-2.5 text-center text-xs font-semibold transition-colors sm:w-auto sm:py-2 ${

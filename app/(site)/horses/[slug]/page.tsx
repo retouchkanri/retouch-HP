@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
 import { Section, SectionHeading } from "@/components/Section";
 import Placeholder from "@/components/Placeholder";
+import SupportStatusBadge from "@/components/SupportStatusBadge";
 import { CTA } from "@/components/Blocks";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
@@ -12,6 +13,9 @@ import { getHorseBySlugDb, getHorses, supportRate } from "@/lib/content";
 import { getHorseBySlug, getHorseSlugs, formatHorseMeta } from "@/lib/horses";
 
 type Props = { params: Promise<{ slug: string }> };
+
+// retouch.salon 共有DBの支援ステータス等を定期的に再取得（ISR）。
+export const revalidate = 600;
 
 // Keep static params for build-time pre-rendering using static horse slugs
 export async function generateStaticParams() {
@@ -43,6 +47,8 @@ export default async function HorseDetailPage({ params }: Props) {
   const allHorses = await getHorses();
   const rate = supportRate(horse);
   const hasSupport = horse.goal > 0;
+  // salon DBで明示的に受付停止の馬は支援ボタンを出さない（未連携=undefinedは従来通り）
+  const canSupport = hasSupport && horse.isSupportable !== false;
 
   return (
     <>
@@ -97,7 +103,10 @@ export default async function HorseDetailPage({ params }: Props) {
               )}
               <div className="flex gap-3">
                 <dt className="w-16 shrink-0 font-semibold text-brand-800">状態</dt>
-                <dd>{horse.statusLabel}</dd>
+                <dd className="flex flex-wrap items-center gap-2">
+                  {horse.statusLabel}
+                  <SupportStatusBadge isSupportable={horse.isSupportable} />
+                </dd>
               </div>
             </dl>
 
@@ -152,9 +161,15 @@ export default async function HorseDetailPage({ params }: Props) {
               <span>{yen(horse.raised)} / {yen(horse.goal)}</span>
               <span>支援者 {horse.supporters}名</span>
             </div>
-            <a href={SITE.donateUrl} target="_blank" rel="noopener noreferrer" className="btn-gold mt-8">
-              この子を支援する
-            </a>
+            {canSupport ? (
+              <a href={SITE.donateUrl} target="_blank" rel="noopener noreferrer" className="btn-gold mt-8">
+                この子を支援する
+              </a>
+            ) : (
+              <p className="mt-8 text-sm text-ink/60">
+                現在、この馬の新規支援の受付を停止しています。
+              </p>
+            )}
           </div>
         ) : (
           <p className="mt-6 text-sm text-ink/60">支援状況データは準備中です。</p>

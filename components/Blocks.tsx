@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import SiteLink from "@/components/SiteLink";
 import { type HorseProfile } from "@/lib/horses";
 import Placeholder from "@/components/Placeholder";
+import SupportStatusBadge from "@/components/SupportStatusBadge";
 
 function isImagePath(src: string) {
   return src.startsWith("/");
@@ -126,6 +127,11 @@ export function HorseCard({ horse }: { horse: HorseProfile }) {
           <h3 className="text-lg font-semibold text-black group-hover:text-brand-700">{horse.name}</h3>
           {meta && <span className="shrink-0 text-xs text-ink/50">{meta}</span>}
         </div>
+        {horse.isSupportable !== undefined && (
+          <div className="mt-2">
+            <SupportStatusBadge isSupportable={horse.isSupportable} />
+          </div>
+        )}
         {horse.personality && (
           <p className="mt-2 text-xs font-semibold text-brand-600">性格：{horse.personality}</p>
         )}

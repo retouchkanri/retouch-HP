@@ -30,6 +30,11 @@ export type HorseProfile = {
   supporters: number;
   /** 詳細情報が未登録の馬（名前・性別のみ先行登録可） */
   pendingDetails?: boolean;
+  /**
+   * retouch.salon 共有DB由来の支援ステータス（保護順で結合）。
+   * true=支援募集中 / false=新規受付停止 / undefined=salon未連携・対象外。
+   */
+  isSupportable?: boolean;
 };
 
 export { supportRate };

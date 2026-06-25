@@ -2,6 +2,7 @@ import type { NewsItem, MediaItem } from "@/lib/data";
 import { NEWS, MEDIA } from "@/lib/data";
 import { ALL_HORSES, supportRate, type HorseProfile } from "@/lib/horses";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
+import { getSalonSupportMap } from "@/lib/salon";
 
 export type DbNewsItem = NewsItem & { id: string };
 export type DbMediaItem = MediaItem & { id: string };
@@ -215,7 +216,22 @@ function horsesFallback(): HorseProfile[] {
   return ALL_HORSES;
 }
 
+/**
+ * retouch.salon 共有DBの支援ステータス（is_supportable）を、保護順（order）を
+ * キーに本体の馬プロフィールへ結合します。salon未連携・対象外の馬は元のまま。
+ */
+async function attachSalonSupport(horses: HorseProfile[]): Promise<HorseProfile[]> {
+  const map = await getSalonSupportMap();
+  if (map.size === 0) return horses;
+  return horses.map((h) =>
+    h.order != null && map.has(h.order)
+      ? { ...h, isSupportable: map.get(h.order) }
+      : h
+  );
+}
+
 export async function getHorses(): Promise<HorseProfile[]> {
+  let horses: HorseProfile[];
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -223,11 +239,13 @@ export async function getHorses(): Promise<HorseProfile[]> {
       .select("*")
       .order("sort_order", { ascending: true })
       .order("name", { ascending: true });
-    if (error || !data?.length) return horsesFallback();
-    return data.map((row: HorseRow) => dbHorseToProfile(mapHorse(row)));
+    horses = error || !data?.length
+      ? horsesFallback()
+      : data.map((row: HorseRow) => dbHorseToProfile(mapHorse(row)));
   } catch {
-    return horsesFallback();
+    horses = horsesFallback();
   }
+  return attachSalonSupport(horses);
 }
 
 export async function getHorseBySlugDb(slug: string): Promise<HorseProfile | undefined> {
@@ -239,7 +257,12 @@ export async function getHorseBySlugDb(slug: string): Promise<HorseProfile | und
       .eq("slug", slug)
       .single();
     if (error || !data) return undefined;
-    return dbHorseToProfile(mapHorse(data as HorseRow));
+    const profile = dbHorseToProfile(mapHorse(data as HorseRow));
+    if (profile.order != null) {
+      const map = await getSalonSupportMap();
+      if (map.has(profile.order)) profile.isSupportable = map.get(profile.order);
+    }
+    return profile;
   } catch {
     return undefined;
   }
