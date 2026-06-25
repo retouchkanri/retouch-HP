@@ -1,12 +1,12 @@
 import { getHorses } from "@/lib/content";
-import { monthlyOf, supportersOf } from "@/lib/horses";
+import { canAcceptSupport, monthlyOf, supportersOf } from "@/lib/horses";
 import SupportHorseRow from "@/components/SupportHorseRow";
 
 export default async function SupportRanking() {
   const allHorses = await getHorses();
   // 支援募集中の馬のうち、支援がまだ少ない順（最初のサポーターを募りたい子）
   const supportNeeded = allHorses
-    .filter((h) => h.isSupportable === true)
+    .filter((h) => canAcceptSupport(h))
     .sort((a, b) => monthlyOf(a) - monthlyOf(b) || supportersOf(a) - supportersOf(b))
     .slice(0, 6);
   // 実際に支援が集まっている順（月額支援が多い子）

@@ -27,11 +27,8 @@ const BUCKET = "horse-images";
 const DRY = process.argv.includes("--dry");
 
 // ── Special (non-numbered) .webp horses: filename base -> {slug, name, status} ──
-const WEBP_MAP = {
-  "サクラエース": { slug: "sakura-ace", name: "サクラエース", status: "graduated" },
-  "ハヤテボーイ": { slug: "hayate-boy", name: "ハヤテボーイ", status: "graduated" },
-  "ミドリノカゼ": { slug: "midori-no-kaze", name: "ミドリノカゼ", status: "graduated" },
-};
+// （ダミー卒業馬は削除。番外編ポニーのみ webp で残す）
+const WEBP_MAP = {};
 
 // ── Detail text + support stats for known horses, keyed by slug (horse-NN) ──
 // Carried over from the original hand-written profiles so the support ranking,
@@ -83,12 +80,22 @@ function parseFile(file) {
   const ext = path.extname(file).slice(1).toLowerCase();
   const base = file.slice(0, file.length - path.extname(file).length).trim();
 
+  // 救済ポニー（番外編・ガンガン）
+  if (base.includes("ポニー") || /ガンガン|がんがん/.test(base)) {
+    return {
+      file,
+      ext,
+      slug: "pony-rescue",
+      name: "ガンガン",
+      status: "protected",
+      statusLabel: "救済ポニー",
+      order: null,
+      note: "目を負傷したポニーの救済支援。番外編として保護しました。",
+    };
+  }
+
   // Non-numbered .webp specials.
   if (ext === "webp") {
-    if (base.includes("ポニー")) {
-      return { file, ext, slug: "pony-rescue", name: "救済ポニー", status: "protected", order: null,
-        note: "目を負傷したポニーの救済支援。番外編として保護しました。" };
-    }
     const m = WEBP_MAP[base];
     if (m) return { file, ext, slug: m.slug, name: m.name, status: m.status, order: null };
     // Fallback: keep raw name, derive slug from base.
@@ -114,7 +121,7 @@ function buildRoster(files, publicBase) {
       slug: e.slug,
       name: e.name,
       status: e.status,
-      statusLabel: STATUS_LABEL[e.status],
+      statusLabel: e.statusLabel ?? STATUS_LABEL[e.status],
       order: e.order ?? undefined,
       personality: d.personality,
       story: d.story,

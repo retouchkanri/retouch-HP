@@ -8,16 +8,19 @@ import Placeholder from "@/components/Placeholder";
 import SupportStatusBadge from "@/components/SupportStatusBadge";
 import { CTA } from "@/components/Blocks";
 import { IMG } from "@/lib/images";
-import { SITE } from "@/lib/site";
+import { salonHorseSupportUrl } from "@/lib/salon";
 import { getHorseBySlugDb, getHorses } from "@/lib/content";
 import {
   getHorseBySlug,
   getHorseSlugs,
   formatHorseMeta,
+  formatHorseName,
   formatUnits,
   monthlyOf,
   supportersOf,
   hasSupport as horseHasSupport,
+  canAcceptSupport,
+  isOwnerHorse,
 } from "@/lib/horses";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -39,9 +42,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Try DB first, fall back to static
   const horse = (await getHorseBySlugDb(slug)) ?? getHorseBySlug(slug);
   if (!horse) return { title: "馬が見つかりません" };
+  const displayName = formatHorseName(horse);
   return {
-    title: `${horse.name}｜支援状況`,
-    description: `${horse.name}（${horse.sex}・${horse.age}）の支援状況と紹介。${horse.note ?? horse.story ?? ""}`,
+    title: `${displayName}｜支援状況`,
+    description: `${displayName}（${horse.sex}・${horse.age}）の支援状況と紹介。${horse.note ?? horse.story ?? ""}`,
   };
 }
 
@@ -57,21 +61,23 @@ export default async function HorseDetailPage({ params }: Props) {
   const supporters = supportersOf(horse);
   const monthly = monthlyOf(horse);
   const hasSupport = horseHasSupport(horse);
-  // salon DBで支援募集中の馬のみ支援ボタンを出す
-  const canSupport = horse.isSupportable === true;
+  const canSupport = canAcceptSupport(horse);
+  const isOwner = isOwnerHorse(horse);
+
+  const displayName = formatHorseName(horse);
 
   return (
     <>
       <PageHero
         eyebrow="HORSE PROFILE"
-        title={horse.name}
+        title={displayName}
         subtitle={`${formatHorseMeta(horse)} ｜ ${horse.statusLabel}`}
-        image={`${horse.name}の写真`}
+        image={`${displayName}の写真`}
         backgroundImage={IMG.horsesHeroBg}
         crumbs={[
           { label: "馬たちの紹介", href: "/horses" },
           { label: "支援状況", href: "/support/status" },
-          { label: horse.name },
+          { label: displayName },
         ]}
       />
 
@@ -81,19 +87,19 @@ export default async function HorseDetailPage({ params }: Props) {
             {horse.photo ? (
               <Image
                 src={horse.photo}
-                alt={horse.name}
+                alt={displayName}
                 width={800}
                 height={800}
                 className="aspect-square w-full rounded-2xl object-cover"
               />
             ) : (
-              <Placeholder label={`${horse.name}の写真`} className="aspect-square w-full rounded-2xl" />
+              <Placeholder label={`${displayName}の写真`} className="aspect-square w-full rounded-2xl" />
             )}
           </div>
 
           <div>
             <p className="eyebrow">PROFILE</p>
-            <h2 className="section-title mt-3">{horse.name}</h2>
+            <h2 className="section-title mt-3">{displayName}</h2>
             <dl className="mt-6 space-y-3 text-sm">
               {horse.sex && (
                 <div className="flex gap-3">
@@ -115,7 +121,7 @@ export default async function HorseDetailPage({ params }: Props) {
                 <dt className="w-16 shrink-0 font-semibold text-brand-800">状態</dt>
                 <dd className="flex flex-wrap items-center gap-2">
                   {horse.statusLabel}
-                  <SupportStatusBadge isSupportable={horse.isSupportable} />
+                  <SupportStatusBadge isSupportable={isOwner ? undefined : horse.isSupportable} />
                 </dd>
               </div>
             </dl>
@@ -172,9 +178,13 @@ export default async function HorseDetailPage({ params }: Props) {
               </div>
             </div>
             {canSupport ? (
-              <a href={SITE.donateUrl} target="_blank" rel="noopener noreferrer" className="btn-gold mt-8">
+              <a href={salonHorseSupportUrl(horse)} target="_blank" rel="noopener noreferrer" className="btn-gold mt-8">
                 この子を支援する
               </a>
+            ) : isOwner ? (
+              <p className="mt-8 text-sm text-ink/60">
+                オーナーが決まっており、新規支援は不要です。これまでの支援に感謝しています。
+              </p>
             ) : (
               <p className="mt-8 text-sm text-ink/60">
                 現在、この馬の新規支援の受付を停止しています。
@@ -186,10 +196,14 @@ export default async function HorseDetailPage({ params }: Props) {
             <p className="text-sm text-ink/70">
               この子はまだ支援者がいません。最初のサポーターになりませんか。
             </p>
-            <a href={SITE.donateUrl} target="_blank" rel="noopener noreferrer" className="btn-gold mt-6">
+            <a href={salonHorseSupportUrl(horse)} target="_blank" rel="noopener noreferrer" className="btn-gold mt-6">
               この子を支援する
             </a>
           </div>
+        ) : isOwner ? (
+          <p className="mt-6 text-sm text-ink/60">
+            オーナーが決まっており、新規支援は不要です。
+          </p>
         ) : horse.isSupportable === false ? (
           <p className="mt-6 text-sm text-ink/60">現在、この馬の新規支援の受付を停止しています。</p>
         ) : (

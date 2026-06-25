@@ -35,6 +35,8 @@ export const SITE = {
   activityBasesNote: "※山武市雨坪10番地　東関東馬事高等学院内",
   mapQuery: "大阪府河内長野市高向2001 ホースレスト",
   membersUrl: "https://retouch.salon/",
+  /** 馬ごとの一口支援一覧（単発寄付ではない） */
+  horsesSupportUrl: "https://retouch.salon/horses",
   donateUrl: "https://retouch.salon/donate",
   loginUrl: "https://retouch.salon/login",
   youtube: "https://www.youtube.com/@Retouch2023",

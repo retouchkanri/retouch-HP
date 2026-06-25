@@ -193,7 +193,7 @@ export default async function HorsesPage() {
           backgroundImage={IMG.ctaBg}
           title="この子の、力になりませんか。"
           body="一口オーナー制度や会員支援で、馬の飼養・再調教を支えることができます。"
-          primary={{ label: "この子を支援する", href: SITE.donateUrl }}
+          primary={{ label: "この子を支援する", href: SITE.horsesSupportUrl }}
           secondary={{ label: "会員になる", href: SITE.loginUrl }}
         />
       </Section>

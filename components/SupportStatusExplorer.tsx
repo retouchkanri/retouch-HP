@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ALL_HORSES, monthlyOf, supportersOf, type HorseProfile } from "@/lib/horses";
+import { ALL_HORSES, canAcceptSupport, monthlyOf, supportersOf, type HorseProfile } from "@/lib/horses";
 import SupportHorseRow from "@/components/SupportHorseRow";
 
 const CATEGORIES = [
@@ -40,9 +40,9 @@ export default function SupportStatusExplorer({
 
     list = [...list].sort((a, b) => {
       if (sort === "urgent") {
-        // 支援募集中を優先し、支援が少ない順
-        const aOpen = a.isSupportable === true ? 0 : 1;
-        const bOpen = b.isSupportable === true ? 0 : 1;
+        // 支援募集中を優先し、支援が少ない順（オーナー決定馬は除外）
+        const aOpen = canAcceptSupport(a) ? 0 : 1;
+        const bOpen = canAcceptSupport(b) ? 0 : 1;
         if (aOpen !== bOpen) return aOpen - bOpen;
         return monthlyOf(a) - monthlyOf(b) || a.name.localeCompare(b.name, "ja");
       }

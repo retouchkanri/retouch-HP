@@ -41,6 +41,8 @@ export type HorseProfile = {
   monthlySupport?: number;
   /** retouch.salon の支援口数合計（0.5=半口）。 */
   supportUnits?: number;
+  /** retouch.salon horses.id（馬ごとの支援リンク用）。 */
+  salonHorseId?: string;
 };
 
 export { supportRate };
@@ -54,14 +56,25 @@ export const supportersOf = (h: Pick<HorseProfile, "supporterCount">) => h.suppo
 export const hasSupport = (h: Pick<HorseProfile, "supporterCount">) => (h.supporterCount ?? 0) > 0;
 /** 支援募集中か（salon未連携=undefinedはfalse扱い）。 */
 export const isOpenForSupport = (h: Pick<HorseProfile, "isSupportable">) => h.isSupportable === true;
+/** オーナー決定馬か。 */
+export const isOwnerHorse = (h: Pick<HorseProfile, "status">) => h.status === "owner";
+/** 新規支援を受け付けられるか（オーナー決定馬は除外）。 */
+export const canAcceptSupport = (h: Pick<HorseProfile, "status" | "isSupportable">) =>
+  h.status !== "owner" && h.isSupportable === true;
 /** 口数の表示（整数はそのまま、半口は小数1桁）。 */
 export const formatUnits = (n: number) => (n % 1 === 0 ? `${n}` : n.toFixed(1));
+
+export function formatHorseName(horse: Pick<HorseProfile, "name" | "order">) {
+  if (horse.order != null) {
+    return `${String(horse.order).padStart(2, "0")}：${horse.name}`;
+  }
+  return horse.name;
+}
 
 export function formatHorseMeta(horse: Pick<HorseProfile, "sex" | "age" | "order">) {
   const parts: string[] = [];
   if (horse.sex) parts.push(horse.sex);
   parts.push(horse.age || "不明");
-  if (horse.order) parts.push(`肥育場${horse.order}番目`);
   return parts.join("・");
 }
 

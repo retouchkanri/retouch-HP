@@ -13,6 +13,8 @@ import { createSalonClient } from "@/lib/supabase/salon";
 // ============================================================================
 
 export type SalonHorseStatus = {
+  /** retouch.salon horses.id（支援申込み deep link 用） */
+  salonHorseId: string;
   /** 支援募集中（true）／受付停止（false） */
   isSupportable: boolean;
   /** 現在アクティブな支援者数（support_subscriptions の active 件数） */
@@ -44,6 +46,7 @@ export async function getSalonHorseStatusMap(): Promise<Map<number, SalonHorseSt
       if (typeof h.sort_order === "number") {
         idToOrder.set(h.id, h.sort_order);
         map.set(h.sort_order, {
+          salonHorseId: h.id,
           isSupportable: !!h.is_supportable,
           supporterCount: 0,
           monthlySupport: 0,
@@ -74,4 +77,28 @@ export async function getSalonHorseStatusMap(): Promise<Map<number, SalonHorseSt
   } catch {
     return map;
   }
+}
+
+const SALON_HORSES_URL = "https://retouch.salon/horses";
+/** salon DB 上のポニー救済チーム（番外編）の sort_order */
+const SALON_PONY_SORT_ORDER = 153;
+
+type HorseSupportLink = {
+  slug?: string;
+  order?: number;
+  salonHorseId?: string;
+};
+
+/** 馬ごとの一口支援ページ（retouch.salon）への URL。単発寄付 /donate ではありません。 */
+export function salonHorseSupportUrl(horse: HorseSupportLink): string {
+  if (horse.salonHorseId) {
+    return `${SALON_HORSES_URL}?horse_id=${encodeURIComponent(horse.salonHorseId)}`;
+  }
+  if (horse.slug === "pony-rescue") {
+    return `${SALON_HORSES_URL}?sort_order=${SALON_PONY_SORT_ORDER}`;
+  }
+  if (typeof horse.order === "number") {
+    return `${SALON_HORSES_URL}?sort_order=${horse.order}`;
+  }
+  return SALON_HORSES_URL;
 }

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
 import SiteLink from "@/components/SiteLink";
-import { type HorseProfile } from "@/lib/horses";
+import { formatHorseMeta, formatHorseName, type HorseProfile } from "@/lib/horses";
 import Placeholder from "@/components/Placeholder";
 import SupportStatusBadge from "@/components/SupportStatusBadge";
 
@@ -87,20 +87,14 @@ export function FeatureCard({
 
 // 馬カード
 export function HorseCard({ horse }: { horse: HorseProfile }) {
+  const displayName = formatHorseName(horse);
+  const meta = formatHorseMeta(horse);
   const badgeColor =
     horse.status === "protected"
       ? "bg-brand-600"
       : horse.status === "graduated"
       ? "bg-gold"
       : "bg-ink";
-  const meta =
-    horse.sex && horse.age
-      ? `${horse.sex}・${horse.age}`
-      : horse.order
-      ? `肥育場から${horse.order}番目`
-      : horse.sex
-      ? horse.sex
-      : "";
 
   return (
     <Link href={`/horses/${horse.slug}`} className="card group flex flex-col">
@@ -108,13 +102,13 @@ export function HorseCard({ horse }: { horse: HorseProfile }) {
         {horse.photo ? (
           <Image
             src={horse.photo}
-            alt={`${horse.name}（${horse.statusLabel}）`}
+            alt={`${displayName}（${horse.statusLabel}）`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition group-hover:scale-105"
           />
         ) : (
-          <Placeholder label={`${horse.name}（${horse.statusLabel}）の写真`} className="h-full w-full" />
+          <Placeholder label={`${displayName}（${horse.statusLabel}）の写真`} className="h-full w-full" />
         )}
         <span
           className={`absolute top-3 left-3 rounded-full ${badgeColor} px-3 py-1 text-[10px] font-semibold tracking-wider text-white`}
@@ -124,7 +118,7 @@ export function HorseCard({ horse }: { horse: HorseProfile }) {
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-baseline justify-between gap-2">
-          <h3 className="text-lg font-semibold text-black group-hover:text-brand-700">{horse.name}</h3>
+          <h3 className="text-lg font-semibold text-black group-hover:text-brand-700">{displayName}</h3>
           {meta && <span className="shrink-0 text-xs text-ink/50">{meta}</span>}
         </div>
         {horse.isSupportable !== undefined && (

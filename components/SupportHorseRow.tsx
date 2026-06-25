@@ -2,13 +2,16 @@ import Link from "next/link";
 import Placeholder from "@/components/Placeholder";
 import SiteLink from "@/components/SiteLink";
 import SupportStatusBadge from "@/components/SupportStatusBadge";
-import { SITE } from "@/lib/site";
+import { salonHorseSupportUrl } from "@/lib/salon";
 import {
   formatHorseMeta,
+  formatHorseName,
   formatUnits,
   monthlyOf,
   supportersOf,
   hasSupport as horseHasSupport,
+  canAcceptSupport,
+  isOwnerHorse,
   type HorseProfile,
 } from "@/lib/horses";
 
@@ -31,8 +34,9 @@ export default function SupportHorseRow({
   const supporters = supportersOf(horse);
   const monthly = monthlyOf(horse);
   const hasSupport = horseHasSupport(horse);
-  // salon DBで支援募集中の馬のみ支援ボタンを出す（受付停止・未連携は出さない）
-  const canSupport = horse.isSupportable === true;
+  const canSupport = canAcceptSupport(horse);
+  const isOwner = isOwnerHorse(horse);
+  const displayName = formatHorseName(horse);
   const accent =
     tone === "urgent" ? "text-rose-600" : tone === "top" ? "text-gold" : "text-brand-700";
   const rankColor =
@@ -53,24 +57,24 @@ export default function SupportHorseRow({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={horse.photo}
-            alt={horse.name}
+            alt={displayName}
             className="h-16 w-16 rounded-xl object-cover"
           />
         ) : (
-          <Placeholder label={`${horse.name}の写真`} className="h-16 w-16 rounded-xl" />
+          <Placeholder label={`${displayName}の写真`} className="h-16 w-16 rounded-xl" />
         )}
       </Link>
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
           <Link href={`/horses/${horse.slug}`} className="text-base font-semibold text-black hover:text-brand-700">
-            {horse.name}
+            {displayName}
           </Link>
           <span className="text-xs text-ink/50">{formatHorseMeta(horse)}</span>
           <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold text-brand-700">
             {horse.statusLabel}
           </span>
-          <SupportStatusBadge isSupportable={horse.isSupportable} />
+          <SupportStatusBadge isSupportable={isOwner ? undefined : horse.isSupportable} />
         </div>
 
         {(horse.note || horse.story) && (
@@ -86,6 +90,8 @@ export default function SupportHorseRow({
             <span className="font-semibold text-ink/70">月額 {yen(monthly)}</span>
             <span className="ml-1 font-normal text-ink/40">（{formatUnits(horse.supportUnits ?? 0)}口）</span>
           </p>
+        ) : isOwner ? (
+          <p className="mt-2 text-[11px] text-ink/45">オーナー決定済み｜新規支援は不要です</p>
         ) : horse.isSupportable === true ? (
           <p className="mt-2 text-[11px] font-semibold text-brand-700">
             支援募集中｜最初のサポーターになりませんか
@@ -106,7 +112,7 @@ export default function SupportHorseRow({
         </Link>
         {canSupport && (
           <SiteLink
-            href={SITE.donateUrl}
+            href={salonHorseSupportUrl(horse)}
             className={`w-full rounded-full px-4 py-2.5 text-center text-xs font-semibold transition-colors sm:w-auto sm:py-2 ${
               tone === "urgent"
                 ? "bg-rose-500 text-white hover:bg-rose-600"

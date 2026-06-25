@@ -230,7 +230,8 @@ async function attachSalonSupport(horses: HorseProfile[]): Promise<HorseProfile[
     if (!status) return h;
     return {
       ...h,
-      isSupportable: status.isSupportable,
+      salonHorseId: status.salonHorseId,
+      isSupportable: h.status === "owner" ? undefined : status.isSupportable,
       supporterCount: status.supporterCount,
       monthlySupport: status.monthlySupport,
       supportUnits: status.supportUnits,
@@ -270,7 +271,7 @@ export async function getHorseBySlugDb(slug: string): Promise<HorseProfile | und
       const map = await getSalonHorseStatusMap();
       const status = map.get(profile.order);
       if (status) {
-        profile.isSupportable = status.isSupportable;
+        profile.isSupportable = profile.status === "owner" ? undefined : status.isSupportable;
         profile.supporterCount = status.supporterCount;
         profile.monthlySupport = status.monthlySupport;
         profile.supportUnits = status.supportUnits;

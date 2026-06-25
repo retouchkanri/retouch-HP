@@ -24,6 +24,8 @@ export default async function SupportStatusPage() {
   // retouch.salon 共有DBの実支援データの合計
   const totalMonthly = allHorses.reduce((sum, h) => sum + monthlyOf(h), 0);
   const totalSupporters = allHorses.reduce((sum, h) => sum + supportersOf(h), 0);
+  const perHorseAllocation =
+    withSupport.length > 0 ? Math.floor(totalMonthly / withSupport.length) : 0;
 
   return (
     <>
@@ -57,6 +59,17 @@ export default async function SupportStatusPage() {
             </div>
           ))}
         </dl>
+        <div className="mt-4 grid grid-cols-3 gap-4">
+          <div className="hidden sm:block" aria-hidden />
+          <div className="hidden sm:block" aria-hidden />
+          <div className="col-span-3 rounded-2xl bg-white p-5 text-center shadow-sm ring-1 ring-brand-900/5 sm:col-span-1">
+            <p className="text-2xl font-bold text-brand-700 sm:text-3xl">
+              {perHorseAllocation.toLocaleString("ja-JP")}円
+            </p>
+            <p className="mt-1 text-xs text-ink/55">１頭あたりの支援割当額</p>
+            <p className="mt-1 text-[10px] text-ink/40">（自動計算）</p>
+          </div>
+        </div>
         <div className="mt-10">
           <SupportRanking />
         </div>
@@ -85,7 +98,7 @@ export default async function SupportStatusPage() {
           backgroundImage={IMG.ctaBg}
           title="この子の、力になりませんか。"
           body="一口オーナー制度や会員支援で、馬の飼養・再調教を支えることができます。"
-          primary={{ label: "この子を支援する", href: SITE.donateUrl }}
+          primary={{ label: "この子を支援する", href: SITE.horsesSupportUrl }}
           secondary={{ label: "応援する方法を見る", href: "/support" }}
         />
         <p className="mt-6 text-center text-sm text-ink/60">
