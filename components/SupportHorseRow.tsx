@@ -3,7 +3,14 @@ import Placeholder from "@/components/Placeholder";
 import SiteLink from "@/components/SiteLink";
 import SupportStatusBadge from "@/components/SupportStatusBadge";
 import { SITE } from "@/lib/site";
-import { formatHorseMeta, supportRate, type HorseProfile } from "@/lib/horses";
+import {
+  formatHorseMeta,
+  formatUnits,
+  monthlyOf,
+  supportersOf,
+  hasSupport as horseHasSupport,
+  type HorseProfile,
+} from "@/lib/horses";
 
 type Tone = "urgent" | "top" | "neutral";
 
@@ -20,12 +27,14 @@ export default function SupportHorseRow({
   tone?: Tone;
   showRank?: boolean;
 }) {
-  const rate = supportRate(horse);
-  const hasSupport = horse.goal > 0;
-  // salon DBで明示的に受付停止の馬は支援ボタンを出さない（未連携=undefinedは従来通り）
-  const canSupport = hasSupport && horse.isSupportable !== false;
-  const barColor =
-    tone === "urgent" ? "bg-rose-500" : tone === "top" ? "bg-gold" : "bg-brand-600";
+  // retouch.salon 共有DBの実支援データ
+  const supporters = supportersOf(horse);
+  const monthly = monthlyOf(horse);
+  const hasSupport = horseHasSupport(horse);
+  // salon DBで支援募集中の馬のみ支援ボタンを出す（受付停止・未連携は出さない）
+  const canSupport = horse.isSupportable === true;
+  const accent =
+    tone === "urgent" ? "text-rose-600" : tone === "top" ? "text-gold" : "text-brand-700";
   const rankColor =
     tone === "urgent" ? "bg-rose-500 text-white" : tone === "top" ? "bg-gold text-white" : "bg-brand-600 text-white";
 
@@ -71,23 +80,18 @@ export default function SupportHorseRow({
         )}
 
         {hasSupport ? (
-          <div className="mt-2.5">
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="font-semibold text-ink/70">
-                {yen(horse.raised)}{" "}
-                <span className="font-normal text-ink/40">/ {yen(horse.goal)}（月）</span>
-              </span>
-              <span
-                className={`font-bold ${tone === "urgent" ? "text-rose-600" : tone === "top" ? "text-gold" : "text-brand-700"}`}
-              >
-                達成率 {rate}%
-              </span>
-            </div>
-            <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-brand-100">
-              <div className={`h-full rounded-full ${barColor}`} style={{ width: `${rate}%` }} />
-            </div>
-            <p className="mt-1 text-[11px] text-ink/40">支援者 {horse.supporters}名</p>
-          </div>
+          <p className="mt-2.5 text-[12px]">
+            <span className={`font-bold ${accent}`}>支援者 {supporters}名</span>
+            <span className="mx-1.5 text-ink/30">|</span>
+            <span className="font-semibold text-ink/70">月額 {yen(monthly)}</span>
+            <span className="ml-1 font-normal text-ink/40">（{formatUnits(horse.supportUnits ?? 0)}口）</span>
+          </p>
+        ) : horse.isSupportable === true ? (
+          <p className="mt-2 text-[11px] font-semibold text-brand-700">
+            支援募集中｜最初のサポーターになりませんか
+          </p>
+        ) : horse.isSupportable === false ? (
+          <p className="mt-2 text-[11px] text-ink/45">現在は新規支援の受付を停止しています</p>
         ) : (
           <p className="mt-2 text-[11px] text-ink/45">支援状況データ準備中</p>
         )}

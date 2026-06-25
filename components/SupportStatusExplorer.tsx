@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ALL_HORSES, HORSES_WITH_SUPPORT, supportRate, type HorseProfile } from "@/lib/horses";
+import { ALL_HORSES, monthlyOf, supportersOf, type HorseProfile } from "@/lib/horses";
 import SupportHorseRow from "@/components/SupportHorseRow";
 
 const CATEGORIES = [
@@ -30,7 +30,7 @@ export default function SupportStatusExplorer({
 }) {
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("urgent");
-  const source = onlyWithSupport ? HORSES_WITH_SUPPORT : horses;
+  const source = onlyWithSupport ? horses.filter((h) => supportersOf(h) > 0) : horses;
 
   const filtered = useMemo(() => {
     let list = source.filter((h) => {
@@ -40,16 +40,14 @@ export default function SupportStatusExplorer({
 
     list = [...list].sort((a, b) => {
       if (sort === "urgent") {
-        if (a.goal === 0 && b.goal === 0) return a.name.localeCompare(b.name, "ja");
-        if (a.goal === 0) return 1;
-        if (b.goal === 0) return -1;
-        return supportRate(a) - supportRate(b);
+        // 支援募集中を優先し、支援が少ない順
+        const aOpen = a.isSupportable === true ? 0 : 1;
+        const bOpen = b.isSupportable === true ? 0 : 1;
+        if (aOpen !== bOpen) return aOpen - bOpen;
+        return monthlyOf(a) - monthlyOf(b) || a.name.localeCompare(b.name, "ja");
       }
       if (sort === "top") {
-        if (a.goal === 0 && b.goal === 0) return a.name.localeCompare(b.name, "ja");
-        if (a.goal === 0) return 1;
-        if (b.goal === 0) return -1;
-        return supportRate(b) - supportRate(a);
+        return monthlyOf(b) - monthlyOf(a) || supportersOf(b) - supportersOf(a) || a.name.localeCompare(b.name, "ja");
       }
       if (sort === "order") {
         return (a.order ?? 999) - (b.order ?? 999);

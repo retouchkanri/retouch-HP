@@ -9,8 +9,16 @@ import SupportStatusBadge from "@/components/SupportStatusBadge";
 import { CTA } from "@/components/Blocks";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
-import { getHorseBySlugDb, getHorses, supportRate } from "@/lib/content";
-import { getHorseBySlug, getHorseSlugs, formatHorseMeta } from "@/lib/horses";
+import { getHorseBySlugDb, getHorses } from "@/lib/content";
+import {
+  getHorseBySlug,
+  getHorseSlugs,
+  formatHorseMeta,
+  formatUnits,
+  monthlyOf,
+  supportersOf,
+  hasSupport as horseHasSupport,
+} from "@/lib/horses";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -45,10 +53,12 @@ export default async function HorseDetailPage({ params }: Props) {
   if (!horse) notFound();
 
   const allHorses = await getHorses();
-  const rate = supportRate(horse);
-  const hasSupport = horse.goal > 0;
-  // salon DBで明示的に受付停止の馬は支援ボタンを出さない（未連携=undefinedは従来通り）
-  const canSupport = hasSupport && horse.isSupportable !== false;
+  // retouch.salon 共有DBの実支援データ
+  const supporters = supportersOf(horse);
+  const monthly = monthlyOf(horse);
+  const hasSupport = horseHasSupport(horse);
+  // salon DBで支援募集中の馬のみ支援ボタンを出す
+  const canSupport = horse.isSupportable === true;
 
   return (
     <>
@@ -142,24 +152,24 @@ export default async function HorseDetailPage({ params }: Props) {
         <SectionHeading
           eyebrow="SUPPORT STATUS"
           title="この子の支援状況"
-          lead="月間支援の達成状況です。"
+          lead="retouch.salon の支援システムと連動した、現在の支援状況です。"
         />
 
         {hasSupport ? (
           <div className="mt-8 max-w-2xl rounded-3xl bg-white p-8 shadow-sm ring-1 ring-brand-900/5">
-            <div className="flex items-end justify-between">
-              <span className="text-sm font-semibold text-brand-800">月間支援</span>
-              <span className="text-2xl font-bold text-brand-700">
-                {rate}%
-                <span className="ml-1 text-sm font-normal text-ink/50">達成</span>
-              </span>
-            </div>
-            <div className="mt-4 h-3 overflow-hidden rounded-full bg-brand-100">
-              <div className="h-full rounded-full bg-gold" style={{ width: `${rate}%` }} />
-            </div>
-            <div className="mt-4 flex flex-wrap justify-between gap-2 text-sm text-ink/70">
-              <span>{yen(horse.raised)} / {yen(horse.goal)}</span>
-              <span>支援者 {horse.supporters}名</span>
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
+              <div>
+                <p className="text-3xl font-bold text-brand-700">{supporters}<span className="ml-1 text-base font-normal text-ink/50">名</span></p>
+                <p className="mt-1 text-xs text-ink/50">現在の支援者</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold text-brand-700">{yen(monthly)}</p>
+                <p className="mt-1 text-xs text-ink/50">毎月の支援額</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold text-brand-700">{formatUnits(horse.supportUnits ?? 0)}<span className="ml-1 text-base font-normal text-ink/50">口</span></p>
+                <p className="mt-1 text-xs text-ink/50">支援口数</p>
+              </div>
             </div>
             {canSupport ? (
               <a href={SITE.donateUrl} target="_blank" rel="noopener noreferrer" className="btn-gold mt-8">
@@ -171,6 +181,17 @@ export default async function HorseDetailPage({ params }: Props) {
               </p>
             )}
           </div>
+        ) : canSupport ? (
+          <div className="mt-8 max-w-2xl rounded-3xl bg-white p-8 shadow-sm ring-1 ring-brand-900/5">
+            <p className="text-sm text-ink/70">
+              この子はまだ支援者がいません。最初のサポーターになりませんか。
+            </p>
+            <a href={SITE.donateUrl} target="_blank" rel="noopener noreferrer" className="btn-gold mt-6">
+              この子を支援する
+            </a>
+          </div>
+        ) : horse.isSupportable === false ? (
+          <p className="mt-6 text-sm text-ink/60">現在、この馬の新規支援の受付を停止しています。</p>
         ) : (
           <p className="mt-6 text-sm text-ink/60">支援状況データは準備中です。</p>
         )}

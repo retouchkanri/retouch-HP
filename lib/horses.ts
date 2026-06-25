@@ -35,9 +35,27 @@ export type HorseProfile = {
    * true=支援募集中 / false=新規受付停止 / undefined=salon未連携・対象外。
    */
   isSupportable?: boolean;
+  /** retouch.salon の実支援者数（active な support_subscriptions 件数）。 */
+  supporterCount?: number;
+  /** retouch.salon の月額支援合計（円）。 */
+  monthlySupport?: number;
+  /** retouch.salon の支援口数合計（0.5=半口）。 */
+  supportUnits?: number;
 };
 
 export { supportRate };
+
+// ── 実支援データ（retouch.salon 由来）のアクセサ ──────────────────────────
+/** 実際の月額支援合計（円）。 */
+export const monthlyOf = (h: Pick<HorseProfile, "monthlySupport">) => h.monthlySupport ?? 0;
+/** 実際の支援者数。 */
+export const supportersOf = (h: Pick<HorseProfile, "supporterCount">) => h.supporterCount ?? 0;
+/** 実際に1人以上の支援者がいるか。 */
+export const hasSupport = (h: Pick<HorseProfile, "supporterCount">) => (h.supporterCount ?? 0) > 0;
+/** 支援募集中か（salon未連携=undefinedはfalse扱い）。 */
+export const isOpenForSupport = (h: Pick<HorseProfile, "isSupportable">) => h.isSupportable === true;
+/** 口数の表示（整数はそのまま、半口は小数1桁）。 */
+export const formatUnits = (n: number) => (n % 1 === 0 ? `${n}` : n.toFixed(1));
 
 export function formatHorseMeta(horse: Pick<HorseProfile, "sex" | "age" | "order">) {
   const parts: string[] = [];

@@ -8,17 +8,22 @@ import { CTA } from "@/components/Blocks";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
 import { getHorses } from "@/lib/content";
-import { TOTAL_PROTECTED_HORSES } from "@/lib/horses";
+import { TOTAL_PROTECTED_HORSES, monthlyOf, supportersOf } from "@/lib/horses";
+
+const yen = (n: number) => `¥${n.toLocaleString("ja-JP")}`;
 
 export const metadata: Metadata = {
   title: "馬ごとの支援状況",
   description:
-    "引退競走馬53頭の支援状況一覧。月間支援の達成率・支援者数から、いま応援を必要としている馬を探せます。",
+    "引退競走馬の支援状況一覧。retouch.salon の支援システムと連動した支援者数・月額支援から、いま応援を必要としている馬を探せます。",
 };
 
 export default async function SupportStatusPage() {
   const allHorses = await getHorses();
-  const withSupport = allHorses.filter((h) => h.goal > 0);
+  const withSupport = allHorses.filter((h) => supportersOf(h) > 0);
+  // retouch.salon 共有DBの実支援データの合計
+  const totalMonthly = allHorses.reduce((sum, h) => sum + monthlyOf(h), 0);
+  const totalSupporters = allHorses.reduce((sum, h) => sum + supportersOf(h), 0);
 
   return (
     <>
@@ -38,8 +43,20 @@ export default async function SupportStatusPage() {
         <SectionHeading
           eyebrow="OVERVIEW"
           title={`累計${TOTAL_PROTECTED_HORSES}頭の保護実績`}
-          lead={`現在、支援データが登録されているのは ${withSupport.length} 頭です。管理画面（/admin）から馬の支援数値・紹介文を更新できます。`}
+          lead={`現在 ${withSupport.length} 頭に、合計 ${totalSupporters} 件・月額 ${yen(totalMonthly)} のご支援をいただいています。（retouch.salon の支援システムと連動・リアルタイム表示）`}
         />
+        <dl className="mt-8 grid grid-cols-3 gap-4">
+          {[
+            { label: "支援を受けている馬", value: `${withSupport.length}頭` },
+            { label: "支援件数（のべ）", value: `${totalSupporters}件` },
+            { label: "毎月の支援額", value: yen(totalMonthly) },
+          ].map((s) => (
+            <div key={s.label} className="rounded-2xl bg-white p-5 text-center shadow-sm ring-1 ring-brand-900/5">
+              <dd className="text-2xl font-bold text-brand-700 sm:text-3xl">{s.value}</dd>
+              <dt className="mt-1 text-xs text-ink/55">{s.label}</dt>
+            </div>
+          ))}
+        </dl>
         <div className="mt-10">
           <SupportRanking />
         </div>
@@ -55,9 +72,11 @@ export default async function SupportStatusPage() {
           <SupportStatusExplorer horses={allHorses} />
         </div>
         <p className="mt-8 text-sm leading-relaxed text-ink/60">
-          ※ 写真・コメント・支援数値は
+          ※ 支援者数・月額支援・募集状況は
+          <span className="mx-1 font-semibold text-brand-700">retouch.salon の支援システム</span>
+          と連動して自動表示しています。写真・紹介文は
           <Link href="/admin" className="mx-1 text-gold hover:underline">管理画面</Link>
-          から編集できます。馬たちの紹介ページ（/horses）と支援状況は同じデータから自動連動します。
+          から編集できます。
         </p>
       </Section>
 

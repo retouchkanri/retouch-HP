@@ -235,7 +235,7 @@ export default async function Home() {
           <SectionHeading
             eyebrow="SUPPORT STATUS ｜ 馬ごとの支援状況"
             title="いま、応援を待っている子がいます。"
-            lead="一頭ごとの月間支援の達成状況を公開しています。支援が手薄な子も、応援が集まっている子も、あなたの一歩で次の命へつながります。"
+            lead="一頭ごとの支援者数・月額支援を公開しています。支援が手薄な子も、応援が集まっている子も、あなたの一歩で次の命へつながります。"
           />
           <div className="flex w-full justify-center sm:w-auto sm:justify-end">
             <Link href="/support/status" className="btn-outline">支援状況をすべて見る</Link>

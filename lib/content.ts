@@ -2,7 +2,7 @@ import type { NewsItem, MediaItem } from "@/lib/data";
 import { NEWS, MEDIA } from "@/lib/data";
 import { ALL_HORSES, supportRate, type HorseProfile } from "@/lib/horses";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { getSalonSupportMap } from "@/lib/salon";
+import { getSalonHorseStatusMap } from "@/lib/salon";
 
 export type DbNewsItem = NewsItem & { id: string };
 export type DbMediaItem = MediaItem & { id: string };
@@ -217,17 +217,25 @@ function horsesFallback(): HorseProfile[] {
 }
 
 /**
- * retouch.salon 共有DBの支援ステータス（is_supportable）を、保護順（order）を
- * キーに本体の馬プロフィールへ結合します。salon未連携・対象外の馬は元のまま。
+ * retouch.salon 共有DBの支援状況（is_supportable・実支援者数・月額支援）を、
+ * 保護順（order）をキーに本体の馬プロフィールへ結合します。
+ * salon未連携・対象外の馬は元のまま（支援数値はundefined）。
  */
 async function attachSalonSupport(horses: HorseProfile[]): Promise<HorseProfile[]> {
-  const map = await getSalonSupportMap();
+  const map = await getSalonHorseStatusMap();
   if (map.size === 0) return horses;
-  return horses.map((h) =>
-    h.order != null && map.has(h.order)
-      ? { ...h, isSupportable: map.get(h.order) }
-      : h
-  );
+  return horses.map((h) => {
+    if (h.order == null) return h;
+    const status = map.get(h.order);
+    if (!status) return h;
+    return {
+      ...h,
+      isSupportable: status.isSupportable,
+      supporterCount: status.supporterCount,
+      monthlySupport: status.monthlySupport,
+      supportUnits: status.supportUnits,
+    };
+  });
 }
 
 export async function getHorses(): Promise<HorseProfile[]> {
@@ -259,8 +267,14 @@ export async function getHorseBySlugDb(slug: string): Promise<HorseProfile | und
     if (error || !data) return undefined;
     const profile = dbHorseToProfile(mapHorse(data as HorseRow));
     if (profile.order != null) {
-      const map = await getSalonSupportMap();
-      if (map.has(profile.order)) profile.isSupportable = map.get(profile.order);
+      const map = await getSalonHorseStatusMap();
+      const status = map.get(profile.order);
+      if (status) {
+        profile.isSupportable = status.isSupportable;
+        profile.supporterCount = status.supporterCount;
+        profile.monthlySupport = status.monthlySupport;
+        profile.supportUnits = status.supportUnits;
+      }
     }
     return profile;
   } catch {

@@ -68,7 +68,7 @@ export default function SupportPage() {
         <SectionHeading
           eyebrow="SUPPORT STATUS"
           title="馬ごとの支援状況"
-          lead="月間支援の達成率・支援者数から、いま応援を必要としている馬を探せます。"
+          lead="支援者数・月額支援から、いま応援を必要としている馬を探せます。"
         />
         <div className="mt-8 text-center">
           <Link href="/support/status" className="btn-primary">

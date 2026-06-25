@@ -1,14 +1,18 @@
-import { getHorses, supportRate } from "@/lib/content";
+import { getHorses } from "@/lib/content";
+import { monthlyOf, supportersOf } from "@/lib/horses";
 import SupportHorseRow from "@/components/SupportHorseRow";
 
 export default async function SupportRanking() {
   const allHorses = await getHorses();
-  const withSupport = allHorses.filter((h) => h.goal > 0);
-  const supportNeeded = [...withSupport]
-    .sort((a, b) => supportRate(a) - supportRate(b))
+  // 支援募集中の馬のうち、支援がまだ少ない順（最初のサポーターを募りたい子）
+  const supportNeeded = allHorses
+    .filter((h) => h.isSupportable === true)
+    .sort((a, b) => monthlyOf(a) - monthlyOf(b) || supportersOf(a) - supportersOf(b))
     .slice(0, 6);
-  const supportTop = [...withSupport]
-    .sort((a, b) => supportRate(b) - supportRate(a))
+  // 実際に支援が集まっている順（月額支援が多い子）
+  const supportTop = allHorses
+    .filter((h) => supportersOf(h) > 0)
+    .sort((a, b) => monthlyOf(b) - monthlyOf(a) || supportersOf(b) - supportersOf(a))
     .slice(0, 6);
 
   return (
@@ -21,7 +25,7 @@ export default async function SupportRanking() {
           <h3 className="min-w-0 text-base font-semibold text-black sm:text-lg">支援が必要な子ランキング</h3>
         </div>
         <p className="mt-2 text-sm text-ink/60">
-          月間支援の達成率が低い、いま応援を必要としている6頭です。
+          支援募集中で、まだ支援が少ない6頭です。あなたの応援を待っています。
         </p>
         <ol className="mt-5 space-y-3">
           {supportNeeded.map((h, i) => (
