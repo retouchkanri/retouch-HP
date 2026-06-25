@@ -38,6 +38,10 @@ export const SITE = {
   donateUrl: "https://retouch.salon/donate",
   loginUrl: "https://retouch.salon/login",
   youtube: "https://www.youtube.com/@Retouch2023",
+  youtubeSubscribeUrl:
+    "https://www.youtube.com/channel/UCXFZsW4-dvsAr0-JbEIXPdQ/?sub_confirmation=1",
+  petitionUrl:
+    "https://www.change.org/p/%E5%BC%95%E9%80%80%E7%AB%B6%E8%B5%B0%E9%A6%AC%E3%81%AE%E6%9C%AA%E6%9D%A5%E3%82%92%E5%AE%88%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB-%E3%81%82%E3%81%AA%E3%81%9F%E3%81%AE%E7%BD%B2%E5%90%8D%E3%81%8C%E5%BF%85%E8%A6%81%E3%81%A7%E3%81%99",
   petitionVideoUrl: "https://www.youtube.com/watch?v=aOg5jTScgIQ",
   instagram: "https://www.instagram.com/bajigakuin/",
   line: "https://line.me/ti/p/%40410yxdcp",

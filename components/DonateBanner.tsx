@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-
-const DONATE_URL = "https://retouch.salon/donate";
+import { SITE } from "@/lib/site";
 
 export default function DonateBanner() {
   const pathname = usePathname();
@@ -17,10 +16,10 @@ export default function DonateBanner() {
 
   return (
     <div
-      className="pointer-events-none fixed bottom-0 left-0 z-40 pb-[env(safe-area-inset-bottom)]"
+      className="pointer-events-none fixed bottom-0 left-0 z-40 pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left,0px)]"
       aria-hidden={false}
     >
-      <div className="pointer-events-auto relative w-[4.5rem] max-sm:max-w-[21vw] sm:w-[10.4rem]">
+      <div className="pointer-events-auto relative w-[8.6rem] max-sm:max-w-[41vw] sm:w-[19.9rem]">
         <button
           type="button"
           onClick={() => setDismissed(true)}
@@ -31,7 +30,7 @@ export default function DonateBanner() {
         </button>
 
         <a
-          href={DONATE_URL}
+          href={SITE.donateUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="group card block cursor-pointer overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-brand-900/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:ring-gold/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 active:scale-[0.98] motion-reduce:transition-none motion-reduce:hover:translate-y-0"

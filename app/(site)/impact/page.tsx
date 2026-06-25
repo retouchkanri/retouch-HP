@@ -7,6 +7,7 @@ import { Section, SectionHeading } from "@/components/Section";
 import { CTA } from "@/components/Blocks";
 import { AdBanner } from "@/components/Ads";
 import Placeholder from "@/components/Placeholder";
+import SiteLink from "@/components/SiteLink";
 import YouTubeGrid from "@/components/YouTubeGrid";
 
 export const metadata: Metadata = {
@@ -30,14 +31,46 @@ export const metadata: Metadata = {
 };
 
 const HIGHLIGHTS = [
-  { id: "保護馬53頭", value: "53", unit: "頭", title: "累計保護馬", image: IMG.impactProtected, imageAlt: "保護馬の写真コラージュ",
-    body: "肥育場・競馬場・牧場から救い出した馬の累計頭数。一頭ずつ、確かに命をつないできました。" },
-  { id: "支援者600名超", value: "600", unit: "名超", title: "支援者・会員", image: IMG.impactSupporters, imageAlt: "全国の支援者・コミュニティの写真",
-    body: "全国から集まった会員・サポーター。月々のご支援が、馬たちの飼養・治療・再調教を支えています。" },
-  { id: "YouTube登録者2万人超", value: "2", unit: "万人超", title: "Youtube啓発活動", image: IMG.impactYoutube, imageAlt: "動画視聴風景／人気動画サムネイル",
-    body: "Retouch専用のYoutubeチャンネルを活用し引退馬問題を取り上げています。" },
-  { id: "署名5万人超", value: "5", unit: "万人超", title: "署名", image: IMG.impactPetition, imageAlt: "署名活動の様子（社会的インパクト）",
-    body: "引退馬を守る制度づくりに向けた署名。農水省・JRA・地方競馬への提言を後押しする確かな声です。" },
+  {
+    id: "保護馬53頭",
+    value: "53",
+    unit: "頭",
+    title: "累計保護馬",
+    image: IMG.impactProtected,
+    imageAlt: "保護馬の写真コラージュ",
+    body: "肥育場・競馬場・牧場から救い出した馬の累計頭数。一頭ずつ、確かに命をつないできました。",
+    cta: { label: "支援状況を見る", href: "/support/status" },
+  },
+  {
+    id: "支援者600名超",
+    value: "600",
+    unit: "名超",
+    title: "支援者・会員",
+    image: IMG.impactSupporters,
+    imageAlt: "全国の支援者・コミュニティの写真",
+    body: "全国から集まった会員・サポーター。月々のご支援が、馬たちの飼養・治療・再調教を支えています。",
+    cta: { label: "新規会員登録へ", href: SITE.membersUrl },
+  },
+  {
+    id: "YouTube登録者2万人超",
+    value: "2",
+    unit: "万人超",
+    title: "Youtube啓発活動",
+    image: IMG.impactYoutube,
+    imageAlt: "動画視聴風景／人気動画サムネイル",
+    body: "Retouch専用のYoutubeチャンネルを活用し引退馬問題を取り上げています。",
+    cta: { label: "Youtubeチャンネル登録する", href: SITE.youtubeSubscribeUrl },
+  },
+  {
+    id: "署名5万人超",
+    value: "5",
+    unit: "万人超",
+    title: "署名",
+    image: IMG.impactPetition,
+    imageAlt: "署名活動の様子（社会的インパクト）",
+    body: "引退馬を守る制度づくりに向けた署名。農水省・JRA・地方競馬への提言を後押しする確かな声です。",
+    cta: { label: "署名活動に協力する", href: SITE.petitionUrl },
+  },
 ];
 
 const TIMELINE = [
@@ -98,6 +131,15 @@ export default function ImpactPage() {
               </div>
               <h3 className="mt-2 section-title !text-2xl">{h.title}</h3>
               <p className="section-lead mt-5">{h.body}</p>
+              <SiteLink
+                href={h.cta.href}
+                className="mt-8 flex items-center justify-between gap-4 rounded-xl bg-brand-700 px-5 py-4 text-sm font-semibold text-white shadow-md transition-colors hover:bg-brand-800 sm:px-6 sm:text-base"
+              >
+                <span>{h.cta.label}</span>
+                <span aria-hidden="true" className="shrink-0 text-gold">
+                  →
+                </span>
+              </SiteLink>
             </div>
           </div>
         </Section>

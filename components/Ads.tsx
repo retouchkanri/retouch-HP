@@ -96,14 +96,18 @@ export function AdGrid() {
         — ADVERTISEMENT / 協賛・支援のご案内 —
       </p>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((card) => (
+        {cards.map((card, index) => (
           <SiteLink key={card.title} href={card.href} className="card group flex flex-col">
-            <div className="relative overflow-hidden bg-brand-50">
+            <div
+              className={`relative overflow-hidden bg-brand-50 ${
+                index === 1 ? "px-3 pb-2 pt-5 sm:px-4 sm:pb-3 sm:pt-6" : "px-2 pb-2 pt-3 sm:px-3 sm:pb-3 sm:pt-4"
+              }`}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={card.img}
                 alt={card.alt}
-                className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+                className="mx-auto w-full h-auto max-h-[280px] object-contain transition-transform duration-500 group-hover:scale-[1.02]"
               />
               <span className="absolute top-2 left-2 max-w-[calc(100%-1rem)] rounded-full bg-brand-900/80 px-2 py-0.5 text-[9px] font-semibold leading-tight tracking-wider text-white sm:top-3 sm:left-3 sm:px-3 sm:py-1 sm:text-[10px]">
                 {card.badge}

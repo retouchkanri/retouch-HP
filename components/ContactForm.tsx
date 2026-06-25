@@ -20,6 +20,7 @@ export default function ContactForm() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    phone: "",
     topic: TOPICS[0],
     message: "",
     agree: false,
@@ -65,7 +66,7 @@ export default function ContactForm() {
         <button
           onClick={() => {
             setSent(false);
-            setForm({ name: "", email: "", topic: TOPICS[0], message: "", agree: false });
+            setForm({ name: "", email: "", phone: "", topic: TOPICS[0], message: "", agree: false });
           }}
           className="btn-white mt-7"
         >
@@ -103,6 +104,19 @@ export default function ContactForm() {
           />
         </label>
       </div>
+
+      <label className="mt-5 block">
+        <span className="text-sm font-semibold text-brand-800">電話番号 <span className="text-gold">*</span></span>
+        <input
+          required
+          type="tel"
+          inputMode="tel"
+          value={form.phone}
+          onChange={(e) => update("phone", e.target.value)}
+          className={field}
+          placeholder="090-1234-5678"
+        />
+      </label>
 
       <label className="mt-5 block">
         <span className="text-sm font-semibold text-brand-800">お問い合わせ種別</span>
