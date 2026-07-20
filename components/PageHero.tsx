@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { ImageNote } from "@/components/Placeholder";
 
 type Crumb = { label: string; href?: string };
@@ -17,7 +18,7 @@ export default function PageHero({
   overlay = "default",
 }: {
   eyebrow?: string;
-  title?: string;
+  title?: ReactNode;
   subtitle?: string;
   image: string;
   backgroundImage?: string;
@@ -66,7 +67,7 @@ export default function PageHero({
               </h1>
             )}
             {subtitle && (
-              <p className="mt-5 max-w-2xl text-sm sm:text-base leading-loose text-brand-100 animate-fadeUp">
+              <p className="mt-5 max-w-2xl whitespace-pre-line text-sm sm:text-base leading-loose text-brand-100 animate-fadeUp">
                 {subtitle}
               </p>
             )}

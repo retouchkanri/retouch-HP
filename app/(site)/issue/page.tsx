@@ -64,14 +64,19 @@ export default function IssuePage() {
             <p className="accent-line eyebrow">FACT</p>
             <h3 className="section-title mt-2 !text-2xl">「肉用馬」として、出荷を待つ馬たち。</h3>
             <p className="section-lead mt-5">
-              肥育場とは、馬を肉用として育て出荷する施設です。
-              競走馬は引退後に行き場を失うと、ここへ送られることが少なくありません。
-              限られた環境の中で、命の期限を待つ馬たちがいます。
+            肥育場とは、馬を肉用として肥育し、出荷するための施設です。
+            競走馬は引退後、行き場を失った馬の中の多くは、
+            この肥育場へ送られているのです。
+            その数は年間5000頭を越えるといわれており、
+            年間サラブレッドの誕生8000頭に対する62%という計算になります。
             </p>
             <p className="section-lead mt-4">
-              Retouchは、こうした肥育場から馬を直接引き取り、
-              再調教を経て新しい役割へとつなぐ活動を続けています。
-              一頭を救うことは、その馬の物語を変えることです。
+            Retouchは、そうした肥育場から馬を直接引き取り、
+            新しい未来へつなぐ活動を続けています。
+            競馬場で多くの人に夢を届けてくれた馬たちが、
+            引退後も穏やかで幸せな時間を過ごせる社会をつくり、
+            引退競走馬の未来そのものを変えたい。
+            そうRetouchは信じています。
             </p>
           </SplitBlock>
         </div>
@@ -87,7 +92,7 @@ export default function IssuePage() {
         <div className="mt-12 grid gap-8 lg:grid-cols-3">
           <div className="rounded-3xl bg-brand-700 p-8 text-white">
             <p className="text-3xl font-bold text-gold text-balance break-words sm:text-4xl lg:text-5xl">屠殺5000頭</p>
-            <p className="mt-2 text-sm text-brand-100">毎年、競走馬を引退し屠殺への向かう数といわれています。</p>
+            <p className="mt-2 text-sm text-brand-100">毎年、競走馬を引退した馬「サラブレッド」の屠殺されている推定頭数です</p>
           </div>
           <div className="rounded-3xl bg-brand-800 p-8 text-white">
             <p className="text-3xl font-bold text-gold text-balance break-words sm:text-4xl lg:text-5xl">年間100万円</p>
@@ -105,7 +110,7 @@ export default function IssuePage() {
         title="馬の未来支援"
         body="月額支援を通じ引退競走馬の命と新たな活躍の場を応援。月額支援で本来もうない命を支える。"
         cta="一口支援制度"
-        href={SITE.membersUrl}
+        href="https://retouch.salon/support-guide"
         tone="green"
       />
 

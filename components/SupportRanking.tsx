@@ -27,7 +27,7 @@ export default async function SupportRanking() {
           <h3 className="min-w-0 text-base font-semibold text-black sm:text-lg">支援が必要な子ランキング</h3>
         </div>
         <p className="mt-2 text-sm text-ink/60">
-          支援募集中で、まだ支援が少ない6頭です。維持管理には最低{MIN_SUPPORT_UNITS}口の支援が必要です。あなたの応援を待っています。
+          支援募集中で、まだ支援が少ない6頭です。維持管理には最低{MIN_SUPPORT_UNITS}口の支援が必要です。
         </p>
         <ol className="mt-5 space-y-3">
           {supportNeeded.map((h, i) => (

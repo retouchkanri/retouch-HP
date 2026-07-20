@@ -32,13 +32,13 @@ export const metadata: Metadata = {
 
 const HIGHLIGHTS = [
   {
-    id: "保護馬53頭",
-    value: "53",
+    id: "保護馬56頭",
+    value: "56",
     unit: "頭",
     title: "累計保護馬",
     image: IMG.impactProtected,
     imageAlt: "保護馬の写真コラージュ",
-    body: "肥育場・競馬場・牧場から救い出した馬の累計頭数。一頭ずつ、確かに命をつないできました。",
+    body: "競走馬や繁殖を引退後、肉用として肥育場に送られた馬の保護頭数（令和5年11月以降）",
     cta: { label: "支援状況を見る", href: "/support/status" },
   },
   {

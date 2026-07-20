@@ -53,8 +53,8 @@ export default function AboutPage() {
     <>
       <PageHero
         eyebrow="ABOUT RETOUCH"
-        title="Retouch（リタッチ）とは"
-        subtitle="引退馬に、もう一度役割を。"
+        title={<span className="whitespace-nowrap">Retouch(リタッチ)とは</span>}
+        subtitle={"行き場を無くした引退馬に、\nもう一度、役割を。"}
         image={IMG.heroField}
         backgroundImage={IMG.aboutHeroBg}
         crumbs={[{ label: "Retouchとは" }]}
