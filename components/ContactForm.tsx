@@ -41,7 +41,9 @@ export default function ContactForm() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) {
-        throw new Error(data.error || "送信に失敗しました。時間をおいて再度お試しください。");
+        // data.detail は原因調査用の一時的な項目（判明後に削除）。
+        const base = data.error || "送信に失敗しました。時間をおいて再度お試しください。";
+        throw new Error(data.detail ? `${base}（詳細: ${data.detail}）` : base);
       }
       setSent(true);
     } catch (err) {
