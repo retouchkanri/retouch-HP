@@ -34,3 +34,8 @@ next-env.d.ts
 
 # editor / OS
 Thumbs.db
+
+# added by `vercel link` — broadened to catch every .env variant,
+# but .env.example must stay committed as the reference template.
+.env*
+!.env.example

@@ -9,9 +9,15 @@ import { CTA } from "@/components/Blocks";
 import { IMG } from "@/lib/images";
 import { SITE } from "@/lib/site";
 import { getHorses } from "@/lib/content";
+import { getSalonSupportTotals } from "@/lib/salon";
 import { TOTAL_PROTECTED_HORSES, TOTAL_SUPPORT_AMOUNT_LABEL, monthlyOf, supportersOf } from "@/lib/horses";
 
 const yen = (n: number) => `¥${n.toLocaleString("ja-JP")}`;
+
+// retouch.salon 側の支援状況が変わった瞬間に反映されるよう、キャッシュせず
+// リクエストごとに共有DBを参照する。
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "馬ごとの支援状況",
@@ -20,11 +26,17 @@ export const metadata: Metadata = {
 };
 
 export default async function SupportStatusPage() {
-  const allHorses = await getHorses();
+  const [allHorses, salonTotals] = await Promise.all([getHorses(), getSalonSupportTotals()]);
   const withSupport = allHorses.filter((h) => supportersOf(h) > 0);
-  // retouch.salon 共有DBの実支援データの合計
-  const totalMonthly = allHorses.reduce((sum, h) => sum + monthlyOf(h), 0);
-  const totalSupporters = allHorses.reduce((sum, h) => sum + supportersOf(h), 0);
+
+  // 合計値は retouch.salon 共有DBの集計をそのまま使う（唯一の正）。本体の馬マスター
+  // を経由して合計すると、salon 側にしか存在しない馬の支援が欠落して実数とずれる。
+  // salon が未設定・不通のときだけ、本体側の結合済みデータで代替表示する。
+  const supportedHorseCount = salonTotals?.horseCount ?? withSupport.length;
+  const totalSupporters =
+    salonTotals?.subscriptionCount ?? allHorses.reduce((sum, h) => sum + supportersOf(h), 0);
+  const totalMonthly =
+    salonTotals?.monthlyTotal ?? allHorses.reduce((sum, h) => sum + monthlyOf(h), 0);
 
   return (
     <>
@@ -44,12 +56,12 @@ export default async function SupportStatusPage() {
         <SectionHeading
           eyebrow="OVERVIEW"
           title={`累計${TOTAL_PROTECTED_HORSES}頭の保護実績`}
-          lead={`現在 ${withSupport.length} 頭に、合計 ${totalSupporters} 件・${TOTAL_SUPPORT_AMOUNT_LABEL} ${yen(totalMonthly)} のご支援をいただいています。（retouch.salon の支援システムと連動・リアルタイム表示）`}
+          lead={`現在 ${supportedHorseCount} 頭に、合計 ${totalSupporters} 件・${TOTAL_SUPPORT_AMOUNT_LABEL} ${yen(totalMonthly)} のご支援をいただいています。（retouch.salon の支援システムと連動・リアルタイム表示）`}
         />
         <SupportMinUnitsAppeal className="mt-6" />
         <dl className="mt-6 grid grid-cols-3 gap-4">
           {[
-            { label: "支援を受けている馬", value: `${withSupport.length}頭` },
+            { label: "支援を受けている馬", value: `${supportedHorseCount}頭` },
             { label: "支援件数（のべ）", value: `${totalSupporters}件` },
             { label: TOTAL_SUPPORT_AMOUNT_LABEL, value: yen(totalMonthly) },
           ].map((s) => (

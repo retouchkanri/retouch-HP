@@ -2,7 +2,7 @@ import type { NewsItem, MediaItem } from "@/lib/data";
 import { NEWS, MEDIA } from "@/lib/data";
 import { ALL_HORSES, supportRate, type HorseProfile } from "@/lib/horses";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { getSalonHorseStatusMap } from "@/lib/salon";
+import { getSalonHorseStatusMap, salonSortOrderFor } from "@/lib/salon";
 
 export type DbNewsItem = NewsItem & { id: string };
 export type DbMediaItem = MediaItem & { id: string };
@@ -225,8 +225,9 @@ async function attachSalonSupport(horses: HorseProfile[]): Promise<HorseProfile[
   const map = await getSalonHorseStatusMap();
   if (map.size === 0) return horses;
   return horses.map((h) => {
-    if (h.order == null) return h;
-    const status = map.get(h.order);
+    const sortOrder = salonSortOrderFor(h);
+    if (sortOrder == null) return h;
+    const status = map.get(sortOrder);
     if (!status) return h;
     return {
       ...h,
@@ -267,9 +268,10 @@ export async function getHorseBySlugDb(slug: string): Promise<HorseProfile | und
       .single();
     if (error || !data) return undefined;
     const profile = dbHorseToProfile(mapHorse(data as HorseRow));
-    if (profile.order != null) {
+    const sortOrder = salonSortOrderFor(profile);
+    if (sortOrder != null) {
       const map = await getSalonHorseStatusMap();
-      const status = map.get(profile.order);
+      const status = map.get(sortOrder);
       if (status) {
         profile.isSupportable = profile.status === "owner" ? undefined : status.isSupportable;
         profile.supporterCount = status.supporterCount;

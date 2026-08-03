@@ -13,7 +13,6 @@ import { salonHorseSupportUrl } from "@/lib/salon";
 import { getHorseBySlugDb, getHorses } from "@/lib/content";
 import {
   getHorseBySlug,
-  getHorseSlugs,
   formatHorseMeta,
   formatHorseName,
   formatUnits,
@@ -28,17 +27,14 @@ import {
 
 type Props = { params: Promise<{ slug: string }> };
 
-// retouch.salon 共有DBの支援ステータス等を定期的に再取得（ISR）。
-export const revalidate = 600;
-
-// Keep static params for build-time pre-rendering using static horse slugs
-export async function generateStaticParams() {
-  const horses = await getHorses();
-  if (horses.length > 0) {
-    return horses.map((h) => ({ slug: h.slug }));
-  }
-  return getHorseSlugs().map((slug) => ({ slug }));
-}
+// retouch.salon 側の支援状況が変わった瞬間に反映されるよう、キャッシュせず
+// リクエストごとに共有DBを参照する（旧: revalidate=600 で最大10分ずれていた）。
+//
+// generateStaticParams はビルド時に全馬をプリレンダリングしてしまい、
+// force-dynamic を上書きして支援数値が固定化されるため意図的に削除。
+// 各ページはリクエスト時にサーバーレンダリングされる（SEO上は同等）。
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
