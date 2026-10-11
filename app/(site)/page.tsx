@@ -14,12 +14,12 @@ import Placeholder from "@/components/Placeholder";
 import ScrollDownArrow from "@/components/ScrollDownArrow";
 
 const SOLUTIONS = [
-  { no: "01", image: "/1_1.jpg", title: "馬の保護", body: "肥育場・競馬場・牧場から、命の期限が迫る引退競走馬を直接引き取ります。", href: "/solution#馬の保護" },
-  { no: "02", image: "/1_2.jpg", title: "リトレーニング", body: "一頭ごとの個性に合わせ、競走馬から乗用馬へ。時間をかけて信頼を育てます。", href: "/solution#リトレーニング" },
-  { no: "03", image: "/1_3.jpg", title: "オーナー制度", body: "一口支援・オーナー制度で、馬と支援者をつなぎます。会える・乗れる支援。", href: "/solution#オーナー制度" },
-  { no: "04", image: "/1_4.jpg", title: "教育事業", body: "馬事学院（バジガク）と連携し、馬産業を担う人材を育成・輩出します。", href: "/solution#教育事業" },
-  { no: "05", image: "/1_5.jpg", title: "福祉・観光", body: "ホースセラピーやふれあい見学会で、馬が人と地域に癒やしを届けます。", href: "/solution#福祉事業", crop: true },
-  { no: "06", image: "/1_6.jpg", title: "地域活性化", body: "馬を核に、観光・雇用・交流を生み、地域とともに歩む未来をつくります。", href: "/solution#地域活性化" },
+  { no: "01", image: "/1_1.webp", title: "馬の保護", body: "肥育場・競馬場・牧場から、命の期限が迫る引退競走馬を直接引き取ります。", href: "/solution#馬の保護" },
+  { no: "02", image: "/1_2.webp", title: "リトレーニング", body: "一頭ごとの個性に合わせ、競走馬から乗用馬へ。時間をかけて信頼を育てます。", href: "/solution#リトレーニング" },
+  { no: "03", image: "/1_3.webp", title: "オーナー制度", body: "一口支援・オーナー制度で、馬と支援者をつなぎます。会える・乗れる支援。", href: "/solution#オーナー制度" },
+  { no: "04", image: "/1_4.webp", title: "教育事業", body: "馬事学院（バジガク）と連携し、馬産業を担う人材を育成・輩出します。", href: "/solution#教育事業" },
+  { no: "05", image: "/1_5.webp", title: "福祉・観光", body: "ホースセラピーやふれあい見学会で、馬が人と地域に癒やしを届けます。", href: "/solution#福祉事業", crop: true },
+  { no: "06", image: "/1_6.webp", title: "地域活性化", body: "馬を核に、観光・雇用・交流を生み、地域とともに歩む未来をつくります。", href: "/solution#地域活性化" },
 ];
 
 export default async function Home() {
@@ -31,7 +31,7 @@ export default async function Home() {
       <section data-hero className="relative h-[calc(100dvh-4rem)] sm:h-[calc(100dvh-5rem)] w-full overflow-hidden">
         {/* デスクトップ用背景 */}
         <Image
-          src="/bg.png"
+          src="/bg.webp"
           alt=""
           fill
           priority
@@ -40,7 +40,7 @@ export default async function Home() {
         />
         {/* モバイル用背景（縦長） */}
         <Image
-          src="/bg-m.png"
+          src="/bg-m.webp"
           alt=""
           fill
           priority
@@ -138,7 +138,7 @@ export default async function Home() {
 
       {/* ===== 引退馬の現実（ISSUE） ===== */}
       <section className="relative overflow-hidden py-12 sm:py-28">
-        <img src="/1_3bg.jpg" alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover object-center" />
+        <img src="/1_3bg.webp" alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover object-center" />
         <div className="absolute inset-0 bg-brand-950/75" aria-hidden />
         <div className="relative container-x text-white">
           <p className="eyebrow !text-gold">THE REALITY ｜ 引退競走馬の現実</p>

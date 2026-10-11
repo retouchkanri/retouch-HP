@@ -92,7 +92,7 @@ export function HorseCard({ horse }: { horse: HorseProfile }) {
   const badgeColor =
     horse.status === "protected"
       ? "bg-brand-600"
-      : horse.status === "graduated"
+      : horse.status === "owner"
       ? "bg-gold"
       : "bg-ink";
 

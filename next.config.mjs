@@ -3,20 +3,16 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {
     serverActions: {
-      // Admin image uploads (news, horses, media) exceed the default 1 MB limit.
-      bodySizeLimit: "10mb",
+      // 馬情報の CSV 取り込み（最大500行）が既定の 1MB を超える場合に備える。
+      // 画像はブラウザから Supabase Storage へ直接送るため、ここは通らない。
+      bodySizeLimit: "4mb",
     },
   },
   images: {
-    // Allow images served from Supabase Storage public buckets (e.g. horse photos
-    // rendered via next/image on the horse detail page).
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "*.supabase.co",
-        pathname: "/storage/v1/object/public/**",
-      },
-    ],
+    // Vercel の画像最適化（/_next/image）は月間の利用枠を使い切ると 402 を返し、
+    // ヒーロー背景や馬の写真が表示されなくなる。最適化には頼らず、
+    // 軽量化済みのファイル（public/*.webp・Supabase Storage）をそのまま配信する。
+    unoptimized: true,
   },
 };
 

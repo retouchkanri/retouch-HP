@@ -1,15 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { HorseProfile } from "@/lib/horses";
+import { HORSE_STATUSES, HorseProfile } from "@/lib/horses";
 import SupportHorseRow from "@/components/SupportHorseRow";
 
-const CATEGORIES = [
-  { value: "all", label: "すべて" },
-  { value: "protected", label: "現在の保護馬" },
-  { value: "graduated", label: "卒業馬（オーナー決定馬）" },
-  { value: "owner", label: "オーナー決定馬" },
-];
+const CATEGORIES = [{ value: "all", label: "すべて" }, ...HORSE_STATUSES];
 const SEXES = [
   { value: "all", label: "すべて" },
   { value: "牡", label: "牡" },

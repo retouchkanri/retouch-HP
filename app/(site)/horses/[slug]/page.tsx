@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
+import HorseGallery from "@/components/HorseGallery";
 import { Section, SectionHeading } from "@/components/Section";
 import Placeholder from "@/components/Placeholder";
 import SupportStatusBadge from "@/components/SupportStatusBadge";
@@ -23,6 +22,8 @@ import {
   hasSupport as horseHasSupport,
   canAcceptSupport,
   isOwnerHorse,
+  isOtherHorse,
+  formatRescuedAt,
 } from "@/lib/horses";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -63,6 +64,8 @@ export default async function HorseDetailPage({ params }: Props) {
   const hasSupport = horseHasSupport(horse);
   const canSupport = canAcceptSupport(horse);
   const isOwner = isOwnerHorse(horse);
+  const isOther = isOtherHorse(horse);
+  const rescuedAt = formatRescuedAt(horse.rescuedAt);
 
   const displayName = formatHorseName(horse);
 
@@ -84,14 +87,8 @@ export default async function HorseDetailPage({ params }: Props) {
       <Section alt>
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
-            {horse.photo ? (
-              <Image
-                src={horse.photo}
-                alt={displayName}
-                width={800}
-                height={800}
-                className="aspect-square w-full rounded-2xl object-cover"
-              />
+            {horse.photos.length > 0 ? (
+              <HorseGallery photos={horse.photos} name={displayName} />
             ) : (
               <Placeholder label={`${displayName}の写真`} className="aspect-square w-full rounded-2xl" />
             )}
@@ -111,17 +108,23 @@ export default async function HorseDetailPage({ params }: Props) {
                 <dt className="w-16 shrink-0 font-semibold text-brand-800">年齢</dt>
                 <dd>{horse.age}</dd>
               </div>
-              {horse.order && (
+              {horse.order != null && (
                 <div className="flex gap-3">
                   <dt className="w-16 shrink-0 font-semibold text-brand-800">保護順</dt>
                   <dd>肥育場から{horse.order}番目</dd>
+                </div>
+              )}
+              {rescuedAt && (
+                <div className="flex gap-3">
+                  <dt className="w-16 shrink-0 font-semibold text-brand-800">保護年月</dt>
+                  <dd>{rescuedAt}（肥育場から保護）</dd>
                 </div>
               )}
               <div className="flex gap-3">
                 <dt className="w-16 shrink-0 font-semibold text-brand-800">状態</dt>
                 <dd className="flex flex-wrap items-center gap-2">
                   {horse.statusLabel}
-                  <SupportStatusBadge isSupportable={isOwner ? undefined : horse.isSupportable} />
+                  <SupportStatusBadge isSupportable={horse.isSupportable} />
                 </dd>
               </div>
             </dl>
@@ -146,12 +149,31 @@ export default async function HorseDetailPage({ params }: Props) {
                   </div>
                 )}
                 {(horse.story || horse.note) && (
-                  <p className="section-lead mt-6">{horse.story ?? horse.note}</p>
+                  <p className="section-lead mt-6 whitespace-pre-line">{horse.story || horse.note}</p>
                 )}
               </>
             )}
+
+            {horse.youtubeUrl && (
+              <a
+                href={horse.youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary mt-8"
+              >
+                ▶ {horse.name}の動画をYouTubeで見る
+              </a>
+            )}
           </div>
         </div>
+
+        {horse.officeMessage && (
+          <div className="mt-12 rounded-3xl bg-white p-7 shadow-sm ring-1 ring-brand-900/5 sm:p-9">
+            <p className="eyebrow">MESSAGE</p>
+            <h3 className="mt-2 text-xl font-semibold text-brand-900">事務局からのメッセージ</h3>
+            <p className="section-lead mt-4 whitespace-pre-line">{horse.officeMessage}</p>
+          </div>
+        )}
       </Section>
 
       <Section id="支援状況">
@@ -208,7 +230,7 @@ export default async function HorseDetailPage({ params }: Props) {
           <p className="mt-6 text-sm text-ink/60">
             オーナーが決まっており、新規支援は不要です。
           </p>
-        ) : horse.isSupportable === false ? (
+        ) : isOther || horse.isSupportable === false ? (
           <p className="mt-6 text-sm text-ink/60">現在、この馬の新規支援の受付を停止しています。</p>
         ) : (
           <p className="mt-6 text-sm text-ink/60">支援状況データは準備中です。</p>

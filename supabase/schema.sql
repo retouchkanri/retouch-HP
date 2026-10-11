@@ -113,13 +113,15 @@ create table if not exists public.horses (
   sex text,
   age text,
   age_years int,
+  -- protected = リタッチ在籍馬 / owner = オーナー決定馬 / other = その他・退厩等
   status text not null default 'protected',
-  status_label text not null default '現在の保護馬',
+  status_label text not null default 'リタッチ在籍馬',
   order_num int,
   personality text not null default '',
   story text not null default '',
   before_story text,
   photo text,
+  -- 事務局からのメッセージ
   owner_story text,
   sort_order int not null default 0,
   goal int not null default 0,
@@ -129,6 +131,12 @@ create table if not exists public.horses (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Migration: 馬紹介ページ拡充（supabase/migrations/20261011_horse_profile_fields.sql と同内容）
+-- photos = 写真URL（最大10枚、先頭がメイン） / youtube_url = プレイリストURL / rescued_at = 保護年月
+alter table public.horses add column if not exists photos text[] not null default '{}';
+alter table public.horses add column if not exists youtube_url text;
+alter table public.horses add column if not exists rescued_at text;
 
 drop trigger if exists horses_updated_at on public.horses;
 create trigger horses_updated_at

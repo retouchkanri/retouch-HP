@@ -20,19 +20,22 @@ export const metadata: Metadata = {
   keywords: ["馬の購入", "里親募集", "引退馬", "引き取り", "保護馬", "動物愛護", "支援", "財団法人"],
 };
 
-const NAV = [
-  { id: "現在の保護馬", label: "現在の保護馬" },
-  { id: "卒業馬", label: "卒業馬（オーナー決定馬）" },
-  { id: "馬たちの物語", label: "馬たちの物語" },
-  { id: "支援中の馬を探す", label: "支援中の馬を探す" },
-];
-
 export default async function HorsesPage() {
   const allHorses = await getHorses();
   const protectedHorses = allHorses.filter((h) => h.status === "protected" && !h.pendingDetails);
-  const graduatedHorses = allHorses.filter((h) => h.status === "graduated" && !h.pendingDetails);
-  const featured = graduatedHorses[0];
+  const ownerHorses = allHorses.filter((h) => h.status === "owner" && !h.pendingDetails);
+  const otherHorses = allHorses.filter((h) => h.status === "other" && !h.pendingDetails);
+  // 物語の特集は、保護前（Before）の記録が残っているオーナー決定馬から
+  const featured = ownerHorses.find((h) => h.before && h.story);
   const explorerHorses = allHorses.filter((h) => !h.pendingDetails);
+
+  const nav = [
+    { id: "リタッチ在籍馬", label: "リタッチ在籍馬" },
+    { id: "オーナー決定馬", label: "オーナー決定馬" },
+    ...(otherHorses.length ? [{ id: "その他・退厩等", label: "その他・退厩等" }] : []),
+    ...(featured ? [{ id: "馬たちの物語", label: "馬たちの物語" }] : []),
+    { id: "支援中の馬を探す", label: "支援中の馬を探す" },
+  ];
 
   return (
     <>
@@ -48,7 +51,7 @@ export default async function HorsesPage() {
       {/* カテゴリーナビ */}
       <div className="sticky top-16 sm:top-20 z-30 bg-cream/95 backdrop-blur border-b border-brand-900/10">
         <div className="container-x flex flex-wrap gap-2 py-3">
-          {NAV.map((n) => (
+          {nav.map((n) => (
             <a
               key={n.id}
               href={`#${n.id}`}
@@ -60,11 +63,11 @@ export default async function HorsesPage() {
         </div>
       </div>
 
-      {/* 現在の保護馬 */}
-      <Section id="現在の保護馬" alt className="scroll-mt-[7.5rem] sm:scroll-mt-40">
+      {/* リタッチ在籍馬 */}
+      <Section id="リタッチ在籍馬" alt className="scroll-mt-[7.5rem] sm:scroll-mt-40">
         <SectionHeading
           eyebrow="PROTECTED"
-          title={`現在の保護馬（${protectedHorses.length}頭）`}
+          title={`リタッチ在籍馬（${protectedHorses.length}頭）`}
           lead="いま、Retouchの拠点で再調教を進めている馬たち。名前・年齢・性格・現在の様子をご紹介します。"
         />
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -74,33 +77,39 @@ export default async function HorsesPage() {
         </div>
       </Section>
 
-      {/* 卒業馬（＝オーナー決定馬）Before → After */}
-      <Section id="卒業馬" className="scroll-mt-[7.5rem] sm:scroll-mt-40">
+      {/* オーナー決定馬 Before → After */}
+      <Section id="オーナー決定馬" className="scroll-mt-[7.5rem] sm:scroll-mt-40">
         <SectionHeading
-          eyebrow="GRADUATES"
-          title="卒業馬（オーナー決定馬）"
-          lead="卒業＝オーナーが決まった馬たち。肥育場での保護前（Before）から、新しい家族のもとへ巣立つ現在（After）まで、歩んできた道のりをご紹介します。"
+          eyebrow="OWNERS"
+          title={`オーナー決定馬（${ownerHorses.length}頭）`}
+          lead="オーナーが決まった馬たち。肥育場での保護前（Before）から、新しい家族のもとへ巣立つ現在（After）まで、歩んできた道のりをご紹介します。"
         />
         <div className="mt-10 space-y-6">
-          {graduatedHorses.map((h) => (
+          {ownerHorses.map((h) => (
             <article
               key={h.slug}
               className="grid items-stretch gap-0 overflow-hidden rounded-3xl shadow-sm ring-1 ring-brand-900/5 lg:grid-cols-[300px_1fr]"
             >
               {h.photo ? (
-                <Image
-                  src={h.photo}
-                  alt={`${h.name}の Before / After`}
-                  width={600}
-                  height={800}
-                  className="min-h-[200px] w-full object-cover lg:min-h-full"
-                />
+                <Link href={`/horses/${h.slug}`} className="relative block min-h-[240px] lg:min-h-full">
+                  <Image
+                    src={h.photo}
+                    alt={`${h.name}の写真`}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 300px"
+                    className="object-cover"
+                  />
+                </Link>
               ) : (
-                <Placeholder label={`${h.name} の Before / After 写真`} className="min-h-[200px] w-full" />
+                <Placeholder label={`${h.name} の写真`} className="min-h-[200px] w-full" />
               )}
               <div className="bg-white p-7">
                 <div className="flex items-baseline justify-between gap-3">
-                  <h3 className="text-xl font-semibold text-brand-900">{h.name}</h3>
+                  <h3 className="text-xl font-semibold text-brand-900">
+                    <Link href={`/horses/${h.slug}`} className="hover:text-brand-700 hover:underline">
+                      {h.name}
+                    </Link>
+                  </h3>
                   <span className="shrink-0 text-xs text-ink/50">
                     {h.sex && h.age
                       ? `${h.sex}・${h.age}`
@@ -119,7 +128,9 @@ export default async function HorsesPage() {
                   </div>
                   <div className="rounded-2xl bg-brand-50 p-5 ring-1 ring-brand-200">
                     <span className="text-[11px] font-bold tracking-widest text-brand-600">AFTER</span>
-                    <p className="mt-2 text-sm leading-relaxed text-brand-900">{h.story}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-brand-900">
+                      {h.story || "現在の様子は準備中です。"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -127,6 +138,22 @@ export default async function HorsesPage() {
           ))}
         </div>
       </Section>
+
+      {/* その他・退厩等（該当馬がいる場合のみ） */}
+      {otherHorses.length > 0 && (
+        <Section id="その他・退厩等" alt className="scroll-mt-[7.5rem] sm:scroll-mt-40">
+          <SectionHeading
+            eyebrow="OTHERS"
+            title={`その他・退厩等（${otherHorses.length}頭）`}
+            lead="退厩などにより、現在はリタッチに在籍していない馬たちです。"
+          />
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {otherHorses.map((h) => (
+              <HorseCard key={h.slug} horse={h} />
+            ))}
+          </div>
+        </Section>
+      )}
 
       {/* 馬たちの物語（特集記事形式） */}
       {featured && (

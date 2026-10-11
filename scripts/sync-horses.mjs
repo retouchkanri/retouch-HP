@@ -59,10 +59,11 @@ const SUPPORT = {
   "horse-21": { goal: 180000, raised: 178000, supporters: 142, note: "ほぼ満額を達成。多くのサポーターに支えられています。" },
 };
 
+// lib/horses.ts の HORSE_STATUSES と同じ文言にすること
 const STATUS_LABEL = {
-  protected: "現在の保護馬",
-  graduated: "卒業馬",
+  protected: "リタッチ在籍馬",
   owner: "オーナー決定馬",
+  other: "その他・退厩等",
 };
 
 function contentTypeFor(ext) {
@@ -99,7 +100,7 @@ function parseFile(file) {
     const m = WEBP_MAP[base];
     if (m) return { file, ext, slug: m.slug, name: m.name, status: m.status, order: null };
     // Fallback: keep raw name, derive slug from base.
-    return { file, ext, slug: base.replace(/[^\w]+/g, "-").toLowerCase() || "horse-x", name: base, status: "graduated", order: null };
+    return { file, ext, slug: base.replace(/[^\w]+/g, "-").toLowerCase() || "horse-x", name: base, status: "owner", order: null };
   }
 
   // Numbered: "07：ブライト（オーナー決定）" / "27チャコ" / "00：マッシュ"

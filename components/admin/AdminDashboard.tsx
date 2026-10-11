@@ -13,8 +13,10 @@ import {
   saveFaq,
   seedDatabase,
   signOut,
-  uploadImage,
 } from "@/app/admin/actions";
+import { HORSE_STATUSES, MAX_HORSE_PHOTOS } from "@/lib/horses";
+import { ImageField, PhotoListField } from "@/components/admin/ImageUploader";
+import HorseCsvTools from "@/components/admin/HorseCsvTools";
 
 type Props = {
   news: DbNewsItem[];
@@ -22,6 +24,8 @@ type Props = {
   horses: DbHorse[];
   faq: DbFaqItem[];
   dbReady: boolean;
+  /** horses テーブルに写真複数枚・保護年月などの追加カラムがあるか */
+  horseSchemaReady: boolean;
 };
 
 const emptyNews = { date: "", category: "", title: "", img: "", body: "", linkUrl: "" };
@@ -36,7 +40,7 @@ const emptyMedia = {
   sortOrder: "0",
 };
 
-export default function AdminDashboard({ news, media, horses, faq, dbReady }: Props) {
+export default function AdminDashboard({ news, media, horses, faq, dbReady, horseSchemaReady }: Props) {
   const [tab, setTab] = useState<"news" | "media" | "horses" | "faq">("news");
   const [message, setMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -78,6 +82,17 @@ export default function AdminDashboard({ news, media, horses, faq, dbReady }: Pr
           >
             初期データを投入
           </button>
+        </div>
+      )}
+
+      {dbReady && !horseSchemaReady && (
+        <div className="mt-8 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-6">
+          <h2 className="text-lg font-semibold text-amber-100">データベースの更新が必要です</h2>
+          <p className="mt-3 text-sm leading-relaxed text-amber-50/90">
+            馬の写真（複数枚）・YouTubeプレイリスト・保護年月を保存するには、Supabase ダッシュボードの SQL Editor で{" "}
+            <code className="rounded bg-black/30 px-1.5 py-0.5">supabase/migrations/20261011_horse_profile_fields.sql</code>{" "}
+            の内容を実行してください。実行するまで、馬情報の保存はエラーになります。
+          </p>
         </div>
       )}
 
@@ -154,25 +169,6 @@ function NewsPanel({
       body: item.body ?? "",
       linkUrl: item.linkUrl ?? "",
     });
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("bucket", "news-images");
-    const result = await uploadImage(fd);
-    setUploading(false);
-    if (result.error) {
-      onMessage(`画像アップロードエラー: ${result.error}`);
-    } else if (result.url) {
-      setForm((f) => ({ ...f, img: result.url! }));
-      onMessage(null);
-    }
-    // Reset file input so the same file can be re-selected if needed
-    e.target.value = "";
   };
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -253,50 +249,15 @@ function NewsPanel({
           <p className="text-xs text-brand-300">タイトルのみ入力すれば保存できます。日付・カテゴリは未入力時に自動設定されます。</p>
         )}
 
-        {/* Image */}
-        <div>
-          <p className="mb-1.5 text-sm text-brand-100">画像</p>
-          {form.img && (
-            <div className="relative mb-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={form.img}
-                alt="プレビュー"
-                className="h-36 w-full rounded-xl object-cover"
-              />
-              <button
-                type="button"
-                onClick={() => setForm((f) => ({ ...f, img: "" }))}
-                className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-xs text-white hover:bg-black/80"
-              >
-                ✕ 削除
-              </button>
-            </div>
-          )}
-          <label className="mb-1 block text-xs text-brand-300">ファイルをアップロード</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            disabled={uploading || pending}
-            className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-3 py-2.5 text-sm text-white
-              file:mr-3 file:rounded-lg file:border-0 file:bg-gold file:px-3 file:py-1
-              file:text-xs file:font-semibold file:text-white file:cursor-pointer
-              disabled:opacity-50"
-          />
-          {uploading && (
-            <p className="mt-1 text-xs text-brand-200">アップロード中…</p>
-          )}
-          <label className="mt-2 mb-1 block text-xs text-brand-300">または画像 URL を直接入力</label>
-          <input
-            type="text"
-            name="img"
-            value={form.img}
-            onChange={(e) => setForm((f) => ({ ...f, img: e.target.value }))}
-            placeholder="https://... または /images/news.jpg"
-            className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-4 py-3 text-sm text-white outline-none ring-gold focus:ring-2"
-          />
-        </div>
+        <ImageField
+          value={form.img}
+          onChange={(img) => setForm((f) => ({ ...f, img }))}
+          bucket="news-images"
+          disabled={pending}
+          onBusyChange={setUploading}
+          onMessage={onMessage}
+          urlPlaceholder="https://... または /images/news.jpg"
+        />
 
         <Field
           label="日付"
@@ -380,23 +341,6 @@ function MediaPanel({
     setForm(emptyMedia);
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("bucket", "media-image");
-    const result = await uploadImage(fd);
-    setUploading(false);
-    if (result.error) onMessage(`画像アップロードエラー: ${result.error}`);
-    else if (result.url) {
-      setForm((f) => ({ ...f, img: result.url! }));
-      onMessage(null);
-    }
-    e.target.value = "";
-  };
-
   const openEdit = (item: DbMediaItem) => {
     setEditing(item);
     setForm({
@@ -474,43 +418,15 @@ function MediaPanel({
         <Field label="日付" name="date" value={form.date} onChange={(v) => setForm({ ...form, date: v })} optional />
         <Field label="タイトル" name="title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
 
-        {/* Image */}
-        <div>
-          <p className="mb-1.5 text-sm text-brand-100">画像</p>
-          {form.img && (
-            <div className="relative mb-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={form.img} alt="プレビュー" className="h-36 w-full rounded-xl object-cover" />
-              <button
-                type="button"
-                onClick={() => setForm((f) => ({ ...f, img: "" }))}
-                className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-xs text-white hover:bg-black/80"
-              >
-                ✕ 削除
-              </button>
-            </div>
-          )}
-          <label className="mb-1 block text-xs text-brand-300">ファイルをアップロード</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            disabled={uploading || pending}
-            className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-3 py-2.5 text-sm text-white
-              file:mr-3 file:rounded-lg file:border-0 file:bg-gold file:px-3 file:py-1
-              file:text-xs file:font-semibold file:text-white file:cursor-pointer disabled:opacity-50"
-          />
-          {uploading && <p className="mt-1 text-xs text-brand-200">アップロード中…</p>}
-          <label className="mt-2 mb-1 block text-xs text-brand-300">または画像 URL を直接入力</label>
-          <input
-            type="text"
-            name="img"
-            value={form.img}
-            onChange={(e) => setForm((f) => ({ ...f, img: e.target.value }))}
-            placeholder="https://... または /media/media-example.jpg"
-            className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-4 py-3 text-sm text-white outline-none ring-gold focus:ring-2"
-          />
-        </div>
+        <ImageField
+          value={form.img}
+          onChange={(img) => setForm((f) => ({ ...f, img }))}
+          bucket="media-image"
+          disabled={pending}
+          onBusyChange={setUploading}
+          onMessage={onMessage}
+          urlPlaceholder="https://... または /media/media-example.jpg"
+        />
 
         <Field label="URL" name="url" value={form.url} onChange={(v) => setForm({ ...form, url: v })} optional />
         <Field label="画像 alt" name="imgAlt" value={form.imgAlt} onChange={(v) => setForm({ ...form, imgAlt: v })} optional />
@@ -529,25 +445,38 @@ function MediaPanel({
 // ============================================================================
 
 const emptyHorse = {
-  name: "", slug: "", sex: "", age: "", status: "protected", statusLabel: "現在の保護馬",
-  orderNum: "", personality: "", story: "", beforeStory: "", photo: "",
-  ownerStory: "", sortOrder: "0", goal: "0", raised: "0", supporters: "0", note: "",
+  name: "", slug: "", sex: "", age: "", status: "protected" as string,
+  orderNum: "", personality: "", story: "", beforeStory: "", photos: [] as string[],
+  rescuedYear: "", rescuedMonth: "", youtubeUrl: "",
+  officeMessage: "", sortOrder: "0", goal: "0", raised: "0", supporters: "0", note: "",
 };
 
-function horseToForm(item: DbHorse) {
+const RESCUE_FIRST_YEAR = 2015;
+
+/** 保護年の選択肢（新しい順）。登録済みの年が範囲外でも選べるよう含める。 */
+function rescueYearOptions(selected: string) {
+  const thisYear = new Date().getFullYear();
+  const years = Array.from({ length: thisYear - RESCUE_FIRST_YEAR + 1 }, (_, i) => String(thisYear - i));
+  return selected && !years.includes(selected) ? [selected, ...years] : years;
+}
+
+function horseToForm(item: DbHorse): typeof emptyHorse {
+  const [rescuedYear = "", rescuedMonth = ""] = (item.rescuedAt ?? "").split("-");
   return {
     name: item.name,
     slug: item.slug,
     sex: item.sex ?? "",
     age: item.age ?? "",
     status: item.status,
-    statusLabel: item.statusLabel,
     orderNum: String(item.orderNum ?? ""),
     personality: item.personality ?? "",
     story: item.story ?? "",
     beforeStory: item.before ?? "",
-    photo: item.photo ?? "",
-    ownerStory: item.ownerStory ?? "",
+    photos: item.photos,
+    rescuedYear,
+    rescuedMonth,
+    youtubeUrl: item.youtubeUrl ?? "",
+    officeMessage: item.officeMessage ?? "",
     sortOrder: String(item.sortOrder),
     goal: String(item.goal),
     raised: String(item.raised),
@@ -564,13 +493,17 @@ function horseFormToFormData(form: typeof emptyHorse, id?: string) {
   fd.set("sex", form.sex);
   fd.set("age", form.age);
   fd.set("status", form.status);
-  fd.set("statusLabel", form.statusLabel);
   fd.set("orderNum", form.orderNum);
   fd.set("personality", form.personality);
   fd.set("story", form.story);
   fd.set("beforeStory", form.beforeStory);
-  fd.set("photo", form.photo);
-  fd.set("ownerStory", form.ownerStory);
+  fd.set("photos", JSON.stringify(form.photos));
+  fd.set(
+    "rescuedAt",
+    form.rescuedYear ? [form.rescuedYear, form.rescuedMonth].filter(Boolean).join("-") : ""
+  );
+  fd.set("youtubeUrl", form.youtubeUrl);
+  fd.set("officeMessage", form.officeMessage);
   fd.set("sortOrder", form.sortOrder);
   fd.set("goal", form.goal);
   fd.set("raised", form.raised);
@@ -578,6 +511,9 @@ function horseFormToFormData(form: typeof emptyHorse, id?: string) {
   fd.set("note", form.note);
   return fd;
 }
+
+const selectClass =
+  "w-full rounded-xl border border-white/10 bg-brand-950/50 px-4 py-3 text-sm text-white outline-none ring-gold focus:ring-2";
 
 function HorsePanel({
   items,
@@ -597,31 +533,22 @@ function HorsePanel({
     [form, baseline]
   );
 
+  // 写真をアップロードしただけでは保存されないので、切り替え前に確認する
+  const canLeave = () => !isDirty || confirm("未保存の変更があります。破棄して切り替えますか？");
+
   const openNew = () => {
+    if (!canLeave()) return;
     setEditing(null);
     setForm(emptyHorse);
     setBaseline(emptyHorse);
   };
 
   const openEdit = (item: DbHorse) => {
+    if (!canLeave()) return;
     const next = horseToForm(item);
     setEditing(item);
     setForm(next);
     setBaseline(next);
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("bucket", "horse-images");
-    const result = await uploadImage(fd);
-    setUploading(false);
-    if (result.error) onMessage(`画像アップロードエラー: ${result.error}`);
-    else if (result.url) setForm((f) => ({ ...f, photo: result.url! }));
-    e.target.value = "";
   };
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -651,6 +578,7 @@ function HorsePanel({
     <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_1.2fr]">
       {/* List */}
       <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+        <HorseCsvTools items={items} onMessage={onMessage} />
         <div className="mb-4 flex items-center justify-between">
           <h2 className="font-semibold text-white">一覧 ({items.length}頭)</h2>
           <button type="button" onClick={openNew} className="text-sm font-semibold text-gold">＋ 新規</button>
@@ -661,10 +589,12 @@ function HorsePanel({
               <button type="button" onClick={() => openEdit(item)} className="flex items-start gap-3 text-left min-w-0">
                 {item.photo && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.photo} alt="" className="h-10 w-12 shrink-0 rounded-lg object-cover" />
+                  <img src={item.photo} alt="" loading="lazy" className="h-10 w-12 shrink-0 rounded-lg object-cover" />
                 )}
                 <div className="min-w-0">
-                  <p className="text-xs text-brand-200 truncate">{item.statusLabel} ｜ {item.sex ?? "性別不明"}</p>
+                  <p className="text-xs text-brand-200 truncate">
+                    {item.statusLabel} ｜ {item.sex ?? "性別不明"} ｜ 写真{item.photos.length}枚
+                  </p>
                   <p className="mt-0.5 text-sm font-semibold text-white">{item.name}</p>
                   {item.note && <p className="mt-0.5 text-xs text-brand-300 line-clamp-1">{item.note}</p>}
                 </div>
@@ -678,32 +608,23 @@ function HorsePanel({
 
       {/* Form */}
       <form onSubmit={submit} className="rounded-2xl border border-white/10 bg-white/5 p-5 space-y-4 max-h-[80vh] overflow-y-auto">
-        <h2 className="font-semibold text-white sticky top-0 bg-brand-950/95 py-1">{editing ? "編集" : "新規作成"}</h2>
+        <h2 className="font-semibold text-white sticky top-0 z-10 bg-brand-950/95 py-1">
+          {editing ? `編集：${editing.name}` : "新規作成"}
+        </h2>
         {!editing && (
           <p className="text-xs text-brand-300">任意の項目を入力して保存できます。未入力の項目は空のまま登録されます。</p>
         )}
 
-        {/* Photo */}
-        <div>
-          <p className="mb-1.5 text-sm text-brand-100">写真</p>
-          {form.photo && (
-            <div className="relative mb-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={form.photo} alt="プレビュー" className="h-32 w-full rounded-xl object-cover" />
-              <button type="button" onClick={() => setForm((f) => ({ ...f, photo: "" }))}
-                className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-xs text-white hover:bg-black/80">
-                ✕ 削除
-              </button>
-            </div>
-          )}
-          <input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading || pending}
-            className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-3 py-2.5 text-sm text-white
-              file:mr-3 file:rounded-lg file:border-0 file:bg-gold file:px-3 file:py-1 file:text-xs file:font-semibold file:text-white file:cursor-pointer disabled:opacity-50" />
-          {uploading && <p className="mt-1 text-xs text-brand-200">アップロード中…</p>}
-          <label className="mt-2 mb-1 block text-xs text-brand-300">または画像 URL</label>
-          <input type="text" name="photo" value={form.photo} onChange={(e) => setForm((f) => ({ ...f, photo: e.target.value }))}
-            placeholder="https://..." className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-4 py-3 text-sm text-white outline-none ring-gold focus:ring-2" />
-        </div>
+        <PhotoListField
+          label={`写真（最大${MAX_HORSE_PHOTOS}枚）`}
+          value={form.photos}
+          onChange={(photos) => setForm((f) => ({ ...f, photos }))}
+          max={MAX_HORSE_PHOTOS}
+          bucket="horse-images"
+          disabled={pending}
+          onBusyChange={setUploading}
+          onMessage={onMessage}
+        />
 
         <div className="grid grid-cols-2 gap-3">
           <Field label="馬名" name="name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="ハル号" optional />
@@ -713,8 +634,7 @@ function HorsePanel({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="mb-1.5 block text-sm text-brand-100">性別</label>
-            <select name="sex" value={form.sex} onChange={(e) => setForm({ ...form, sex: e.target.value })}
-              className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-4 py-3 text-sm text-white outline-none ring-gold focus:ring-2">
+            <select name="sex" value={form.sex} onChange={(e) => setForm({ ...form, sex: e.target.value })} className={selectClass}>
               <option value="">不明</option>
               <option value="牡">牡</option>
               <option value="牝">牝</option>
@@ -727,21 +647,49 @@ function HorsePanel({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="mb-1.5 block text-sm text-brand-100">ステータス</label>
-            <select name="status" value={form.status} onChange={(e) => {
-              const s = e.target.value;
-              const label = s === "protected" ? "現在の保護馬" : s === "graduated" ? "卒業馬" : "オーナー決定馬";
-              setForm({ ...form, status: s, statusLabel: label });
-            }} className="w-full rounded-xl border border-white/10 bg-brand-950/50 px-4 py-3 text-sm text-white outline-none ring-gold focus:ring-2">
-              <option value="protected">現在の保護馬</option>
-              <option value="graduated">卒業馬</option>
-              <option value="owner">オーナー決定馬</option>
+            <select name="status" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className={selectClass}>
+              {HORSE_STATUSES.map((s) => (
+                <option key={s.value} value={s.value}>{s.label}</option>
+              ))}
             </select>
           </div>
-          <Field label="ステータスラベル" name="statusLabel" value={form.statusLabel} onChange={(v) => setForm({ ...form, statusLabel: v })} optional />
+          <Field label="肥育場番号" name="orderNum" value={form.orderNum} onChange={(v) => setForm({ ...form, orderNum: v })} placeholder="16" optional />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Field label="肥育場番号" name="orderNum" value={form.orderNum} onChange={(v) => setForm({ ...form, orderNum: v })} placeholder="16" optional />
+          <div>
+            <label className="mb-1.5 block text-sm text-brand-100">
+              肥育場からの保護年月
+              <span className="ml-2 text-xs font-normal text-brand-300">（任意）</span>
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <select
+                aria-label="保護年"
+                value={form.rescuedYear}
+                onChange={(e) =>
+                  setForm({ ...form, rescuedYear: e.target.value, rescuedMonth: e.target.value ? form.rescuedMonth : "" })
+                }
+                className={selectClass}
+              >
+                <option value="">年</option>
+                {rescueYearOptions(form.rescuedYear).map((y) => (
+                  <option key={y} value={y}>{y}年</option>
+                ))}
+              </select>
+              <select
+                aria-label="保護月"
+                value={form.rescuedMonth}
+                onChange={(e) => setForm({ ...form, rescuedMonth: e.target.value })}
+                disabled={!form.rescuedYear}
+                className={`${selectClass} disabled:opacity-50`}
+              >
+                <option value="">月</option>
+                {Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0")).map((m) => (
+                  <option key={m} value={m}>{Number(m)}月</option>
+                ))}
+              </select>
+            </div>
+          </div>
           <Field label="表示順" name="sortOrder" value={form.sortOrder} onChange={(v) => setForm({ ...form, sortOrder: v })} optional />
         </div>
 
@@ -750,7 +698,16 @@ function HorsePanel({
         <Textarea label="現在の様子（story）" name="story" value={form.story} onChange={(v) => setForm({ ...form, story: v })} rows={3} optional />
         <Textarea label="保護前の様子（before）" name="beforeStory" value={form.beforeStory} onChange={(v) => setForm({ ...form, beforeStory: v })} rows={2} optional />
         <Textarea label="支援が必要な理由（note）" name="note" value={form.note} onChange={(v) => setForm({ ...form, note: v })} rows={2} optional />
-        <Textarea label="オーナーストーリー" name="ownerStory" value={form.ownerStory} onChange={(v) => setForm({ ...form, ownerStory: v })} rows={2} optional />
+        <Textarea label="事務局からのメッセージ" name="officeMessage" value={form.officeMessage} onChange={(v) => setForm({ ...form, officeMessage: v })} rows={3} optional />
+
+        <Field
+          label="YouTubeプレイリストURL"
+          name="youtubeUrl"
+          value={form.youtubeUrl}
+          onChange={(v) => setForm({ ...form, youtubeUrl: v })}
+          placeholder="https://www.youtube.com/playlist?list=..."
+          optional
+        />
 
         <p className="text-xs font-semibold text-brand-200 pt-2">支援データ</p>
         <div className="grid grid-cols-3 gap-3">
@@ -759,12 +716,15 @@ function HorsePanel({
           <Field label="支援者数" name="supporters" value={form.supporters} onChange={(v) => setForm({ ...form, supporters: v })} placeholder="22" optional />
         </div>
 
+        {isDirty && !pending && (
+          <p className="text-xs text-amber-200">未保存の変更があります。「保存」を押すとサイトに反映されます。</p>
+        )}
         <button
           type="submit"
           disabled={pending || uploading || !isDirty}
           className="btn-gold w-full disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {pending ? "保存中…" : "保存"}
+          {pending ? "保存中…" : uploading ? "画像をアップロード中…" : "保存"}
         </button>
       </form>
     </div>

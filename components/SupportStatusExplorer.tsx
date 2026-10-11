@@ -1,16 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ALL_HORSES, canAcceptSupport, monthlyOf, supportersOf, type HorseProfile } from "@/lib/horses";
+import {
+  ALL_HORSES,
+  HORSE_STATUSES,
+  canAcceptSupport,
+  monthlyOf,
+  supportersOf,
+  type HorseProfile,
+} from "@/lib/horses";
 import SupportHorseRow from "@/components/SupportHorseRow";
 import SupportMinUnitsAppeal from "@/components/SupportMinUnitsAppeal";
 
-const CATEGORIES = [
-  { value: "all", label: "すべて" },
-  { value: "protected", label: "現在の保護馬" },
-  { value: "graduated", label: "卒業馬" },
-  { value: "owner", label: "オーナー決定馬" },
-];
+const CATEGORIES = [{ value: "all", label: "すべて" }, ...HORSE_STATUSES];
 
 const SORTS = [
   { value: "urgent", label: "支援が必要な順" },

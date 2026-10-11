@@ -1,6 +1,14 @@
 import type { NewsItem, MediaItem } from "@/lib/data";
 import { NEWS, MEDIA } from "@/lib/data";
-import { ALL_HORSES, supportRate, type HorseProfile } from "@/lib/horses";
+import {
+  ALL_HORSES,
+  MAX_HORSE_PHOTOS,
+  horseStatusLabel,
+  normalizeHorseStatus,
+  supportRate,
+  type HorseProfile,
+  type HorseStatus,
+} from "@/lib/horses";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { getSalonHorseStatusMap, salonSortOrderFor } from "@/lib/salon";
 
@@ -129,14 +137,18 @@ export type DbHorse = {
   sex?: "牡" | "牝" | "騙";
   age?: string;
   ageYears?: number;
-  status: "protected" | "graduated" | "owner";
+  status: HorseStatus;
   statusLabel: string;
   orderNum?: number;
   personality: string;
   story: string;
   before?: string;
   photo?: string;
-  ownerStory?: string;
+  photos: string[];
+  youtubeUrl?: string;
+  rescuedAt?: string;
+  /** 事務局からのメッセージ（DBカラムは owner_story） */
+  officeMessage?: string;
   sortOrder: number;
   goal: number;
   raised: number;
@@ -165,9 +177,22 @@ type HorseRow = {
   raised: number;
   supporters: number;
   note: string | null;
+  // 20261011_horse_profile_fields.sql で追加。未適用のDBでは undefined。
+  photos?: string[] | null;
+  youtube_url?: string | null;
+  rescued_at?: string | null;
 };
 
+/** photos（複数枚）を正とし、未移行の行は従来の photo 1枚にフォールバック。 */
+function horsePhotos(row: Pick<HorseRow, "photo" | "photos">): string[] {
+  const list = (row.photos ?? []).filter(Boolean);
+  if (list.length) return list.slice(0, MAX_HORSE_PHOTOS);
+  return row.photo ? [row.photo] : [];
+}
+
 function mapHorse(row: HorseRow): DbHorse {
+  const status = normalizeHorseStatus(row.status);
+  const photos = horsePhotos(row);
   return {
     id: row.id,
     name: row.name,
@@ -175,14 +200,17 @@ function mapHorse(row: HorseRow): DbHorse {
     sex: (row.sex as "牡" | "牝" | "騙") ?? undefined,
     age: row.age ?? undefined,
     ageYears: row.age_years ?? undefined,
-    status: row.status as "protected" | "graduated" | "owner",
-    statusLabel: row.status_label,
+    status,
+    statusLabel: horseStatusLabel(status),
     orderNum: row.order_num ?? undefined,
     personality: row.personality,
     story: row.story,
     before: row.before_story ?? undefined,
-    photo: row.photo ?? undefined,
-    ownerStory: row.owner_story ?? undefined,
+    photo: photos[0],
+    photos,
+    youtubeUrl: row.youtube_url ?? undefined,
+    rescuedAt: row.rescued_at ?? undefined,
+    officeMessage: row.owner_story ?? undefined,
     sortOrder: row.sort_order,
     goal: row.goal,
     raised: row.raised,
@@ -204,6 +232,10 @@ export function dbHorseToProfile(h: DbHorse): HorseProfile {
     story: h.story,
     before: h.before,
     photo: h.photo,
+    photos: h.photos,
+    youtubeUrl: h.youtubeUrl,
+    rescuedAt: h.rescuedAt,
+    officeMessage: h.officeMessage,
     note: h.note,
     goal: h.goal,
     raised: h.raised,
@@ -232,7 +264,7 @@ async function attachSalonSupport(horses: HorseProfile[]): Promise<HorseProfile[
     return {
       ...h,
       salonHorseId: status.salonHorseId,
-      isSupportable: h.status === "owner" ? undefined : status.isSupportable,
+      isSupportable: h.status === "protected" ? status.isSupportable : undefined,
       supporterCount: status.supporterCount,
       monthlySupport: status.monthlySupport,
       supportUnits: status.supportUnits,
@@ -273,7 +305,7 @@ export async function getHorseBySlugDb(slug: string): Promise<HorseProfile | und
       const map = await getSalonHorseStatusMap();
       const status = map.get(sortOrder);
       if (status) {
-        profile.isSupportable = profile.status === "owner" ? undefined : status.isSupportable;
+        profile.isSupportable = profile.status === "protected" ? status.isSupportable : undefined;
         profile.supporterCount = status.supporterCount;
         profile.monthlySupport = status.monthlySupport;
         profile.supportUnits = status.supportUnits;
@@ -282,6 +314,23 @@ export async function getHorseBySlugDb(slug: string): Promise<HorseProfile | und
     return profile;
   } catch {
     return undefined;
+  }
+}
+
+/**
+ * horses テーブルに拡充カラム（photos / youtube_url / rescued_at）があるか。
+ * 無い場合は supabase/migrations/20261011_horse_profile_fields.sql が未適用。
+ */
+export async function isHorseSchemaCurrent(): Promise<boolean> {
+  try {
+    const supabase = createServiceClient();
+    const { error } = await supabase
+      .from("horses")
+      .select("photos, youtube_url, rescued_at")
+      .limit(1);
+    return !error;
+  } catch {
+    return false;
   }
 }
 

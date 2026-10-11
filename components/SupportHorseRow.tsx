@@ -16,6 +16,7 @@ import {
   hasSupport as horseHasSupport,
   canAcceptSupport,
   isOwnerHorse,
+  isOtherHorse,
   type HorseProfile,
 } from "@/lib/horses";
 
@@ -80,7 +81,7 @@ export default function SupportHorseRow({
           <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold text-brand-700">
             {horse.statusLabel}
           </span>
-          <SupportStatusBadge isSupportable={isOwner ? undefined : horse.isSupportable} />
+          <SupportStatusBadge isSupportable={horse.isSupportable} />
         </div>
 
         {(horse.note || horse.story) && (
@@ -102,7 +103,7 @@ export default function SupportHorseRow({
           <p className="mt-2 text-[11px] font-semibold text-brand-700">
             支援募集中｜最初のサポーターになりませんか
           </p>
-        ) : horse.isSupportable === false ? (
+        ) : isOtherHorse(horse) || horse.isSupportable === false ? (
           <p className="mt-2 text-[11px] text-ink/45">現在は新規支援の受付を停止しています</p>
         ) : (
           <p className="mt-2 text-[11px] text-ink/45">支援状況データ準備中</p>

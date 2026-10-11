@@ -12,18 +12,52 @@ import { ROSTER } from "./roster";
 /** 累計保護頭数（サイト表示用の対外数値）。実ロスター件数とは独立。 */
 export const TOTAL_PROTECTED_HORSES = 53;
 
+/** 1頭あたりに掲載できる写真の上限。 */
+export const MAX_HORSE_PHOTOS = 10;
+
+// ── ステータス ──────────────────────────────────────────────────────────────
+// DB の horses.status に入る値。表示ラベルは常にここから引く（status_label は
+// 互換のために同じ文言を書き込むだけで、表示には使わない）。
+export const HORSE_STATUSES = [
+  { value: "protected", label: "リタッチ在籍馬" },
+  { value: "owner", label: "オーナー決定馬" },
+  { value: "other", label: "その他・退厩等" },
+] as const;
+
+export type HorseStatus = (typeof HORSE_STATUSES)[number]["value"];
+
+/** 旧データの値（graduated=卒業馬 など）を現行の3区分に寄せる。 */
+export function normalizeHorseStatus(raw: string | null | undefined): HorseStatus {
+  if (raw === "owner" || raw === "graduated") return "owner";
+  if (raw === "other") return "other";
+  return "protected";
+}
+
+export function horseStatusLabel(status: HorseStatus): string {
+  return HORSE_STATUSES.find((s) => s.value === status)?.label ?? HORSE_STATUSES[0].label;
+}
+
 export type HorseProfile = {
   slug: string;
   name: string;
   sex: "牡" | "牝" | "騙";
   age: string;
-  status: "protected" | "graduated" | "owner";
+  status: HorseStatus;
   statusLabel: string;
   order?: number;
   personality?: string;
   story?: string;
   before?: string;
+  /** メイン写真（photos の先頭）。 */
   photo?: string;
+  /** 掲載写真（最大 MAX_HORSE_PHOTOS 枚、先頭がメイン）。 */
+  photos: string[];
+  /** 馬ごとの YouTube プレイリストURL。 */
+  youtubeUrl?: string;
+  /** 肥育場からの保護年月（"YYYY-MM" または "YYYY"）。 */
+  rescuedAt?: string;
+  /** 事務局からのメッセージ。 */
+  officeMessage?: string;
   note?: string;
   goal: number;
   raised: number;
@@ -58,9 +92,11 @@ export const hasSupport = (h: Pick<HorseProfile, "supporterCount">) => (h.suppor
 export const isOpenForSupport = (h: Pick<HorseProfile, "isSupportable">) => h.isSupportable === true;
 /** オーナー決定馬か。 */
 export const isOwnerHorse = (h: Pick<HorseProfile, "status">) => h.status === "owner";
-/** 新規支援を受け付けられるか（オーナー決定馬は除外）。 */
+/** その他・退厩等の馬か。 */
+export const isOtherHorse = (h: Pick<HorseProfile, "status">) => h.status === "other";
+/** 新規支援を受け付けられるか（リタッチ在籍馬のみ）。 */
 export const canAcceptSupport = (h: Pick<HorseProfile, "status" | "isSupportable">) =>
-  h.status !== "owner" && h.isSupportable === true;
+  h.status === "protected" && h.isSupportable === true;
 /** 口数の表示（整数はそのまま、半口は小数1桁）。 */
 export const formatUnits = (n: number) => (n % 1 === 0 ? `${n}` : n.toFixed(1));
 
@@ -87,6 +123,56 @@ export function formatHorseName(horse: Pick<HorseProfile, "name" | "order">) {
     return `${String(horse.order).padStart(2, "0")}：${horse.name}`;
   }
   return horse.name;
+}
+
+/** 保護年月（"YYYY-MM" / "YYYY"）を「2024年5月」形式に。 */
+export function formatRescuedAt(value: string | null | undefined): string {
+  const m = (value ?? "").match(/^(\d{4})(?:-(\d{1,2}))?$/);
+  if (!m) return "";
+  return m[2] ? `${m[1]}年${Number(m[2])}月` : `${m[1]}年`;
+}
+
+/**
+ * 保護年月の入力ゆれを "YYYY-MM"（月が不明なら "YYYY"）に揃える。
+ * CSV を Excel で編集すると「2024/5/1」「May-24」等に書き換わるため広めに受ける。
+ * 空文字は空文字、解釈できない値は null を返す。
+ */
+export function normalizeRescuedAt(raw: string | null | undefined): string | null {
+  const v = (raw ?? "")
+    .trim()
+    .replace(/[０-９]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 0xfee0));
+  if (!v) return "";
+  const pad = (month: number) => String(month).padStart(2, "0");
+
+  const ym = v.match(/^(\d{4})\s*[-/.年]\s*(\d{1,2})(?:\D.*)?$/);
+  if (ym) {
+    const month = Number(ym[2]);
+    return month >= 1 && month <= 12 ? `${ym[1]}-${pad(month)}` : null;
+  }
+
+  const y = v.match(/^(\d{4})\s*年?$/);
+  if (y) return y[1];
+
+  const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+  const en = v.match(/^([A-Za-z]{3})[a-z]*[-\s/.](\d{2}|\d{4})$/);
+  if (en) {
+    const month = MONTHS.indexOf(en[1].toLowerCase()) + 1;
+    if (!month) return null;
+    return `${en[2].length === 2 ? `20${en[2]}` : en[2]}-${pad(month)}`;
+  }
+  return null;
+}
+
+/** YouTube の URL（プレイリスト・動画・チャンネル）か。 */
+export function isYouTubeUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return false;
+    const host = url.hostname.toLowerCase();
+    return host === "youtu.be" || host === "youtube.com" || host.endsWith(".youtube.com");
+  } catch {
+    return false;
+  }
 }
 
 export function formatHorseMeta(horse: Pick<HorseProfile, "sex" | "age" | "order">) {
@@ -128,13 +214,14 @@ export const ALL_HORSES: HorseProfile[] = ROSTER.map((r) => ({
   name: r.name,
   sex: r.sex ?? "牡",
   age: r.age ?? "不明",
-  status: r.status,
-  statusLabel: r.statusLabel,
+  status: normalizeHorseStatus(r.status),
+  statusLabel: horseStatusLabel(normalizeHorseStatus(r.status)),
   order: r.order,
   personality: r.personality,
   story: r.story,
   before: r.before,
   photo: r.photo,
+  photos: r.photo ? [r.photo] : [],
   note: r.note,
   goal: r.goal,
   raised: r.raised,

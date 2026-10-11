@@ -40,12 +40,12 @@ const PROFILE: [string, string][] = [
 const FUTURE_FIELDS = ["観光", "教育", "福祉", "地域活性化", "乗馬", "ホースセラピー"];
 
 const VISION = [
-  { image: "/2c_1.png", label: "引退馬問題の認知向上" },
-  { image: "/2c_2.png", label: "保護頭数の拡大" },
-  { image: "/2c_3.png", label: "全国への活動展開" },
-  { image: "/2c_4.png", label: "教育・福祉分野との連携" },
-  { image: "/2c_5.png", label: "持続可能な支援モデル構築" },
-  { image: "/2c_6.png", label: "人と馬が共生する社会の実現" },
+  { image: "/2c_1.webp", label: "引退馬問題の認知向上" },
+  { image: "/2c_2.webp", label: "保護頭数の拡大" },
+  { image: "/2c_3.webp", label: "全国への活動展開" },
+  { image: "/2c_4.webp", label: "教育・福祉分野との連携" },
+  { image: "/2c_5.webp", label: "持続可能な支援モデル構築" },
+  { image: "/2c_6.webp", label: "人と馬が共生する社会の実現" },
 ];
 
 export default function AboutPage() {

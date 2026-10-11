@@ -110,7 +110,7 @@ export const NAV: NavItem[] = [
     label: "馬たちの紹介",
     labelEn: "HORSES",
     href: "/horses",
-    sections: ["現在の保護馬", "卒業馬", "オーナー決定馬", "馬たちの物語"],
+    sections: ["リタッチ在籍馬", "オーナー決定馬", "その他・退厩等", "馬たちの物語"],
   },
   {
     label: "共に未来を創る",

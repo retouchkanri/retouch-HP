@@ -31,7 +31,7 @@ const PILLARS = [
     id: "伝える・知ってもらう",
     no: "01",
     title: "伝える・知ってもらう",
-    image: "/4_1.png",
+    image: "/4_1.webp",
     imageAlt: "YouTube・SNS・講演・署名活動による情報発信の様子",
     body: "引退馬の現状を一人でも多くの方に知っていただくため、YouTubeやSNS、講演活動、署名活動を通じて情報発信を行っています。まずは「知ること」から社会を変えていきます。",
   },
@@ -39,7 +39,7 @@ const PILLARS = [
     id: "支える仕組みをつくる",
     no: "02",
     title: "支える仕組みをつくる",
-    image: "/4_2.png",
+    image: "/4_2.webp",
     imageAlt: "メンバー制度・一口支援・企業協賛・ふるさと納税による支援の仕組み",
     body: "Retouchメンバー制度、一口支援、企業協賛、ふるさと納税などを通じて、馬たちを継続的に支えられる仕組みづくりを進めています。",
   },
@@ -47,7 +47,7 @@ const PILLARS = [
     id: "新しい役割をつくる",
     no: "03",
     title: "新しい役割をつくる",
-    image: "/4_3.png",
+    image: "/4_3.webp",
     imageAlt: "教育・福祉・観光・スポーツ・ホースセラピーでの馬の活躍",
     body: "保護した馬たちを再調教し、教育・福祉・観光・スポーツ・ホースセラピーなどの分野で活躍できる環境づくりに取り組んでいます。",
   },
@@ -55,7 +55,7 @@ const PILLARS = [
     id: "次世代を育てる",
     no: "04",
     title: "次世代を育てる",
-    image: "/4_4.png",
+    image: "/4_4.webp",
     imageAlt: "東関東馬事高等学院・専門学院での馬の管理・調教・福祉活動の実践",
     body: "東関東馬事高等学院や東関東馬事専門学院の学生たちとともに、馬の管理や調教、福祉活動を実践しながら、引退馬の未来を支える人材育成を行っています。",
   },
@@ -67,7 +67,7 @@ export default function SolutionPage() {
       {/* Hero */}
       <section data-hero className="relative min-h-[36vh] overflow-hidden py-16 sm:min-h-[360px] sm:py-32">
         <Image
-          src="/4_h.png"
+          src="/4_h.webp"
           alt=""
           fill
           priority

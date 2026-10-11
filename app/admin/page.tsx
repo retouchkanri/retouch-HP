@@ -6,10 +6,11 @@ import {
   getAdminHorses,
   getAdminFaq,
   isDatabaseReady,
+  isHorseSchemaCurrent,
 } from "@/lib/content";
 
 export default async function AdminPage() {
-  const dbReady = await isDatabaseReady();
+  const [dbReady, horseSchemaReady] = await Promise.all([isDatabaseReady(), isHorseSchemaCurrent()]);
   let news: Awaited<ReturnType<typeof getAdminNews>> = [];
   let media: Awaited<ReturnType<typeof getAdminMedia>> = [];
   let horses: Awaited<ReturnType<typeof getAdminHorses>> = [];
@@ -51,6 +52,7 @@ export default async function AdminPage() {
       horses={horses}
       faq={faq}
       dbReady={dbReady}
+      horseSchemaReady={horseSchemaReady}
     />
   );
 }
